@@ -3,4 +3,4 @@ thwack
 
 Thwack 'n Bash game
 
-2d hack and slash with some unique game play features.
+This is a 2d hack and slash with some unique game play features, based on the [libgdx](http://libgdx.badlogicgames.com/) toolkit.
