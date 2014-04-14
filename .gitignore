@@ -6,3 +6,5 @@ gradle.properties
 .project
 .settings/
 *.iml
+android/libs/
+android/gen/
