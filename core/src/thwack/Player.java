@@ -1,5 +1,10 @@
 package thwack;
 
+import java.util.Map;
+
+import collision.CollisionContext;
+import collision.CollisionVisitor;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
@@ -7,14 +12,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 // player character stuff
-public class Player {
+public class Player implements Body, CollisionVisitor {
 	
 	final Circle circle;
-	private float speed = 100;
-	
+	private float speed = 200;
 	
 	public Player() {
 		this(50, 50, 32);
@@ -24,8 +29,9 @@ public class Player {
 		this.circle = new Circle(x, y, radius);
 	}
 	
-	public void update(float deltaTime, Array<Block> objects) {
-
+	@Override
+	public void update(float deltaTime, Map<String, Object> context) {
+		
 		float oldX = circle.x;
 		
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
@@ -36,9 +42,13 @@ public class Player {
 			circle.x += speed * deltaTime;
 		}
 		
+		CollisionContext collisionContext = (CollisionContext)context.get(CollisionContext.COLLISION);
+		
+		Array<CollisionVisitor> objects = collisionContext.getCollisionCandidates();
+		
 		boolean collidedX = false;
-		for (Block obj : objects) {
-			if (Intersector.overlaps(this.circle, obj.rectangle)) {
+		for (CollisionVisitor obj : objects) {
+			if (this.collidesWith(obj)) {
 				collidedX = true;
 				break;
 			}
@@ -59,8 +69,8 @@ public class Player {
 		}
 		
 		boolean collidedY = false;
-		for (Block obj : objects) {
-			if (Intersector.overlaps(circle, obj.rectangle)) {
+		for (CollisionVisitor obj : objects) {
+			if (this.collidesWith(obj)) {
 				collidedY = true;
 				break;
 			}
@@ -71,6 +81,7 @@ public class Player {
 		}
 	}
 	
+	@Override
 	public void render(ShapeRenderer shapeRenderer) {
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(Color.WHITE);
@@ -78,5 +89,18 @@ public class Player {
 		shapeRenderer.end();
 	}
 	
+	@Override
+	public boolean collidesWith(CollisionVisitor visitor) {
+		return this != visitor && visitor.visit(this.circle);
+	}
+	
+	@Override
+	public boolean visit(Circle circle) {
+		return Intersector.overlaps(circle, this.circle);
+	}
+	
+	public boolean visit(Rectangle rect) {
+		return Intersector.overlaps(this.circle, rect);
+	}
 	
 }
