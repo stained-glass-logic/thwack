@@ -4,53 +4,100 @@ import java.util.HashMap;
 import java.util.Map;
 
 import collision.CollisionContext;
+import collision.CollisionVisitor;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
 public class ThwackGame extends ApplicationAdapter {
-	OrthographicCamera camera;
 	
-	Map<String, Object> context = new HashMap<String, Object>();
+	private OrthographicCamera camera;
 	
-	SpriteBatch batch;
-	BitmapFont font;
-	ShapeRenderer shapeRenderer;
-	CollisionContext collisionContext;
+	private Map<String, Object> context = new HashMap<String, Object>();
 	
-	Player p;
-	Array<Block> blocks = new Array<Block>();
+	public static final String SPRITE_BATCH = "SPRITE_BATCH";
+	private SpriteBatch batch;
+	
+	public static final String BITMAP_FONT = "BITMAP_FONT";
+	private BitmapFont font;
+	
+	public static final String SHAPE_RENDERER = "SHAPE_RENDERER";
+	private ShapeRenderer shapeRenderer;
+	
+	private CollisionContext collisionContext;
+	
+	private Array<Renderable> renderables = new Array<Renderable>();
+	
+	private Array<Updateable> updateables = new Array<Updateable>();
+	
+	private Array<Disposable> disposables = new Array<Disposable>();
 	
 	@Override
 	public void create () {
+		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 600);
 		
 		batch = new SpriteBatch();
+		context.put(SPRITE_BATCH, batch);
+		disposables.add(batch);
+
 		font = new BitmapFont();
-		shapeRenderer = new ShapeRenderer();
-		collisionContext = new CollisionContext();
+		context.put(BITMAP_FONT, font);
+		disposables.add(font);
 		
+		shapeRenderer = new ShapeRenderer();
+		context.put(SHAPE_RENDERER, shapeRenderer);
+		disposables.add(shapeRenderer);
+
+		collisionContext = new CollisionContext();
 		context.put(CollisionContext.COLLISION, collisionContext);
 
-		p = new Player(16, 16, 5);
-
-		collisionContext.add(p);
+		Player p = new Player(16, 16, 5);
+		addGameObject(p);
 		
 		for (int i = 0; i < 1000; i++) {
-			blocks.add(new Block(MathUtils.random(750) + 50, MathUtils.random(550) + 50, 5, 5));
+			Block b = new Block(MathUtils.random(750) + 50, MathUtils.random(550) + 50, 5, 5);
+			addGameObject(b);
+		}
+	}
+	
+	private void addGameObject(Object obj) {
+		
+		if (obj instanceof Renderable) {
+			renderables.add((Renderable)obj);
 		}
 		
-		collisionContext.addAll(blocks);
+		if (obj instanceof Updateable) {
+			updateables.add((Updateable)obj);
+		}
 		
+		if (obj instanceof CollisionVisitor) {
+			collisionContext.add((CollisionVisitor)obj);
+		}
+	}
+	
+	private void removeGameObject(Object obj) {
+		if (obj instanceof Renderable) {
+			renderables.removeValue((Renderable)obj, true);
+		}
+		
+		if (obj instanceof Updateable) {
+			updateables.removeValue((Updateable)obj, true);
+		}
+		
+		if (obj instanceof CollisionVisitor) {
+			collisionContext.remove((CollisionVisitor)obj);
+		}
 	}
 
 	@Override
@@ -58,33 +105,31 @@ public class ThwackGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0.1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		Gdx.graphics.getFramesPerSecond();
-		
 		camera.update();
-		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		float deltaTime = Gdx.graphics.getDeltaTime();
-		
-		p.update(deltaTime, context);
-		
-		p.render(shapeRenderer);
-		
-		for (Block block: blocks) {
-			block.render(shapeRenderer);
+	
+		for (Updateable updateable : updateables) {
+			updateable.update(deltaTime, context);
 		}
 		
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		shapeRenderer.begin(ShapeType.Line);
 		batch.begin();
-		font.setColor(Color.WHITE);
-		font.draw(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 300, 300);
+
+		for (Renderable renderable : renderables) {
+			renderable.render(context);
+		}
+		
+		shapeRenderer.end();
 		batch.end();
 		
 	}
 	
 	@Override
 	public void dispose() {
-		if (shapeRenderer != null) {
-			shapeRenderer.dispose();
+		for (Disposable disposable : disposables) {
+			disposable.dispose();
 		}
 	}
-	
 }

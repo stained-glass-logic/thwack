@@ -6,12 +6,11 @@ import collision.CollisionVisitor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Block implements Body, CollisionVisitor {
+public class Block implements Renderable, CollisionVisitor {
 	
 	final Rectangle rectangle;
 	private Color color = Color.GREEN;
@@ -25,15 +24,12 @@ public class Block implements Body, CollisionVisitor {
 	}
 	
 	@Override
-	public void update(float deltaTime, Map<String, Object> context) {
-	}
-	
-	@Override
-	public void render(ShapeRenderer renderer) {
-		renderer.begin(ShapeType.Filled);
+	public void render(Map<String, Object> context) {
+		ShapeRenderer renderer = (ShapeRenderer)context.get(ThwackGame.SHAPE_RENDERER);
+		
 		renderer.setColor(color);
 		renderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-		renderer.end();
+		
 	}
 
 	@Override

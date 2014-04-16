@@ -28,4 +28,8 @@ public class CollisionContext {
 		objects.addAll(blocks);
 	}
 	
+	public void remove(CollisionVisitor visitor) {
+		objects.removeValue(visitor, true);
+	}
+	
 }
