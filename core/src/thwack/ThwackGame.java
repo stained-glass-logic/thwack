@@ -3,8 +3,8 @@ package thwack;
 import java.util.HashMap;
 import java.util.Map;
 
-import collision.CollisionContext;
-import collision.CollisionVisitor;
+import thwack.collision.CollisionContext;
+import thwack.collision.CollisionVisitor;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;

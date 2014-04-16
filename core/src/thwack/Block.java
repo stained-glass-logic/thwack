@@ -2,7 +2,7 @@ package thwack;
 
 import java.util.Map;
 
-import collision.CollisionVisitor;
+import thwack.collision.CollisionVisitor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;

@@ -2,8 +2,8 @@ package thwack;
 
 import java.util.Map;
 
-import collision.CollisionContext;
-import collision.CollisionVisitor;
+import thwack.collision.CollisionContext;
+import thwack.collision.CollisionVisitor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;

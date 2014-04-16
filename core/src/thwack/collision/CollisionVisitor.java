@@ -1,4 +1,4 @@
-package collision;
+package thwack.collision;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;

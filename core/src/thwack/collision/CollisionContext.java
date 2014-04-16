@@ -1,4 +1,4 @@
-package collision;
+package thwack.collision;
 
 import thwack.Block;
 
