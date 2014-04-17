@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -81,10 +82,13 @@ public class Player implements Body, CollisionVisitor {
 	}
 	
 	@Override
-	public void render(Map<String, Object> context) {
+	public void render(float deltaTime, Map<String, Object> context) {
 		ShapeRenderer renderer = (ShapeRenderer)context.get(ThwackGame.SHAPE_RENDERER);
+		
+		renderer.begin(ShapeType.Line);
 		renderer.setColor(Color.WHITE);
 		renderer.circle(circle.x, circle.y, circle.radius);
+		renderer.end();
 	}
 	
 	@Override

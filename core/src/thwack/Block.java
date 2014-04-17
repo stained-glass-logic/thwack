@@ -24,7 +24,7 @@ public class Block implements Renderable, CollisionVisitor {
 	}
 	
 	@Override
-	public void render(Map<String, Object> context) {
+	public void render(float deltaTime, Map<String, Object> context) {
 		ShapeRenderer renderer = (ShapeRenderer)context.get(ThwackGame.SHAPE_RENDERER);
 		
 		renderer.setColor(color);

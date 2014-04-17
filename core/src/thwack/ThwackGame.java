@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -45,7 +44,7 @@ public class ThwackGame extends ApplicationAdapter {
 	public void create () {
 		
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 600);
+		camera.setToOrtho(false, 400, 300);
 		
 		batch = new SpriteBatch();
 		context.put(SPRITE_BATCH, batch);
@@ -62,13 +61,17 @@ public class ThwackGame extends ApplicationAdapter {
 		collisionContext = new CollisionContext();
 		context.put(CollisionContext.COLLISION, collisionContext);
 
-		Player p = new Player(16, 16, 5);
-		addGameObject(p);
+//		Player p = new Player(16, 16, 5);
+//		addGameObject(p);
 		
-		for (int i = 0; i < 1000; i++) {
-			Block b = new Block(MathUtils.random(750) + 50, MathUtils.random(550) + 50, 5, 5);
-			addGameObject(b);
-		}
+//		for (int i = 0; i < 1000; i++) {
+//			Block b = new Block(MathUtils.random(750) + 50, MathUtils.random(550) + 50, 5, 5);
+//			addGameObject(b);
+//		}
+		
+		Mob mob = new Mob();
+		
+		addGameObject(mob);
 	}
 	
 	private void addGameObject(Object obj) {
@@ -101,11 +104,13 @@ public class ThwackGame extends ApplicationAdapter {
 	}
 
 	@Override
-	public void render () {
+	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0.1f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		camera.update();
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		batch.setProjectionMatrix(camera.combined);
 
 		float deltaTime = Gdx.graphics.getDeltaTime();
 	
@@ -113,16 +118,11 @@ public class ThwackGame extends ApplicationAdapter {
 			updateable.update(deltaTime, context);
 		}
 		
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.begin(ShapeType.Line);
-		batch.begin();
-
+//		batch.begin();
 		for (Renderable renderable : renderables) {
-			renderable.render(context);
+			renderable.render(deltaTime, context);
 		}
-		
-		shapeRenderer.end();
-		batch.end();
+//		batch.end();
 		
 	}
 	
