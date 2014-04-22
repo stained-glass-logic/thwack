@@ -1,4 +1,4 @@
-package thwack;
+package thwack.model;
 
 import java.util.Map;
 

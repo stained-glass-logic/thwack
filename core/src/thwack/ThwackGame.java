@@ -4,7 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import thwack.collision.CollisionContext;
-import thwack.collision.CollisionVisitor;
+import thwack.model.Block;
+import thwack.model.Mob;
+import thwack.model.Player;
+import thwack.model.Updateable;
+import thwack.view.BlockRenderer;
+import thwack.view.MobRenderer;
+import thwack.view.PlayerRenderer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -13,7 +19,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -34,19 +41,28 @@ public class ThwackGame extends ApplicationAdapter {
 	
 	private CollisionContext collisionContext;
 	
-	private Array<Renderable> renderables = new Array<Renderable>();
-	
 	private Array<Updateable> updateables = new Array<Updateable>();
 	
 	private Array<Disposable> disposables = new Array<Disposable>();
 	
+	private Player player;
+	
+	private PlayerRenderer playerRenderer;
+	
+	private MobRenderer mobRenderer;
+	
+	private Array<Mob> mobs = new Array<Mob>();
+	
+	private BlockRenderer blockRenderer;
+	
+	private Array<Block> blocks = new Array<Block>();
+	
 	@Override
 	public void create () {
-		
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 400, 300);
 		
 		batch = new SpriteBatch();
+		
 		context.put(SPRITE_BATCH, batch);
 		disposables.add(batch);
 
@@ -60,53 +76,45 @@ public class ThwackGame extends ApplicationAdapter {
 
 		collisionContext = new CollisionContext();
 		context.put(CollisionContext.COLLISION, collisionContext);
+	
+		playerRenderer = new PlayerRenderer(batch, shapeRenderer);
+		
+		blockRenderer = new BlockRenderer(shapeRenderer);
+		
+		mobRenderer = new MobRenderer(batch, null);
 
-//		Player p = new Player(16, 16, 5);
-//		addGameObject(p);
+		player = new Player();
+		updateables.add(player);
+		collisionContext.add(player);
 		
-//		for (int i = 0; i < 1000; i++) {
-//			Block b = new Block(MathUtils.random(750) + 50, MathUtils.random(550) + 50, 5, 5);
-//			addGameObject(b);
-//		}
+		for (int i = 0; i < 10; i++) {
+			Mob b = new Mob();
+			
+			do {
+				b.setPosition(MathUtils.random(20.0f) - 10.0f, MathUtils.random(20.0f) - 10.0f);
+			} while (b.collidesWith(player));
+			
+			mobs.add(b);
+			collisionContext.add(b);
+		}
 		
-		Mob mob = new Mob();
+		for (int i = 0; i < 10; i++) {
+			Block b = new Block();
+			
+			do {
+				b.setPosition(MathUtils.random(20.0f) - 10.0f,  MathUtils.random(20.0f) - 10.0f);
+			} while (b.collidesWith(player));
+			
+			blocks.add(b);
+			collisionContext.add(b);
+		}
 		
-		addGameObject(mob);
 	}
 	
-	private void addGameObject(Object obj) {
-		
-		if (obj instanceof Renderable) {
-			renderables.add((Renderable)obj);
-		}
-		
-		if (obj instanceof Updateable) {
-			updateables.add((Updateable)obj);
-		}
-		
-		if (obj instanceof CollisionVisitor) {
-			collisionContext.add((CollisionVisitor)obj);
-		}
-	}
-	
-	private void removeGameObject(Object obj) {
-		if (obj instanceof Renderable) {
-			renderables.removeValue((Renderable)obj, true);
-		}
-		
-		if (obj instanceof Updateable) {
-			updateables.removeValue((Updateable)obj, true);
-		}
-		
-		if (obj instanceof CollisionVisitor) {
-			collisionContext.remove((CollisionVisitor)obj);
-		}
-	}
-
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0.1f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
 		shapeRenderer.setProjectionMatrix(camera.combined);
@@ -118,12 +126,15 @@ public class ThwackGame extends ApplicationAdapter {
 			updateable.update(deltaTime, context);
 		}
 		
-//		batch.begin();
-		for (Renderable renderable : renderables) {
-			renderable.render(deltaTime, context);
-		}
-//		batch.end();
+		playerRenderer.render(player);
 		
+		for (Mob mob : mobs) {
+			mobRenderer.render(mob);
+		}
+		
+		for (Block b : blocks) {
+			blockRenderer.render(b);
+		}
 	}
 	
 	@Override
@@ -132,4 +143,12 @@ public class ThwackGame extends ApplicationAdapter {
 			disposable.dispose();
 		}
 	}
+	
+	@Override
+	public void resize(int width, int height) {
+		Vector3 oldpos = new Vector3(camera.position);
+		camera.setToOrtho(false, width/Constants.PIXELS_PER_METER, height/Constants.PIXELS_PER_METER);
+		camera.translate(oldpos.x - camera.position.x, oldpos.y - camera.position.y);
+	}
+
 }

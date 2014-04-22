@@ -1,45 +1,45 @@
-package thwack;
+package thwack.model;
 
 import java.util.Map;
 
+import thwack.Constants;
 import thwack.collision.CollisionContext;
 import thwack.collision.CollisionVisitor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-// player character stuff
-public class Player implements Body, CollisionVisitor {
+public class Player implements Updateable, CollisionVisitor {
 	
-	private final Circle circle;
-	private float speed = 200;
+	private final Vector2 position;
+	private final Rectangle bounds;
+	private float speed = 5.0f;
 	
 	public Player() {
-		this(50, 50, 32);
+		this(0.0f, 0.0f);
 	}
 	
-	public Player(float x, float y, float radius) {
-		this.circle = new Circle(x, y, radius);
+	public Player(float x, float y) {
+		this.position = new Vector2(x, y);
+		this.bounds = new Rectangle(x, y, 50 / Constants.PIXELS_PER_METER, 50 / Constants.PIXELS_PER_METER);
 	}
 	
 	@Override
 	public void update(float deltaTime, Map<String, Object> context) {
 		
-		float oldX = circle.x;
+		float oldX = bounds.x;
 		
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			circle.x -= speed * deltaTime;
+			bounds.x -= speed * deltaTime;
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			circle.x += speed * deltaTime;
+			bounds.x += speed * deltaTime;
 		}
 		
 		CollisionContext collisionContext = (CollisionContext)context.get(CollisionContext.COLLISION);
@@ -55,17 +55,17 @@ public class Player implements Body, CollisionVisitor {
 		}
 		
 		if (collidedX) {
-			circle.x = oldX;
+			bounds.x = oldX;
 		}
 		
-		float oldY = circle.y;
+		float oldY = bounds.y;
 		
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			circle.y += speed * deltaTime;
+			bounds.y += speed * deltaTime;
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			circle.y -= speed * deltaTime;
+			bounds.y -= speed * deltaTime;
 		}
 		
 		boolean collidedY = false;
@@ -77,32 +77,34 @@ public class Player implements Body, CollisionVisitor {
 		}
 		
 		if (collidedY) {
-			circle.y = oldY;
+			bounds.y = oldY;
 		}
 	}
 	
-	@Override
-	public void render(float deltaTime, Map<String, Object> context) {
-		ShapeRenderer renderer = (ShapeRenderer)context.get(ThwackGame.SHAPE_RENDERER);
-		
-		renderer.begin(ShapeType.Line);
-		renderer.setColor(Color.WHITE);
-		renderer.circle(circle.x, circle.y, circle.radius);
-		renderer.end();
+	public Vector2 getPosition() {
+		return bounds.getPosition(position);
 	}
 	
+	public void setPosition(float x, float y) {
+		this.bounds.setPosition(x, y);
+	}
+	
+	public Rectangle getBounds() {
+		return this.bounds;
+	}
+
 	@Override
 	public boolean collidesWith(CollisionVisitor visitor) {
-		return this != visitor && visitor.visit(this.circle);
+		return this != visitor && visitor.visit(this.bounds);
 	}
 	
 	@Override
 	public boolean visit(Circle circle) {
-		return Intersector.overlaps(circle, this.circle);
+		return Intersector.overlaps(circle, this.bounds);
 	}
 	
 	public boolean visit(Rectangle rect) {
-		return Intersector.overlaps(this.circle, rect);
+		return Intersector.overlaps(this.bounds, rect);
 	}
 	
 }

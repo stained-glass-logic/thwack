@@ -1,6 +1,6 @@
 package thwack.collision;
 
-import thwack.Block;
+import thwack.model.Block;
 
 import com.badlogic.gdx.utils.Array;
 
