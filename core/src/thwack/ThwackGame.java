@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import thwack.collision.CollisionContext;
+import thwack.controller.PlayerController;
 import thwack.model.Block;
 import thwack.model.Mob;
 import thwack.model.Player;
@@ -47,6 +48,8 @@ public class ThwackGame extends ApplicationAdapter {
 	
 	private Player player;
 	
+	private PlayerController playerController;
+	
 	private PlayerRenderer playerRenderer;
 	
 	private MobRenderer mobRenderer;
@@ -81,11 +84,18 @@ public class ThwackGame extends ApplicationAdapter {
 		
 		blockRenderer = new BlockRenderer(shapeRenderer);
 		
-		mobRenderer = new MobRenderer(batch, null);
+		mobRenderer = new MobRenderer(batch, shapeRenderer);
 
 		player = new Player();
 		updateables.add(player);
 		collisionContext.add(player);
+		
+		playerController = new PlayerController(camera);
+		playerController.setPlayer(player);
+		
+		updateables.add(playerController);
+		Gdx.input.setInputProcessor(playerController);
+		
 		
 		for (int i = 0; i < 10; i++) {
 			Mob b = new Mob();

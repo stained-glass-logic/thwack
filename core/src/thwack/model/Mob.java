@@ -8,7 +8,6 @@ import thwack.collision.CollisionVisitor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -118,11 +117,6 @@ public class Mob implements Updateable, CollisionVisitor {
 	@Override
 	public boolean collidesWith(CollisionVisitor visitor) {
 		return this != visitor && visitor.visit(this.bounds);
-	}
-
-	@Override
-	public boolean visit(Circle circle) {
-		return Intersector.overlaps(circle, this.bounds);
 	}
 
 	public boolean visit(Rectangle rect) {

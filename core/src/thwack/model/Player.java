@@ -6,9 +6,6 @@ import thwack.Constants;
 import thwack.collision.CollisionContext;
 import thwack.collision.CollisionVisitor;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -16,9 +13,11 @@ import com.badlogic.gdx.utils.Array;
 
 public class Player implements Updateable, CollisionVisitor {
 	
+	private final Vector2 center;
 	private final Vector2 position;
 	private final Rectangle bounds;
-	private float speed = 5.0f;
+	private final float speed = 5.0f;
+	private Vector2 velocity = new Vector2(0,0).limit(speed);
 	
 	public Player() {
 		this(0.0f, 0.0f);
@@ -27,62 +26,48 @@ public class Player implements Updateable, CollisionVisitor {
 	public Player(float x, float y) {
 		this.position = new Vector2(x, y);
 		this.bounds = new Rectangle(x, y, 50 / Constants.PIXELS_PER_METER, 50 / Constants.PIXELS_PER_METER);
+		this.center = new Vector2();
+		this.bounds.getCenter(center);
+	}
+	
+	public void move(Vector2 velocity) {
+		if (velocity.isZero(0.01f)) {
+			this.velocity.set(0, 0);
+		} else {
+			this.velocity.set(velocity.nor());
+		}
 	}
 	
 	@Override
 	public void update(float deltaTime, Map<String, Object> context) {
 		
-		float oldX = bounds.x;
-		
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			bounds.x -= speed * deltaTime;
-		}
-		
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			bounds.x += speed * deltaTime;
-		}
+		Vector2 oldPosition = position.cpy();
+
+		bounds.setPosition(oldPosition.mulAdd(velocity, speed * deltaTime));
 		
 		CollisionContext collisionContext = (CollisionContext)context.get(CollisionContext.COLLISION);
 		
 		Array<CollisionVisitor> objects = collisionContext.getCollisionCandidates();
 		
-		boolean collidedX = false;
+		boolean collided = false;
 		for (CollisionVisitor obj : objects) {
 			if (this.collidesWith(obj)) {
-				collidedX = true;
+				collided = true;
 				break;
 			}
 		}
 		
-		if (collidedX) {
-			bounds.x = oldX;
-		}
-		
-		float oldY = bounds.y;
-		
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			bounds.y += speed * deltaTime;
-		}
-		
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			bounds.y -= speed * deltaTime;
-		}
-		
-		boolean collidedY = false;
-		for (CollisionVisitor obj : objects) {
-			if (this.collidesWith(obj)) {
-				collidedY = true;
-				break;
-			}
-		}
-		
-		if (collidedY) {
-			bounds.y = oldY;
+		if (collided) {
+			bounds.setPosition(position);
 		}
 	}
 	
 	public Vector2 getPosition() {
 		return bounds.getPosition(position);
+	}
+	
+	public Vector2 getCenter() {
+		return bounds.getCenter(center);
 	}
 	
 	public void setPosition(float x, float y) {
@@ -96,11 +81,6 @@ public class Player implements Updateable, CollisionVisitor {
 	@Override
 	public boolean collidesWith(CollisionVisitor visitor) {
 		return this != visitor && visitor.visit(this.bounds);
-	}
-	
-	@Override
-	public boolean visit(Circle circle) {
-		return Intersector.overlaps(circle, this.bounds);
 	}
 	
 	public boolean visit(Rectangle rect) {
