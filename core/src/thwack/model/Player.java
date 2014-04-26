@@ -13,11 +13,25 @@ import com.badlogic.gdx.utils.Array;
 
 public class Player implements Updateable, CollisionVisitor {
 	
+	public static enum State {
+		STANDING,
+		WALKING
+	}
+	
+	public static enum Direction {
+		UP, DOWN, LEFT, RIGHT
+	}
+	
+	private Direction direction = Direction.DOWN;
+	private State state = State.STANDING;
+	
 	private final Vector2 center;
 	private final Vector2 position;
 	private final Rectangle bounds;
 	private final float speed = 5.0f;
 	private Vector2 velocity = new Vector2(0,0).limit(speed);
+	
+	private float stateTime = 0.0f;
 	
 	public Player() {
 		this(0.0f, 0.0f);
@@ -30,11 +44,29 @@ public class Player implements Updateable, CollisionVisitor {
 		this.bounds.getCenter(center);
 	}
 	
+	public State getState() {
+		return state;
+	}
+	
+	public Direction getDirection() {
+		return direction;
+	}
+	
+	public float getStateTime() {
+		return stateTime;
+	}
+	
+	public void increaseStateTime(float delta) {
+		this.stateTime += delta;
+	}
+	
 	public void move(Vector2 velocity) {
 		if (velocity.isZero(0.01f)) {
 			this.velocity.set(0, 0);
+			this.state = State.STANDING;
 		} else {
 			this.velocity.set(velocity.nor());
+			this.state = State.WALKING;
 		}
 	}
 	
