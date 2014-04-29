@@ -68,11 +68,15 @@ public class Player implements Updateable, CollisionVisitor {
 			this.velocity.set(velocity.nor());
 			this.state = State.WALKING;
 			
-			
-			if (velocity.isCollinear(Constants.UP)) {
+			float epsilon = 0.5f;
+			if (velocity.isCollinear(Constants.UP, epsilon)) {
 				this.direction = Direction.UP;
-			} else if (velocity.isCollinear(Constants.DOWN)) {
+			} else if (velocity.isCollinear(Constants.DOWN, epsilon)) {
 				this.direction = Direction.DOWN;
+			} else if (velocity.isCollinear(Constants.LEFT, epsilon)) {
+				this.direction = Direction.LEFT;
+			} else if (velocity.isCollinear(Constants.RIGHT, epsilon)) {
+				this.direction = Direction.RIGHT;
 			}
 		}
 	}

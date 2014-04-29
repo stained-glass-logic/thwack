@@ -32,7 +32,8 @@ public class PlayerRenderer implements Disposable {
 		
 		directions.put(Direction.DOWN, new AnimationDirection("walking-downard_35x45.gif"));
 		directions.put(Direction.UP, new AnimationDirection("walking-upward_35x46.gif"));
-		
+		directions.put(Direction.LEFT, new AnimationDirection("walking-sideways_33x46.gif", true));
+		directions.put(Direction.RIGHT, new AnimationDirection("walking-sideways_33x46.gif"));
 	}
 	
 	public void render(Player player) {
@@ -63,12 +64,17 @@ public class PlayerRenderer implements Disposable {
 	
 	private static class AnimationDirection implements Disposable {
 
-		private Texture walking;
-		private Animation walkingAnimation;
-		private TextureRegion standing;
+		private final Texture walking;
+		private final Animation walkingAnimation;
+		private final TextureRegion standing;
+		private final boolean invert;
 		
 		public AnimationDirection(String image) {
-
+			this(image, false);
+		}
+		
+		public AnimationDirection(String image, boolean invert) {
+			this.invert = invert;
 			this.walking = new Texture(Gdx.files.internal(image));
 			
 			TextureRegion[] walkingDownRegions = new TextureRegion[3];
@@ -84,12 +90,18 @@ public class PlayerRenderer implements Disposable {
 		}
 		
 		public TextureRegion getFrame(State playerState, float playerStateTime) {
+			TextureRegion keyFrame = null;
 			if (playerState == State.WALKING) {
-				return walkingAnimation.getKeyFrame(playerStateTime, true);
+				keyFrame = walkingAnimation.getKeyFrame(playerStateTime, true);
 			} else if (playerState == State.STANDING) {
-				return standing;
+				keyFrame = standing;
 			}
-			return null;
+			if (invert) {
+				keyFrame.flip(keyFrame.isFlipX(), false);
+			} else {
+				keyFrame.flip(!keyFrame.isFlipX(), false);
+			}
+			return keyFrame;
 		}
 		
 		@Override
