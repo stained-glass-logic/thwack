@@ -27,7 +27,7 @@ public class MobRenderer implements Disposable {
 	public MobRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
-		this.texture = new Texture(Gdx.files.internal("spiderwasp1asheet.gif"));
+		this.texture = new Texture(Gdx.files.internal("spiderwasp-sideways_74x60.gif"));
 
 		TextureRegion[] regions = new TextureRegion[4];
 
