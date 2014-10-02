@@ -30,10 +30,10 @@ public class PlayerRenderer implements Disposable {
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
 		
-		directions.put(Direction.DOWN, new AnimationDirection("walking-downard_35x45.gif"));
-		directions.put(Direction.UP, new AnimationDirection("walking-upward_35x46.gif"));
-		directions.put(Direction.LEFT, new AnimationDirection("walking-sideways_33x46.gif", true));
-		directions.put(Direction.RIGHT, new AnimationDirection("walking-sideways_33x46.gif"));
+		directions.put(Direction.DOWN, new AnimationDirection("Hero/Running/Forward/forward.png"));
+		directions.put(Direction.UP, new AnimationDirection("Hero/Running/Forward/forward.png"));
+		directions.put(Direction.LEFT, new AnimationDirection("Hero/Running/Side/side.png", true, 6));
+		directions.put(Direction.RIGHT, new AnimationDirection("Hero/Running/Side/side.png", false, 6));
 	}
 	
 	public void render(Player player) {
@@ -47,10 +47,10 @@ public class PlayerRenderer implements Disposable {
 		batch.draw(currentRegion, player.getPosition().x, player.getPosition().y, player.getBounds().width, player.getBounds().height);
 		batch.end();
 		
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(Color.WHITE);
-		shapeRenderer.rect(player.getPosition().x, player.getPosition().y, player.getBounds().width, player.getBounds().height);
-		shapeRenderer.end();
+//		shapeRenderer.begin(ShapeType.Line);
+//		shapeRenderer.setColor(Color.WHITE);
+//		shapeRenderer.rect(player.getPosition().x, player.getPosition().y, player.getBounds().width, player.getBounds().height);
+//		shapeRenderer.end();
 		
 	}
 	
@@ -74,19 +74,23 @@ public class PlayerRenderer implements Disposable {
 		}
 		
 		public AnimationDirection(String image, boolean invert) {
+			this(image, false, 0);
+		}
+		
+		public AnimationDirection(String image, boolean invert, int standingFrame) {
 			this.invert = invert;
 			this.walking = new Texture(Gdx.files.internal(image));
 			
-			TextureRegion[] walkingDownRegions = new TextureRegion[3];
+			TextureRegion[] regions = new TextureRegion[8];
 			
-			for (int i = 0; i < 3; i++) {
-				walkingDownRegions[i] = new TextureRegion(walking, i * 35, 0, 35, 45);
+			for (int i = 0; i < 8; i++) {
+				regions[i] = new TextureRegion(walking, i * 22, 0, 22, 45);
 			}
 			
-			walkingAnimation = new Animation(0.150f, walkingDownRegions);
-			walkingAnimation.setPlayMode(PlayMode.LOOP_PINGPONG);
+			walkingAnimation = new Animation(0.150f, regions);
+			walkingAnimation.setPlayMode(PlayMode.LOOP);
 			
-			standing = walkingDownRegions[1];
+			standing = regions[standingFrame];
 		}
 		
 		public TextureRegion getFrame(State playerState, float playerStateTime) {

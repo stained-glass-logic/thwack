@@ -39,7 +39,7 @@ public class Player implements Updateable, CollisionVisitor {
 	
 	public Player(float x, float y) {
 		this.position = new Vector2(x, y);
-		this.bounds = new Rectangle(x, y, 50 / Constants.PIXELS_PER_METER, 50 / Constants.PIXELS_PER_METER);
+		this.bounds = new Rectangle(x, y, 22 / Constants.PIXELS_PER_METER, 45 / Constants.PIXELS_PER_METER);
 		this.center = new Vector2();
 		this.bounds.getCenter(center);
 	}

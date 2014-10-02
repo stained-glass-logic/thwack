@@ -63,6 +63,8 @@ public class ThwackGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		camera = new OrthographicCamera();
+
+		camera.zoom = 0.5f;
 		
 		batch = new SpriteBatch();
 		
@@ -97,27 +99,27 @@ public class ThwackGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(playerController);
 		
 		
-		for (int i = 0; i < 10; i++) {
-			Mob b = new Mob();
-			
-			do {
-				b.setPosition(MathUtils.random(20.0f) - 10.0f, MathUtils.random(20.0f) - 10.0f);
-			} while (b.collidesWith(player));
-			
-			mobs.add(b);
-			collisionContext.add(b);
-		}
-		
-		for (int i = 0; i < 10; i++) {
-			Block b = new Block();
-			
-			do {
-				b.setPosition(MathUtils.random(20.0f) - 10.0f,  MathUtils.random(20.0f) - 10.0f);
-			} while (b.collidesWith(player));
-			
-			blocks.add(b);
-			collisionContext.add(b);
-		}
+//		for (int i = 0; i < 10; i++) {
+//			Mob b = new Mob();
+//			
+//			do {
+//				b.setPosition(MathUtils.random(20.0f) - 10.0f, MathUtils.random(20.0f) - 10.0f);
+//			} while (b.collidesWith(player));
+//			
+//			mobs.add(b);
+//			collisionContext.add(b);
+//		}
+//		
+//		for (int i = 0; i < 10; i++) {
+//			Block b = new Block();
+//			
+//			do {
+//				b.setPosition(MathUtils.random(20.0f) - 10.0f,  MathUtils.random(20.0f) - 10.0f);
+//			} while (b.collidesWith(player));
+//			
+//			blocks.add(b);
+//			collisionContext.add(b);
+//		}
 		
 	}
 	
