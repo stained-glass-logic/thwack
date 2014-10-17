@@ -1,0 +1,355 @@
+
+Hero.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Attack/Down/Chop/Sword/down_chop_sword
+  rotate: false
+  xy: 895, 4
+  size: 14, 47
+  orig: 130, 130
+  offset: 48, 57
+  index: 1
+Attack/Down/Strike/Sword/down_strike_sword
+  rotate: false
+  xy: 895, 4
+  size: 14, 47
+  orig: 130, 130
+  offset: 48, 57
+  index: 1
+Attack/Down/Chop/Sword/down_chop_sword
+  rotate: false
+  xy: 911, 5
+  size: 11, 46
+  orig: 130, 130
+  offset: 58, 46
+  index: 3
+Attack/Down/Chop/Sword/down_chop_sword
+  rotate: false
+  xy: 924, 9
+  size: 9, 42
+  orig: 130, 130
+  offset: 59, 12
+  index: 4
+Attack/Down/Chop/Sword/down_chop_sword
+  rotate: false
+  xy: 935, 8
+  size: 7, 43
+  orig: 130, 130
+  offset: 60, 72
+  index: 2
+Attack/Down/Chop/Sword/down_chop_sword
+  rotate: false
+  xy: 944, 8
+  size: 7, 43
+  orig: 130, 130
+  offset: 60, 5
+  index: 5
+Attack/Down/Chop/down_chop
+  rotate: false
+  xy: 2, 5
+  size: 26, 46
+  orig: 130, 130
+  offset: 50, 37
+  index: 1
+Attack/Down/Strike/down_strike
+  rotate: false
+  xy: 2, 5
+  size: 26, 46
+  orig: 130, 130
+  offset: 50, 37
+  index: 1
+Attack/Down/Chop/down_chop
+  rotate: false
+  xy: 58, 5
+  size: 24, 46
+  orig: 130, 130
+  offset: 52, 36
+  index: 2
+Attack/Down/Chop/down_chop
+  rotate: false
+  xy: 84, 6
+  size: 24, 45
+  orig: 130, 130
+  offset: 52, 36
+  index: 3
+Attack/Down/Chop/down_chop
+  rotate: false
+  xy: 230, 9
+  size: 24, 42
+  orig: 130, 130
+  offset: 52, 36
+  index: 4
+Attack/Down/Chop/down_chop
+  rotate: false
+  xy: 256, 8
+  size: 24, 43
+  orig: 130, 130
+  offset: 52, 36
+  index: 5
+Attack/Down/Strike/Sword/down_strike_sword
+  rotate: false
+  xy: 110, 17
+  size: 35, 34
+  orig: 130, 130
+  offset: 41, 19
+  index: 4
+Attack/Down/Strike/Sword/down_strike_sword
+  rotate: false
+  xy: 147, 15
+  size: 27, 36
+  orig: 130, 130
+  offset: 37, 41
+  index: 3
+Attack/Down/Strike/Sword/down_strike_sword
+  rotate: false
+  xy: 176, 10
+  size: 25, 41
+  orig: 130, 130
+  offset: 36, 55
+  index: 2
+Attack/Down/Strike/Sword/down_strike_sword
+  rotate: false
+  xy: 203, 10
+  size: 25, 41
+  orig: 130, 130
+  offset: 62, 12
+  index: 5
+Attack/Down/Strike/down_strike
+  rotate: false
+  xy: 30, 6
+  size: 26, 45
+  orig: 130, 130
+  offset: 50, 37
+  index: 2
+Attack/Down/Strike/down_strike
+  rotate: false
+  xy: 282, 4
+  size: 23, 47
+  orig: 130, 130
+  offset: 52, 35
+  index: 3
+Attack/Down/Strike/down_strike
+  rotate: false
+  xy: 451, 6
+  size: 22, 45
+  orig: 130, 130
+  offset: 52, 34
+  index: 5
+Attack/Down/Strike/down_strike
+  rotate: false
+  xy: 523, 7
+  size: 22, 44
+  orig: 130, 130
+  offset: 52, 34
+  index: 4
+Attack/Right/Strike/right_strike
+  rotate: false
+  xy: 475, 6
+  size: 22, 45
+  orig: 22, 45
+  offset: 0, 0
+  index: 2
+Attack/Right/Strike/right_strike
+  rotate: false
+  xy: 571, 6
+  size: 21, 45
+  orig: 21, 45
+  offset: 0, 0
+  index: 1
+Attack/Right/Strike/right_strike
+  rotate: false
+  xy: 594, 6
+  size: 21, 45
+  orig: 21, 45
+  offset: 0, 0
+  index: 3
+Attack/Right/Strike/right_strike
+  rotate: false
+  xy: 617, 6
+  size: 21, 45
+  orig: 21, 45
+  offset: 0, 0
+  index: 4
+Attack/Right/Strike/right_strike
+  rotate: false
+  xy: 640, 6
+  size: 21, 45
+  orig: 21, 45
+  offset: 0, 0
+  index: 5
+Attack/Right/Strike/right_strike
+  rotate: false
+  xy: 663, 6
+  size: 21, 45
+  orig: 21, 45
+  offset: 0, 0
+  index: 6
+Running/Down/running_down
+  rotate: false
+  xy: 307, 4
+  size: 22, 47
+  orig: 100, 100
+  offset: 37, 30
+  index: 2
+Running/Down/running_down
+  rotate: false
+  xy: 307, 4
+  size: 22, 47
+  orig: 100, 100
+  offset: 37, 30
+  index: 4
+Running/Down/running_down
+  rotate: false
+  xy: 331, 2
+  size: 22, 49
+  orig: 100, 100
+  offset: 37, 29
+  index: 3
+Running/Down/running_down
+  rotate: false
+  xy: 355, 2
+  size: 22, 49
+  orig: 100, 100
+  offset: 37, 29
+  index: 7
+Running/Down/running_down
+  rotate: false
+  xy: 379, 4
+  size: 22, 47
+  orig: 100, 100
+  offset: 37, 30
+  index: 6
+Running/Down/running_down
+  rotate: false
+  xy: 379, 4
+  size: 22, 47
+  orig: 100, 100
+  offset: 37, 30
+  index: 8
+Running/Down/running_down
+  rotate: false
+  xy: 499, 6
+  size: 22, 45
+  orig: 100, 100
+  offset: 37, 31
+  index: 1
+Running/Down/running_down
+  rotate: false
+  xy: 499, 6
+  size: 22, 45
+  orig: 100, 100
+  offset: 37, 31
+  index: 5
+Running/Side/running_side
+  rotate: false
+  xy: 686, 7
+  size: 21, 44
+  orig: 80, 80
+  offset: 28, 22
+  index: 1
+Running/Side/running_side
+  rotate: false
+  xy: 686, 7
+  size: 21, 44
+  orig: 80, 80
+  offset: 28, 22
+  index: 5
+Running/Side/running_side
+  rotate: false
+  xy: 709, 7
+  size: 21, 44
+  orig: 80, 80
+  offset: 28, 22
+  index: 4
+Running/Side/running_side
+  rotate: false
+  xy: 732, 7
+  size: 21, 44
+  orig: 80, 80
+  offset: 28, 22
+  index: 8
+Running/Side/running_side
+  rotate: false
+  xy: 803, 9
+  size: 21, 42
+  orig: 80, 80
+  offset: 28, 23
+  index: 2
+Running/Side/running_side
+  rotate: false
+  xy: 826, 9
+  size: 21, 42
+  orig: 80, 80
+  offset: 28, 24
+  index: 3
+Running/Side/running_side
+  rotate: false
+  xy: 849, 9
+  size: 21, 42
+  orig: 80, 80
+  offset: 28, 23
+  index: 6
+Running/Side/running_side
+  rotate: false
+  xy: 872, 9
+  size: 21, 42
+  orig: 80, 80
+  offset: 28, 23
+  index: 7
+Running/Up/running_up
+  rotate: false
+  xy: 403, 5
+  size: 22, 46
+  orig: 80, 80
+  offset: 28, 22
+  index: 2
+Running/Up/running_up
+  rotate: false
+  xy: 403, 5
+  size: 22, 46
+  orig: 80, 80
+  offset: 28, 22
+  index: 4
+Running/Up/running_up
+  rotate: false
+  xy: 427, 5
+  size: 22, 46
+  orig: 80, 80
+  offset: 28, 22
+  index: 6
+Running/Up/running_up
+  rotate: false
+  xy: 427, 5
+  size: 22, 46
+  orig: 80, 80
+  offset: 28, 22
+  index: 8
+Running/Up/running_up
+  rotate: false
+  xy: 547, 7
+  size: 22, 44
+  orig: 80, 80
+  offset: 28, 23
+  index: 1
+Running/Up/running_up
+  rotate: false
+  xy: 547, 7
+  size: 22, 44
+  orig: 80, 80
+  offset: 28, 23
+  index: 5
+Running/Up/running_up
+  rotate: false
+  xy: 755, 8
+  size: 22, 43
+  orig: 80, 80
+  offset: 28, 25
+  index: 3
+Running/Up/running_up
+  rotate: false
+  xy: 779, 8
+  size: 22, 43
+  orig: 80, 80
+  offset: 28, 25
+  index: 7

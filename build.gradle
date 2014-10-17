@@ -7,7 +7,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
     
-    version = "1.0"
+    version = "0.1.0-SNAPSHOT"
     ext.appName = "thwack"
     ext.gdxVersion = "1.0-SNAPSHOT"
     
@@ -23,6 +23,7 @@ project(":core") {
     
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
 		
 		testCompile 'junit:junit:4.11'
     }

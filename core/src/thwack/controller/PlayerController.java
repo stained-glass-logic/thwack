@@ -6,12 +6,10 @@ import thwack.model.Player;
 import thwack.model.Updateable;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 public class PlayerController implements Updateable, InputProcessor {
 	
@@ -29,41 +27,49 @@ public class PlayerController implements Updateable, InputProcessor {
 
 	@Override
 	public void update(float deltaTime, Map<String, Object> context) {
+		
 		direction.set(0, 0);
 		 
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
+		if (Gdx.input.isKeyPressed(Keys.W)) {
 			direction.add(0, 1);
 		}
 		
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+		if (Gdx.input.isKeyPressed(Keys.S)) {
 			direction.add(0, -1);
 		}
 		
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+		if (Gdx.input.isKeyPressed(Keys.A)) {
 			direction.add(-1, 0);
 		}
 		
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+		if (Gdx.input.isKeyPressed(Keys.D)) {
 			direction.add(1, 0);
 		}
-
-		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-			Vector3 v = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-			v = camera.unproject(v);
-			
-			direction.set(v.x, v.y);
-			direction.sub(player.getCenter());
-			
-			player.move(direction);
-		}
-
-		player.move(direction);
 		
+//		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
+//			Vector3 v = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+//			v = camera.unproject(v);
+//			
+//			direction.set(v.x, v.y);
+//			direction.sub(player.getCenter());
+//		}
+		player.move(direction);
 	}
-	
 
 	@Override
 	public boolean keyDown(int keycode) {
+		switch (keycode) {
+		case Keys.J:
+			player.setState(Player.State.ATTACKING);
+			break;
+
+		case Keys.W:
+		case Keys.S:
+		case Keys.A:
+		case Keys.D:
+			player.setState(Player.State.WALKING);
+			break;
+		}
 		return false;
 	}
 

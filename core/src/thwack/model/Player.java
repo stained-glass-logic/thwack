@@ -15,7 +15,8 @@ public class Player implements Updateable, CollisionVisitor {
 	
 	public static enum State {
 		STANDING,
-		WALKING
+		WALKING,
+		ATTACKING
 	}
 	
 	public static enum Direction {
@@ -48,6 +49,14 @@ public class Player implements Updateable, CollisionVisitor {
 		return state;
 	}
 	
+	public void setState(State state) {
+		if (this.state != state) {
+			// reset the state time every time state changes
+			stateTime = 0.0f;
+		}
+		this.state = state;
+	}
+	
 	public Direction getDirection() {
 		return direction;
 	}
@@ -61,22 +70,26 @@ public class Player implements Updateable, CollisionVisitor {
 	}
 	
 	public void move(Vector2 velocity) {
-		if (velocity.isZero(0.01f)) {
+		if (this.state == State.ATTACKING) {
 			this.velocity.set(0, 0);
-			this.state = State.STANDING;
 		} else {
-			this.velocity.set(velocity.nor());
-			this.state = State.WALKING;
-			
-			float epsilon = 0.5f;
-			if (velocity.isCollinear(Constants.UP, epsilon)) {
-				this.direction = Direction.UP;
-			} else if (velocity.isCollinear(Constants.DOWN, epsilon)) {
-				this.direction = Direction.DOWN;
-			} else if (velocity.isCollinear(Constants.LEFT, epsilon)) {
-				this.direction = Direction.LEFT;
-			} else if (velocity.isCollinear(Constants.RIGHT, epsilon)) {
-				this.direction = Direction.RIGHT;
+			if (velocity.isZero(0.01f)) {
+				this.velocity.set(0, 0);
+				this.state = State.STANDING;
+			} else {
+				this.velocity.set(velocity.nor());
+				this.state = State.WALKING;
+				
+				float epsilon = 0.5f;
+				if (velocity.isCollinear(Constants.UP, epsilon)) {
+					this.direction = Direction.UP;
+				} else if (velocity.isCollinear(Constants.DOWN, epsilon)) {
+					this.direction = Direction.DOWN;
+				} else if (velocity.isCollinear(Constants.LEFT, epsilon)) {
+					this.direction = Direction.LEFT;
+				} else if (velocity.isCollinear(Constants.RIGHT, epsilon)) {
+					this.direction = Direction.RIGHT;
+				}
 			}
 		}
 	}
