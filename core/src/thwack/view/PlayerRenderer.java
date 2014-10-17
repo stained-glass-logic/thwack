@@ -47,7 +47,7 @@ public class PlayerRenderer implements Disposable {
 		walking.put(Direction.RIGHT, new Animation(walkingSpeed, runningSidewaysRegions, PlayMode.LOOP));
 		walking.put(Direction.UP, new Animation(walkingSpeed, heroAtlas.findRegions("Running/Up/running_up"), PlayMode.LOOP));
 		
-		float attackSpeed = 0.02f;
+		float attackSpeed = 0.04f;
 		attack.put(Direction.DOWN, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Down/Strike/down_strike")));
 		
 		Array<AtlasRegion> rightStrikeRegions = heroAtlas.findRegions("Attack/Right/Strike/right_strike");
