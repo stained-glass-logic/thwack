@@ -48,17 +48,15 @@ public class PlayerRenderer implements Disposable {
 		walking.put(Direction.UP, new Animation(walkingSpeed, heroAtlas.findRegions("Running/Up/running_up"), PlayMode.LOOP));
 		
 		float attackSpeed = 0.04f;
-		attack.put(Direction.DOWN, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Down/Strike/down_strike")));
+		attack.put(Direction.DOWN, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Down/attack_down")));
+		attack.put(Direction.LEFT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Left/attack_left")));
+		attack.put(Direction.RIGHT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Right/attack_right")));
+    attack.put(Direction.UP, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Up/attack_up")));
 		
-		Array<AtlasRegion> rightStrikeRegions = heroAtlas.findRegions("Attack/Right/Strike/right_strike");
-		attack.put(Direction.RIGHT, new Animation(attackSpeed, rightStrikeRegions));
-		attack.put(Direction.LEFT, new Animation(attackSpeed, rightStrikeRegions));
-		
-		attackSword.put(Direction.DOWN, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Down/Strike/Sword/down_strike_sword")));
-
-		Array<AtlasRegion> rightStrikeSwordRegions = heroAtlas.findRegions("Attack/Right/Strike/Sword/right_strike_sword");
-		attackSword.put(Direction.RIGHT, new Animation(attackSpeed, rightStrikeSwordRegions));
-		attackSword.put(Direction.LEFT, new Animation(attackSpeed, rightStrikeSwordRegions));
+		attackSword.put(Direction.DOWN, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Down/Sword/attack_down_sword")));
+    attackSword.put(Direction.LEFT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Left/Sword/attack_left_sword")));
+    attackSword.put(Direction.RIGHT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Right/Sword/attack_right_sword")));
+    attackSword.put(Direction.UP, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Up/Sword/attack_up_sword")));
 	}
 	
 	public void render(Player player) {
@@ -72,8 +70,7 @@ public class PlayerRenderer implements Disposable {
 		
 		switch (player.getState()) {
 		case ATTACKING:
-//			Direction dir = player.getDirection();
-			Direction dir = Direction.DOWN;
+			Direction dir = player.getDirection();
 			
 			animation = attack.get(dir);
 			weaponAnimation = attackSword.get(dir);
@@ -94,20 +91,14 @@ public class PlayerRenderer implements Disposable {
 		case WALKING:
 			animation = walking.get(player.getDirection());
 			currentRegion = (AtlasRegion)animation.getKeyFrame(player.getStateTime(), true);
+	    if (player.getDirection() == Direction.LEFT) {
+	      currentRegion.flip(currentRegion.isFlipX(), false);
+	    } else if (player.getDirection() == Direction.RIGHT) {
+	      currentRegion.flip(!currentRegion.isFlipX(), false);
+	    }
 			break;
 		}
 	
-		if (player.getDirection() == Direction.LEFT) {
-			currentRegion.flip(currentRegion.isFlipX(), false);
-			if (weaponRegion != null) {
-				weaponRegion.flip(weaponRegion.isFlipX(), false);
-			}
-		} else if (player.getDirection() == Direction.RIGHT) {
-			currentRegion.flip(!currentRegion.isFlipX(), false);
-			if (weaponRegion != null) {
-				weaponRegion.flip(!weaponRegion.isFlipX(), false);
-			}
-		}
 		
 		player.getBounds().setWidth(currentRegion.originalWidth / Constants.PIXELS_PER_METER);
 		player.getBounds().setHeight(currentRegion.originalHeight / Constants.PIXELS_PER_METER);
@@ -128,11 +119,9 @@ public class PlayerRenderer implements Disposable {
 		
 		batch.begin();
 		batch.draw(currentRegion, player.getPosition().x, player.getPosition().y, width, height);
-			
 		if (weaponRegion != null) {
 			batch.draw(weaponRegion, weaponX, weaponY, weaponWidth, weaponHeight);
 		}
-		
 		batch.end();
 		
 //		shapeRenderer.begin(ShapeType.Line);
