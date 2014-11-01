@@ -25,7 +25,17 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+
 public class ThwackGame extends ApplicationAdapter {
+	
+    Texture img;
+    TiledMap tiledMap;
+    TiledMapRenderer tiledMapRenderer;
 	
 	private OrthographicCamera camera;
 	
@@ -62,10 +72,19 @@ public class ThwackGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-		camera = new OrthographicCamera();
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
 
-		camera.zoom = 0.5f;
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false,w,h);
+		       
+		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		
+	    int mapWidth = tiledMap.getProperties().get("width",Integer.class)/2;
+	    int mapHeight = tiledMap.getProperties().get("height",Integer.class)/2;
+
+	    
 		batch = new SpriteBatch();
 		
 		context.put(SPRITE_BATCH, batch);
@@ -126,20 +145,22 @@ public class ThwackGame extends ApplicationAdapter {
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0.1f, 1);
+		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        camera.update();
+		playerRenderer.render(player);
+		
+        tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render();
 
 		camera.update();
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		batch.setProjectionMatrix(camera.combined);
 
 		float deltaTime = Gdx.graphics.getDeltaTime();
 	
 		for (Updateable updateable : updateables) {
 			updateable.update(deltaTime, context);
 		}
-		
-		playerRenderer.render(player);
-		
+
 		for (Mob mob : mobs) {
 			mobRenderer.render(mob);
 		}
@@ -156,11 +177,11 @@ public class ThwackGame extends ApplicationAdapter {
 		}
 	}
 	
-	@Override
-	public void resize(int width, int height) {
+	//@Override
+	/*public void resize(int width, int height) {
 		Vector3 oldpos = new Vector3(camera.position);
 		camera.setToOrtho(false, width/Constants.PIXELS_PER_METER, height/Constants.PIXELS_PER_METER);
 		camera.translate(oldpos.x - camera.position.x, oldpos.y - camera.position.y);
-	}
+	}*/
 
 }

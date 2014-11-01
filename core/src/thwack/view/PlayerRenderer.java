@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class PlayerRenderer implements Disposable {
 	
@@ -32,8 +33,9 @@ public class PlayerRenderer implements Disposable {
 	private final Map<Direction, Animation> walking = new HashMap<Direction, Animation>();
 	private final Map<Direction, Animation> attack = new HashMap<Direction, Animation>();
 	private final Map<Direction, Animation> attackSword = new HashMap<Direction, Animation>();
-	
+
 	public PlayerRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
+
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
 		
@@ -61,6 +63,7 @@ public class PlayerRenderer implements Disposable {
 	
 	public void render(Player player) {
 		
+
 		player.increaseStateTime(Gdx.graphics.getDeltaTime());
 
 		AtlasRegion currentRegion = null;
@@ -100,21 +103,21 @@ public class PlayerRenderer implements Disposable {
 		}
 	
 		
-		player.getBounds().setWidth(currentRegion.originalWidth / Constants.PIXELS_PER_METER);
-		player.getBounds().setHeight(currentRegion.originalHeight / Constants.PIXELS_PER_METER);
+		player.getBounds().setWidth(currentRegion.originalWidth);
+		player.getBounds().setHeight(currentRegion.originalHeight);
 		
-		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER;
-		float height = currentRegion.getRegionHeight() / Constants.PIXELS_PER_METER;
+		float width = currentRegion.getRegionWidth() ;
+		float height = currentRegion.getRegionHeight();
 		
 		float weaponWidth = 0.0f;
 		float weaponHeight = 0.0f;
 		float weaponX = 0.0f;
 		float weaponY = 0.0f;
 		if (weaponRegion != null) {
-			weaponX = player.getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX) / Constants.PIXELS_PER_METER; 
-			weaponY = player.getPosition().y - (currentRegion.offsetY - weaponRegion.offsetY) / Constants.PIXELS_PER_METER; 
-			weaponWidth = weaponRegion.getRegionWidth() / Constants.PIXELS_PER_METER;
-			weaponHeight = weaponRegion.getRegionHeight() / Constants.PIXELS_PER_METER;
+			weaponX = player.getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX); 
+			weaponY = player.getPosition().y - (currentRegion.offsetY - weaponRegion.offsetY); 
+			weaponWidth = weaponRegion.getRegionWidth();
+			weaponHeight = weaponRegion.getRegionHeight();
 		}
 		
 		batch.begin();
