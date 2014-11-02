@@ -35,7 +35,6 @@ public class PlayerRenderer implements Disposable {
 	private final Map<Direction, Animation> attackSword = new HashMap<Direction, Animation>();
 
 	public PlayerRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
-
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
 		
@@ -63,7 +62,6 @@ public class PlayerRenderer implements Disposable {
 	
 	public void render(Player player) {
 		
-
 		player.increaseStateTime(Gdx.graphics.getDeltaTime());
 
 		AtlasRegion currentRegion = null;
@@ -103,21 +101,21 @@ public class PlayerRenderer implements Disposable {
 		}
 	
 		
-		player.getBounds().setWidth(currentRegion.originalWidth);
-		player.getBounds().setHeight(currentRegion.originalHeight);
+		player.getBounds().setWidth(currentRegion.originalWidth * 2);
+		player.getBounds().setHeight(currentRegion.originalHeight * 2);
 		
-		float width = currentRegion.getRegionWidth() ;
-		float height = currentRegion.getRegionHeight();
+		float width = currentRegion.getRegionWidth() * 2;
+		float height = currentRegion.getRegionHeight() * 2;
 		
 		float weaponWidth = 0.0f;
 		float weaponHeight = 0.0f;
 		float weaponX = 0.0f;
 		float weaponY = 0.0f;
 		if (weaponRegion != null) {
-			weaponX = player.getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX); 
-			weaponY = player.getPosition().y - (currentRegion.offsetY - weaponRegion.offsetY); 
-			weaponWidth = weaponRegion.getRegionWidth();
-			weaponHeight = weaponRegion.getRegionHeight();
+			weaponX = player.getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX) * 2; 
+			weaponY = player.getPosition().y - (currentRegion.offsetY - weaponRegion.offsetY) * 2; 
+			weaponWidth = weaponRegion.getRegionWidth() * 2;
+			weaponHeight = weaponRegion.getRegionHeight() * 2;
 		}
 		
 		batch.begin();

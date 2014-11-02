@@ -29,7 +29,7 @@ public class Player implements Updateable, CollisionVisitor {
 	private final Vector2 center;
 	private final Vector2 position;
 	private final Rectangle bounds;
-	private final float speed = 5.0f;
+	private final float speed = 256.0f;
 	private Vector2 velocity = new Vector2(0,0).limit(speed);
 	
 	private float stateTime = 0.0f;

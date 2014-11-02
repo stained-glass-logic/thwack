@@ -72,14 +72,14 @@ public class ThwackGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
-
+        float w = Gdx.graphics.getWidth() / 32;
+        float h = Gdx.graphics.getHeight() / 32;
+        
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false,w,h);
 		       
 		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 32f);
 		
 	    int mapWidth = tiledMap.getProperties().get("width",Integer.class)/2;
 	    int mapHeight = tiledMap.getProperties().get("height",Integer.class)/2;
@@ -105,7 +105,7 @@ public class ThwackGame extends ApplicationAdapter {
 		
 		blockRenderer = new BlockRenderer(shapeRenderer);
 		
-		mobRenderer = new MobRenderer(batch, shapeRenderer);
+//		mobRenderer = new MobRenderer(batch, shapeRenderer);
 
 		player = new Player();
 		updateables.add(player);
@@ -116,6 +116,7 @@ public class ThwackGame extends ApplicationAdapter {
 		
 		updateables.add(playerController);
 		Gdx.input.setInputProcessor(playerController);
+		System.out.println((Gdx.graphics.getDeltaTime()));
 		
 		
 //		for (int i = 0; i < 10; i++) {
@@ -148,10 +149,11 @@ public class ThwackGame extends ApplicationAdapter {
 		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
-		playerRenderer.render(player);
-		
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
+		playerRenderer.render(player);
+		
+   
 
 		camera.update();
 
