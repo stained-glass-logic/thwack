@@ -52,12 +52,12 @@ public class PlayerRenderer implements Disposable {
 		attack.put(Direction.DOWN, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Down/attack_down")));
 		attack.put(Direction.LEFT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Left/attack_left")));
 		attack.put(Direction.RIGHT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Right/attack_right")));
-    attack.put(Direction.UP, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Up/attack_up")));
-		
+		attack.put(Direction.UP, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Up/attack_up")));
+    
 		attackSword.put(Direction.DOWN, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Down/Sword/attack_down_sword")));
-    attackSword.put(Direction.LEFT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Left/Sword/attack_left_sword")));
-    attackSword.put(Direction.RIGHT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Right/Sword/attack_right_sword")));
-    attackSword.put(Direction.UP, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Up/Sword/attack_up_sword")));
+		attackSword.put(Direction.LEFT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Left/Sword/attack_left_sword")));
+		attackSword.put(Direction.RIGHT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Right/Sword/attack_right_sword")));
+		attackSword.put(Direction.UP, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Up/Sword/attack_up_sword")));
 	}
 	
 	public void render(Player player) {
@@ -101,21 +101,21 @@ public class PlayerRenderer implements Disposable {
 		}
 	
 		
-		player.getBounds().setWidth(currentRegion.originalWidth * 2);
-		player.getBounds().setHeight(currentRegion.originalHeight * 2);
+		player.getBounds().setWidth(currentRegion.originalWidth / Constants.PIXELS_PER_METER * 2);
+		player.getBounds().setHeight(currentRegion.originalHeight / Constants.PIXELS_PER_METER * 2);
 		
-		float width = currentRegion.getRegionWidth() * 2;
-		float height = currentRegion.getRegionHeight() * 2;
+		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
+		float height = currentRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 		
 		float weaponWidth = 0.0f;
 		float weaponHeight = 0.0f;
 		float weaponX = 0.0f;
 		float weaponY = 0.0f;
 		if (weaponRegion != null) {
-			weaponX = player.getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX) * 2; 
-			weaponY = player.getPosition().y - (currentRegion.offsetY - weaponRegion.offsetY) * 2; 
-			weaponWidth = weaponRegion.getRegionWidth() * 2;
-			weaponHeight = weaponRegion.getRegionHeight() * 2;
+			weaponX = player.getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX) / Constants.PIXELS_PER_METER * 2; 
+			weaponY = player.getPosition().y - (currentRegion.offsetY - weaponRegion.offsetY) / Constants.PIXELS_PER_METER * 2; 
+			weaponWidth = weaponRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
+			weaponHeight = weaponRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 		}
 		
 		batch.begin();
@@ -131,7 +131,7 @@ public class PlayerRenderer implements Disposable {
 //		shapeRenderer.end();
 		
 	}
-	
+
 	@Override
 	public void dispose() {
 		heroAtlas.dispose();
