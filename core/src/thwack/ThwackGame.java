@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -30,139 +31,200 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-
 
 public class ThwackGame extends ApplicationAdapter {
 	Texture img;
-    TiledMap tiledMap;
-    TiledMapRenderer tiledMapRenderer;
+	TiledMap tiledMap;
+	TiledMapRenderer tiledMapRenderer;
 
-    private Box2DDebugRenderer debugRenderer;
-    private World world = new World(new Vector2(0, 0), false);
+	private Box2DDebugRenderer debugRenderer;
+	private World world = new World(new Vector2(0, 0), false);
 	private OrthographicCamera camera;
-	
+
 	private Map<String, Object> context = new HashMap<String, Object>();
-	
+
 	public static final String SPRITE_BATCH = "SPRITE_BATCH";
 	private SpriteBatch batch;
-	
+
 	public static final String BITMAP_FONT = "BITMAP_FONT";
 	private BitmapFont font;
-	
+
 	public static final String SHAPE_RENDERER = "SHAPE_RENDERER";
 	private ShapeRenderer shapeRenderer;
-	
+
 	private CollisionContext collisionContext;
-	
+
 	private Array<Updateable> updateables = new Array<Updateable>();
-	
+
 	private Array<Disposable> disposables = new Array<Disposable>();
-	
+
 	private Player player;
-	
+
 	private PlayerController playerController;
-	
+
 	private PlayerRenderer playerRenderer;
-	
+
 	private MobRenderer mobRenderer;
-	
+
 	private Array<Mob> mobs = new Array<Mob>();
-	
+
 	private BlockRenderer blockRenderer;
-	
+
 	private Array<Block> blocks = new Array<Block>();
 	
-	@Override
-	public void create () {
- 		world = new World(new Vector2(0, 0), false);
- 		debugRenderer = new Box2DDebugRenderer();
-        float w = Gdx.graphics.getWidth() / 32;
-        float h = Gdx.graphics.getHeight() / 32;
-        
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false,w,h);
-		
 
-	    
+	// my attempt to add a bodydef
+	private BodyDef bodyDef = new BodyDef();
+	private BodyDef playerBodyDef = new BodyDef();
+	private Body body;
+	private Body playerBody;
+	private int width = 49 / 2;
+	private int height = 29 / 2;
+	private TextureRegion region;
+	private FixtureDef fixtureDef;
+	private FixtureDef playerDef;
+	
+	@Override
+	public void create() {
+
+		world = new World(new Vector2(0, 0), false);
+		debugRenderer = new Box2DDebugRenderer();
+
+		float w = Gdx.graphics.getWidth() / 32;
+		float h = Gdx.graphics.getHeight() / 32;
+
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, w, h);
+
+		// new code for collision goes here. to be replaced by a handler class
+		// later
+		{
+
+			float ww = (width);
+			float hh = (height);
+
+			bodyDef.type = BodyType.StaticBody;
+			bodyDef.position.set(28, 20);
+			body = world.createBody(bodyDef);
+			PolygonShape bodyShape = new PolygonShape();
+			bodyShape.setAsBox(ww, hh);
+			fixtureDef = new FixtureDef();
+			// fixtureDef.density=density;
+			// fixtureDef.restitution=restitution;
+			fixtureDef.shape = bodyShape;
+			body.createFixture(fixtureDef);
+			bodyShape.dispose();
+
+		}
+
+		// and the player object code
+		{
+			//Texture texture = new Texture(25 /32, 45 / 32, null);
+			playerBodyDef.type = BodyType.KinematicBody;
+			playerBodyDef.position.set(20,20);
+			playerBody = world.createBody(playerBodyDef);
+			// fixtureDef.density=density;
+			// fixtureDef.restitution=restitution;
+			PolygonShape playerBodyShape = new PolygonShape();
+			playerBodyShape.setAsBox(.5f, .5f);
+			playerDef = new FixtureDef();
+			playerDef.shape = playerBodyShape;
+
+			playerBody.createFixture(playerDef);
+			playerDef.shape.dispose();
+			//region = new TextureRegion(texture);
+			
+		}
+
 		batch = new SpriteBatch();
-		
+
 		context.put(SPRITE_BATCH, batch);
 		disposables.add(batch);
 
 		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/16f, batch);
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
+				batch);
 
-	    int mapWidth = tiledMap.getProperties().get("width",Integer.class);
-	    int mapHeight = tiledMap.getProperties().get("height",Integer.class);
+		int mapWidth = tiledMap.getProperties().get("width", Integer.class);
+		int mapHeight = tiledMap.getProperties().get("height", Integer.class);
 
 		font = new BitmapFont();
 		context.put(BITMAP_FONT, font);
 		disposables.add(font);
-		
+
 		shapeRenderer = new ShapeRenderer();
 		context.put(SHAPE_RENDERER, shapeRenderer);
 		disposables.add(shapeRenderer);
 
 		collisionContext = new CollisionContext();
 		context.put(CollisionContext.COLLISION, collisionContext);
-	
+
 		playerRenderer = new PlayerRenderer(batch, shapeRenderer);
-		
+
 		blockRenderer = new BlockRenderer(shapeRenderer);
-		
-//		mobRenderer = new MobRenderer(batch, shapeRenderer);
+
+		// mobRenderer = new MobRenderer(batch, shapeRenderer);
 
 		player = new Player();
 		updateables.add(player);
 		collisionContext.add(player);
-		
+
 		playerController = new PlayerController(camera);
 		playerController.setPlayer(player);
-		
+
 		updateables.add(playerController);
 		Gdx.input.setInputProcessor(playerController);
-		System.out.println((Gdx.graphics.getDeltaTime()));
+		// System.out.println((Gdx.graphics.getDeltaTime()));
 		player.setPosition(20, 20);
-		
-		
-//		for (int i = 0; i < 10; i++) {
-//			Mob b = new Mob();
-//			
-//			do {
-//				b.setPosition(MathUtils.random(20.0f) - 10.0f, MathUtils.random(20.0f) - 10.0f);
-//			} while (b.collidesWith(player));
-//			
-//			mobs.add(b);
-//			collisionContext.add(b);
-//		}
-//		
-//		for (int i = 0; i < 10; i++) {
-//			Block b = new Block();
-//			
-//			do {
-//				b.setPosition(MathUtils.random(20.0f) - 10.0f,  MathUtils.random(20.0f) - 10.0f);
-//			} while (b.collidesWith(player));
-//			
-//			blocks.add(b);
-//			collisionContext.add(b);
-//		}
-		
+
+		// for (int i = 0; i < 10; i++) {
+		// Mob b = new Mob();
+		//
+		// do {
+		// b.setPosition(MathUtils.random(20.0f) - 10.0f,
+		// MathUtils.random(20.0f) - 10.0f);
+		// } while (b.collidesWith(player));
+		//
+		// mobs.add(b);
+		// collisionContext.add(b);
+		// }
+		//
+		// for (int i = 0; i < 10; i++) {
+		// Block b = new Block();
+		//
+		// do {
+		// b.setPosition(MathUtils.random(20.0f) - 10.0f,
+		// MathUtils.random(20.0f) - 10.0f);
+		// } while (b.collidesWith(player));
+		//
+		// blocks.add(b);
+		// collisionContext.add(b);
+		// }
+
 	}
-	
+
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0.1f, 1);
-		
+
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		tiledMapRenderer.setView(camera);
-		camera.position.set(player.getPositionX() + (42 / 32), player.getPositionY() - (11 / 32), 0);
+		// tiledMapRenderer.
+		camera.position.set(player.getPositionX() + (42 / 32),
+				player.getPositionY() - (11 / 32), 0);
 		camera.update();
-	    tiledMapRenderer.render();
-	    playerRenderer.render(player);
+		tiledMapRenderer.render();
+		playerRenderer.render(player);
 		float deltaTime = Gdx.graphics.getDeltaTime();
-	
+
 		for (Updateable updateable : updateables) {
 			updateable.update(deltaTime, context);
 		}
@@ -170,28 +232,30 @@ public class ThwackGame extends ApplicationAdapter {
 		for (Mob mob : mobs) {
 			mobRenderer.render(mob);
 		}
-		
+
 		for (Block b : blocks) {
 			blockRenderer.render(b);
 		}
-		
+
 		debugRenderer.render(world, camera.combined);
-		
-		world.step(1/60f, 6, 2);
+
+		world.step(1 / 60f, 6, 2);
 	}
-	
+
 	@Override
 	public void dispose() {
 		for (Disposable disposable : disposables) {
 			disposable.dispose();
 		}
 	}
-	
-	//@Override
-	/*public void resize(int width, int height) {
-		Vector3 oldpos = new Vector3(camera.position);
-		camera.setToOrtho(false, width/Constants.PIXELS_PER_METER, height/Constants.PIXELS_PER_METER);
-		camera.translate(oldpos.x - camera.position.x, oldpos.y - camera.position.y);
-	}*/
+
+	// @Override
+	/*
+	 * public void resize(int width, int height) { Vector3 oldpos = new
+	 * Vector3(camera.position); camera.setToOrtho(false,
+	 * width/Constants.PIXELS_PER_METER, height/Constants.PIXELS_PER_METER);
+	 * camera.translate(oldpos.x - camera.position.x, oldpos.y -
+	 * camera.position.y); }
+	 */
 
 }
