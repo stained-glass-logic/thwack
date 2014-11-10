@@ -21,22 +21,26 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+
 
 public class ThwackGame extends ApplicationAdapter {
-	
-    Texture img;
+	Texture img;
     TiledMap tiledMap;
     TiledMapRenderer tiledMapRenderer;
-	
+
+    private Box2DDebugRenderer debugRenderer;
+    private World world = new World(new Vector2(0, 0), false);
 	private OrthographicCamera camera;
 	
 	private Map<String, Object> context = new HashMap<String, Object>();
@@ -72,6 +76,8 @@ public class ThwackGame extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+ 		world = new World(new Vector2(0, 0), false);
+ 		debugRenderer = new Box2DDebugRenderer();
         float w = Gdx.graphics.getWidth() / 32;
         float h = Gdx.graphics.getHeight() / 32;
         
@@ -168,6 +174,10 @@ public class ThwackGame extends ApplicationAdapter {
 		for (Block b : blocks) {
 			blockRenderer.render(b);
 		}
+		
+		debugRenderer.render(world, camera.combined);
+		
+		world.step(1/60f, 6, 2);
 	}
 	
 	@Override
