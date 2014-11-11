@@ -31,53 +31,84 @@ public class PlayerController implements Updateable, InputProcessor {
 		direction.set(0, 0);
 		 
 		if (Gdx.input.isKeyPressed(Keys.W)) {
-			direction.add(0, 1);
+            player.velocity.y += 1;
+            player.setState(Player.State.WALKING);
+        	direction.set(0, 1);
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.S)) {
-			direction.add(0, -1);
+			player.velocity.y -= 1;
+	        player.setState(Player.State.WALKING);    
+			direction.set(0, -1);
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
-			direction.add(-1, 0);
+			player.velocity.x -= 1;
+			player.setState(Player.State.WALKING);
+			direction.set(-1, 0);
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.D)) {
-			direction.add(1, 0);
+			player.velocity.x += 1;
+			player.setState(Player.State.WALKING);
+			direction.set(1, 0);
 		}
-		
-//		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-//			Vector3 v = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-//			v = camera.unproject(v);
-//			
-//			direction.set(v.x, v.y);
-//			direction.sub(player.getCenter());
-//		}
+	
 		player.move(direction);
+		player.applyImpulse();
 	}
 
 	@Override
-	public boolean keyDown(int keycode) {
+	public boolean keyDown(int keycode) {/*
 		switch (keycode) {
 		case Keys.J:
 			player.setState(Player.State.ATTACKING);
 			break;
 
 		case Keys.W:
+            player.velocity.y += 1;
+            player.setState(Player.State.WALKING);
+            break;
 		case Keys.S:
+            player.velocity.y -= 1;
+            player.setState(Player.State.WALKING);
+            break;
 		case Keys.A:
-		case Keys.D:
+			player.velocity.x -= 1;
 			player.setState(Player.State.WALKING);
 			break;
-		}
+		case Keys.D:
+			player.velocity.x += 1;
+			player.setState(Player.State.WALKING);
+			break;
+
+		}*/
+		//player.applyImpulse();
 		return false;
 	}
 
-	@Override
-	public boolean keyUp(int keycode) {
-		return false;
-	}
+	 
+    @Override
+    public boolean keyUp(int keycode) {/*
+            switch (keycode) {
+                    case Keys.W:
+                            player.velocity.y -= 1;
+                            break;
+                    case Keys.A:
+                            player.velocity.x += 1;
+                            break;
+                    case Keys.S:
+                            player.velocity.y += 1;
+                            break;
+                    case Keys.D:
+                            player.velocity.x -= 1;
+                            break;
+            }
+*/
+            player.applyImpulse();
 
+            return false;
+    }
 	@Override
 	public boolean keyTyped(char character) {
 		return false;

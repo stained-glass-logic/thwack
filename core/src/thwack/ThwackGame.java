@@ -95,7 +95,7 @@ public class ThwackGame extends ApplicationAdapter {
 	@Override
 	public void create() {
 
-		world = new World(new Vector2(0, 0), false);
+		world = new World(new Vector2(0, 0), true);
 		debugRenderer = new Box2DDebugRenderer();
 
 		float w = Gdx.graphics.getWidth() / 32;
@@ -106,7 +106,7 @@ public class ThwackGame extends ApplicationAdapter {
 
 		// new code for collision goes here. to be replaced by a handler class
 		// later
-		{
+		/*{
 
 			float ww = (width);
 			float hh = (height);
@@ -123,19 +123,20 @@ public class ThwackGame extends ApplicationAdapter {
 			body.createFixture(fixtureDef);
 			bodyShape.dispose();
 
-		}
+		}*/
 
 		// and the player object code
 		{
 			//Texture texture = new Texture(25 /32, 45 / 32, null);
-			playerBodyDef.type = BodyType.KinematicBody;
+			playerBodyDef.type = BodyType.DynamicBody;
 			playerBodyDef.position.set(20,20);
 			playerBody = world.createBody(playerBodyDef);
-			// fixtureDef.density=density;
+
 			// fixtureDef.restitution=restitution;
 			PolygonShape playerBodyShape = new PolygonShape();
 			playerBodyShape.setAsBox(.5f, .5f);
 			playerDef = new FixtureDef();
+			playerDef.density=1.0f;
 			playerDef.shape = playerBodyShape;
 
 			playerBody.createFixture(playerDef);
@@ -176,6 +177,7 @@ public class ThwackGame extends ApplicationAdapter {
 		player = new Player();
 		updateables.add(player);
 		collisionContext.add(player);
+		player.setBody(playerBody);
 
 		playerController = new PlayerController(camera);
 		playerController.setPlayer(player);
@@ -238,7 +240,6 @@ public class ThwackGame extends ApplicationAdapter {
 		}
 
 		debugRenderer.render(world, camera.combined);
-
 		world.step(1 / 60f, 6, 2);
 	}
 

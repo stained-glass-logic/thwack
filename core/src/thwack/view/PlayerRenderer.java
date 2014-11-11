@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -59,7 +60,7 @@ public class PlayerRenderer implements Disposable {
 		attackSword.put(Direction.RIGHT, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Right/Sword/attack_right_sword")));
 		attackSword.put(Direction.UP, new Animation(attackSpeed, heroAtlas.findRegions("Attack/Up/Sword/attack_up_sword")));
 	}
-	
+
 	public void render(Player player) {
 		
 		player.increaseStateTime(Gdx.graphics.getDeltaTime());

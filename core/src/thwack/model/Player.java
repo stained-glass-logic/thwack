@@ -9,9 +9,12 @@ import thwack.collision.CollisionVisitor;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 
 public class Player implements Updateable, CollisionVisitor {
+	
+	private Body playerBody;
 	
 	public static enum State {
 		STANDING,
@@ -30,8 +33,20 @@ public class Player implements Updateable, CollisionVisitor {
 	private final Vector2 position;
 	private final Rectangle bounds;
 	private final float speed = 7.0f;
-	private Vector2 velocity = new Vector2(0,0).limit(speed);
+	public Vector2 velocity = new Vector2(0,0);
 	
+	 
+    public void applyImpulse() {
+
+            Vector2 currentVelocity = playerBody.getLinearVelocity();
+            Vector2 targetVelocity = new Vector2(velocity).nor().scl(speed);
+
+            Vector2 impulse = new Vector2(targetVelocity).sub(currentVelocity).scl(playerBody.getMass());
+
+           playerBody.applyLinearImpulse(impulse, playerBody.getWorldCenter(), true);
+    }
+
+    
 	private float stateTime = 0.0f;
 	
 	public Player() {
@@ -43,6 +58,10 @@ public class Player implements Updateable, CollisionVisitor {
 		this.bounds = new Rectangle(x, y, 22, 45);
 		this.center = new Vector2();
 		this.bounds.getCenter(center);
+	}
+	
+	public void setBody(Body body){
+		this.playerBody = body;
 	}
 	
 	public State getState() {
@@ -101,21 +120,6 @@ public class Player implements Updateable, CollisionVisitor {
 
 		bounds.setPosition(oldPosition.mulAdd(velocity, speed * deltaTime));
 		
-		CollisionContext collisionContext = (CollisionContext)context.get(CollisionContext.COLLISION);
-		
-		Array<CollisionVisitor> objects = collisionContext.getCollisionCandidates();
-		
-		boolean collided = false;
-		for (CollisionVisitor obj : objects) {
-			if (this.collidesWith(obj)) {
-				collided = true;
-				break;
-			}
-		}
-		
-		if (collided) {
-			bounds.setPosition(position);
-		}
 	}
 	
 	public float getPositionX() {
@@ -143,12 +147,15 @@ public class Player implements Updateable, CollisionVisitor {
 	}
 
 	@Override
+	public boolean visit(Rectangle rectangle) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
 	public boolean collidesWith(CollisionVisitor visitor) {
-		return this != visitor && visitor.visit(this.bounds);
+		// TODO Auto-generated method stub
+		return false;
 	}
-	
-	public boolean visit(Rectangle rect) {
-		return Intersector.overlaps(this.bounds, rect);
-	}
-	
+
 }
