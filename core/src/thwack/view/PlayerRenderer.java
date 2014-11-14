@@ -100,10 +100,6 @@ public class PlayerRenderer implements Disposable {
 	    }
 			break;
 		}
-	
-		
-		player.getBounds().setWidth(currentRegion.originalWidth / Constants.PIXELS_PER_METER * 2);
-		player.getBounds().setHeight(currentRegion.originalHeight / Constants.PIXELS_PER_METER * 2);
 		
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
 		float height = currentRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;

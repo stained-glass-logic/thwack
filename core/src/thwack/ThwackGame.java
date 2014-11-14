@@ -3,15 +3,15 @@ package thwack;
 import java.util.HashMap;
 import java.util.Map;
 
-import thwack.collision.CollisionContext;
 import thwack.controller.PlayerController;
-import thwack.model.Block;
 import thwack.model.Mob;
 import thwack.model.Player;
+import thwack.model.Rat;
 import thwack.model.Updateable;
 import thwack.view.BlockRenderer;
 import thwack.view.MobRenderer;
 import thwack.view.PlayerRenderer;
+import thwack.view.RatRenderer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -60,11 +60,7 @@ public class ThwackGame extends ApplicationAdapter {
 	public static final String SHAPE_RENDERER = "SHAPE_RENDERER";
 	private ShapeRenderer shapeRenderer;
 
-	private CollisionContext collisionContext;
-
 	private Array<Updateable> updateables = new Array<Updateable>();
-
-	private Array<Disposable> disposables = new Array<Disposable>();
 
 	private Player player;
 
@@ -78,20 +74,26 @@ public class ThwackGame extends ApplicationAdapter {
 
 	private BlockRenderer blockRenderer;
 
-	private Array<Block> blocks = new Array<Block>();
-	
 
 	// my attempt to add a bodydef
-	private BodyDef bodyDef = new BodyDef();
+	private BodyDef bodyWestDef = new BodyDef();
+	private BodyDef bodyEastDef = new BodyDef();
+	private BodyDef bodyNorthDef = new BodyDef();
+	private BodyDef bodySouthDef = new BodyDef();
 	private BodyDef playerBodyDef = new BodyDef();
-	private Body body;
+	private Body bodyWest;
+	private Body bodyEast;
+	private Body bodyNorth;
+	private Body bodySouth;
 	private Body playerBody;
-	private int width = 49 / 2;
+	private int width = 4 / 2;
 	private int height = 29 / 2;
 	private TextureRegion region;
-	private FixtureDef fixtureDef;
+	private FixtureDef fixtureDefWest, fixtureDefEast, fixtureDefNorth, fixtureDefSouth;
 	private FixtureDef playerDef;
 	
+	private Rat rat;
+	private RatRenderer ratRenderer;
 	@Override
 	public void create() {
 
@@ -106,50 +108,9 @@ public class ThwackGame extends ApplicationAdapter {
 
 		// new code for collision goes here. to be replaced by a handler class
 		// later
-		/*{
-
-			float ww = (width);
-			float hh = (height);
-
-			bodyDef.type = BodyType.StaticBody;
-			bodyDef.position.set(28, 20);
-			body = world.createBody(bodyDef);
-			PolygonShape bodyShape = new PolygonShape();
-			bodyShape.setAsBox(ww, hh);
-			fixtureDef = new FixtureDef();
-			// fixtureDef.density=density;
-			// fixtureDef.restitution=restitution;
-			fixtureDef.shape = bodyShape;
-			body.createFixture(fixtureDef);
-			bodyShape.dispose();
-
-		}*/
-
-		// and the player object code
-		{
-			//Texture texture = new Texture(25 /32, 45 / 32, null);
-			playerBodyDef.type = BodyType.DynamicBody;
-			playerBodyDef.position.set(20,20);
-			playerBody = world.createBody(playerBodyDef);
-
-			// fixtureDef.restitution=restitution;
-			PolygonShape playerBodyShape = new PolygonShape();
-			playerBodyShape.setAsBox(.5f, .5f);
-			playerDef = new FixtureDef();
-			playerDef.density=1.0f;
-			playerDef.shape = playerBodyShape;
-
-			playerBody.createFixture(playerDef);
-			playerDef.shape.dispose();
-			//region = new TextureRegion(texture);
-			
-		}
 
 		batch = new SpriteBatch();
-
-		context.put(SPRITE_BATCH, batch);
-		disposables.add(batch);
-
+		
 		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
 				batch);
@@ -159,57 +120,93 @@ public class ThwackGame extends ApplicationAdapter {
 
 		font = new BitmapFont();
 		context.put(BITMAP_FONT, font);
-		disposables.add(font);
 
 		shapeRenderer = new ShapeRenderer();
-		context.put(SHAPE_RENDERER, shapeRenderer);
-		disposables.add(shapeRenderer);
-
-		collisionContext = new CollisionContext();
-		context.put(CollisionContext.COLLISION, collisionContext);
 
 		playerRenderer = new PlayerRenderer(batch, shapeRenderer);
 
-		blockRenderer = new BlockRenderer(shapeRenderer);
+		//the walls
+		{
 
-		// mobRenderer = new MobRenderer(batch, shapeRenderer);
+			float ww = (width);
+			float hh = (height);
 
-		player = new Player();
+			bodyWestDef.type = BodyType.StaticBody;
+			bodyWestDef.position.set(2f, 20f);
+			bodyWest = world.createBody(bodyWestDef);
+			PolygonShape bodyShapeWest = new PolygonShape();
+			bodyShapeWest.setAsBox(ww, hh);
+			fixtureDefWest = new FixtureDef();
+
+			fixtureDefWest.shape = bodyShapeWest;
+			bodyWest.createFixture(fixtureDefWest);
+			bodyShapeWest.dispose();
+			
+
+			bodyEastDef.type = BodyType.StaticBody;
+			bodyEastDef.position.set(54f, 20f);
+			bodyEast = world.createBody(bodyEastDef);
+			PolygonShape bodyShapeEast = new PolygonShape();
+			bodyShapeEast.setAsBox(ww, hh);
+			fixtureDefEast = new FixtureDef();
+			fixtureDefEast.shape = bodyShapeEast;
+			bodyEast.createFixture(fixtureDefEast);
+			bodyShapeEast.dispose();
+			
+			bodySouthDef.type = BodyType.StaticBody;
+			bodySouthDef.position.set(28f, 4f);
+			bodySouth = world.createBody(bodySouthDef);
+			PolygonShape bodyShapeSouth = new PolygonShape();
+			bodyShapeSouth.setAsBox(mapWidth, ww);
+			fixtureDefSouth = new FixtureDef();
+			fixtureDefSouth.shape = bodyShapeSouth;
+			bodySouth.createFixture(fixtureDefSouth);
+			bodyShapeSouth.dispose();
+
+			bodyNorthDef.type = BodyType.StaticBody;
+			bodyNorthDef.position.set(28f, 36f);
+			bodyNorth = world.createBody(bodyNorthDef);
+			PolygonShape bodyShapeNorth = new PolygonShape();
+			bodyShapeNorth.setAsBox(mapWidth, ww);
+			fixtureDefNorth = new FixtureDef();
+			fixtureDefNorth.shape = bodyShapeNorth;
+			bodyNorth.createFixture(fixtureDefNorth);
+			bodyShapeNorth.dispose();
+
+		}
+		player = new Player(world);
+		
+		Vector2 ratPos = new Vector2(6f, 20f);
+		Vector2 ratSize = new Vector2(.5f, .5f);
+		rat = new Rat(world, ratPos, ratSize);
+		
+
+		// and the player object code
+		batch = new SpriteBatch();
+
+		context.put(SPRITE_BATCH, batch);
+
+		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
+				batch);
+
+		font = new BitmapFont();
+		context.put(BITMAP_FONT, font);
+
+		shapeRenderer = new ShapeRenderer();
+		context.put(SHAPE_RENDERER, shapeRenderer);
+
+		playerRenderer = new PlayerRenderer(batch, shapeRenderer);
+		ratRenderer = new RatRenderer(batch, shapeRenderer);
+		
 		updateables.add(player);
-		collisionContext.add(player);
-		player.setBody(playerBody);
-
 		playerController = new PlayerController(camera);
 		playerController.setPlayer(player);
 
 		updateables.add(playerController);
 		Gdx.input.setInputProcessor(playerController);
 		// System.out.println((Gdx.graphics.getDeltaTime()));
-		player.setPosition(20, 20);
-
-		// for (int i = 0; i < 10; i++) {
-		// Mob b = new Mob();
-		//
-		// do {
-		// b.setPosition(MathUtils.random(20.0f) - 10.0f,
-		// MathUtils.random(20.0f) - 10.0f);
-		// } while (b.collidesWith(player));
-		//
-		// mobs.add(b);
-		// collisionContext.add(b);
-		// }
-		//
-		// for (int i = 0; i < 10; i++) {
-		// Block b = new Block();
-		//
-		// do {
-		// b.setPosition(MathUtils.random(20.0f) - 10.0f,
-		// MathUtils.random(20.0f) - 10.0f);
-		// } while (b.collidesWith(player));
-		//
-		// blocks.add(b);
-		// collisionContext.add(b);
-		// }
+		player.setPosition(player.playerBody.getPosition().x - .65f, player.playerBody.getPosition().y - .2f);
 
 	}
 
@@ -219,9 +216,9 @@ public class ThwackGame extends ApplicationAdapter {
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		tiledMapRenderer.setView(camera);
-		// tiledMapRenderer.
-		camera.position.set(player.getPositionX() + (42 / 32),
-				player.getPositionY() - (11 / 32), 0);
+		camera.position.set(player.playerBody.getPosition().x,
+				player.playerBody.getPosition().y - (11 / 32), 0);
+		player.setPosition(player.playerBody.getPosition().x -.65f, player.playerBody.getPosition().y);
 		camera.update();
 		tiledMapRenderer.render();
 		playerRenderer.render(player);
@@ -235,20 +232,10 @@ public class ThwackGame extends ApplicationAdapter {
 			mobRenderer.render(mob);
 		}
 
-		for (Block b : blocks) {
-			blockRenderer.render(b);
-		}
-
 		debugRenderer.render(world, camera.combined);
 		world.step(1 / 60f, 6, 2);
 	}
 
-	@Override
-	public void dispose() {
-		for (Disposable disposable : disposables) {
-			disposable.dispose();
-		}
-	}
 
 	// @Override
 	/*

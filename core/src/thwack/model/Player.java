@@ -3,18 +3,23 @@ package thwack.model;
 import java.util.Map;
 
 import thwack.Constants;
-import thwack.collision.CollisionContext;
-import thwack.collision.CollisionVisitor;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-public class Player implements Updateable, CollisionVisitor {
+public class Player implements Updateable {
 	
-	private Body playerBody;
+	public Body playerBody;
+	private BodyDef playerBodyDef = new BodyDef();
+	private FixtureDef playerFixtureDef;
 	
 	public static enum State {
 		STANDING,
@@ -31,39 +36,45 @@ public class Player implements Updateable, CollisionVisitor {
 	
 	private final Vector2 center;
 	private final Vector2 position;
-	private final Rectangle bounds;
 	private final float speed = 7.0f;
-	public Vector2 velocity = new Vector2(0,0);
+	public Vector2 velocity = new Vector2(0,0).limit(speed);
 	
 	 
     public void applyImpulse() {
 
-            Vector2 currentVelocity = playerBody.getLinearVelocity();
+           // Vector2 currentVelocity = playerBody.getLinearVelocity();
             Vector2 targetVelocity = new Vector2(velocity).nor().scl(speed);
 
-            Vector2 impulse = new Vector2(targetVelocity).sub(currentVelocity).scl(playerBody.getMass());
+            Vector2 impulse = new Vector2(targetVelocity);
 
-           playerBody.applyLinearImpulse(impulse, playerBody.getWorldCenter(), true);
+            playerBody.setLinearVelocity(impulse);
     }
 
     
 	private float stateTime = 0.0f;
 	
-	public Player() {
+	public Player(World world) {
 		this(0.0f, 0.0f);
+		playerBodyDef.type = BodyType.DynamicBody;
+		playerBodyDef.position.set(5,20);
+		this.playerBody = world.createBody(playerBodyDef);
+
+		// fixtureDef.restitution=restitution;
+		PolygonShape playerBodyShape = new PolygonShape();
+		playerBodyShape.setAsBox(.5f, .5f);
+		playerFixtureDef = new FixtureDef();
+		playerFixtureDef.density=1.0f;
+		playerFixtureDef.shape = playerBodyShape;
+
+		this.playerBody.createFixture(playerFixtureDef);
+		playerFixtureDef.shape.dispose();
 	}
 	
 	public Player(float x, float y) {
 		this.position = new Vector2(x, y);
-		this.bounds = new Rectangle(x, y, 22, 45);
 		this.center = new Vector2();
-		this.bounds.getCenter(center);
 	}
-	
-	public void setBody(Body body){
-		this.playerBody = body;
-	}
-	
+
 	public State getState() {
 		return state;
 	}
@@ -115,47 +126,16 @@ public class Player implements Updateable, CollisionVisitor {
 	
 	@Override
 	public void update(float deltaTime, Map<String, Object> context) {
-		
-		Vector2 oldPosition = position.cpy();
+			Vector2 oldPosition = position.cpy();
+	}
 
-		bounds.setPosition(oldPosition.mulAdd(velocity, speed * deltaTime));
-		
+	public void setPosition(float f, float g) {
+	this.position.set(f,g);
 	}
-	
-	public float getPositionX() {
-	return bounds.getX();
-	}
-	
-	public float getPositionY() {
-	return bounds.getY();
-	}
-	
+
 	public Vector2 getPosition() {
-		return bounds.getPosition(position);
-	}
-	
-	public Vector2 getCenter() {
-		return bounds.getCenter(center);
-	}
-	
-	public void setPosition(float x, float y) {
-		this.bounds.setPosition(x, y);
-	}
-	
-	public Rectangle getBounds() {
-		return this.bounds;
-	}
-
-	@Override
-	public boolean visit(Rectangle rectangle) {
 		// TODO Auto-generated method stub
-		return false;
+		return position;
 	}
-
-	@Override
-	public boolean collidesWith(CollisionVisitor visitor) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 }

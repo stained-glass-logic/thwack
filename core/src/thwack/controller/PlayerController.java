@@ -29,29 +29,35 @@ public class PlayerController implements Updateable, InputProcessor {
 	public void update(float deltaTime, Map<String, Object> context) {
 		
 		direction.set(0, 0);
-		 
+		
+		if(player.getState() != Player.State.ATTACKING){
 		if (Gdx.input.isKeyPressed(Keys.W)) {
+			direction.add(0, 1);
             player.velocity.y += 1;
             player.setState(Player.State.WALKING);
-        	direction.set(0, 1);
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.S)) {
 			player.velocity.y -= 1;
 	        player.setState(Player.State.WALKING);    
-			direction.set(0, -1);
+			direction.add(0, -1);
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.A)) {
 			player.velocity.x -= 1;
 			player.setState(Player.State.WALKING);
-			direction.set(-1, 0);
+			direction.add(-1, 0);
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.D)) {
 			player.velocity.x += 1;
 			player.setState(Player.State.WALKING);
-			direction.set(1, 0);
+			direction.add(1, 0);
+		}
+		}
+		if (Gdx.input.isKeyPressed(Keys.J)){
+			direction.set(0,0);
+			player.setState(Player.State.ATTACKING);
 		}
 	
 		player.move(direction);
@@ -89,22 +95,7 @@ public class PlayerController implements Updateable, InputProcessor {
 
 	 
     @Override
-    public boolean keyUp(int keycode) {/*
-            switch (keycode) {
-                    case Keys.W:
-                            player.velocity.y -= 1;
-                            break;
-                    case Keys.A:
-                            player.velocity.x += 1;
-                            break;
-                    case Keys.S:
-                            player.velocity.y += 1;
-                            break;
-                    case Keys.D:
-                            player.velocity.x -= 1;
-                            break;
-            }
-*/
+    public boolean keyUp(int keycode) {
             player.applyImpulse();
 
             return false;

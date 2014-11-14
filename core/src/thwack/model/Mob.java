@@ -3,8 +3,6 @@ package thwack.model;
 import java.util.Map;
 
 import thwack.Constants;
-import thwack.collision.CollisionContext;
-import thwack.collision.CollisionVisitor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -12,98 +10,45 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-public class Mob implements Updateable, CollisionVisitor {
-
-	private Vector2 position;
+public class Mob implements Updateable{
 	
-	private Rectangle bounds;
-
-	private boolean facingLeft = true;
-
-	private float speed = 5.0f;
-	
-	private float stateTime = MathUtils.random(10.0f);
-
-	public Mob() {
-		this(0f, 0f);
+	//private AI ai;
+	public static enum State {
+		STANDING,
+		BORED,
+		RUNNING
 	}
 	
-	public Mob(float x, float y) {
-		this.position = new Vector2(x, y);
-		bounds = new Rectangle(x, y, 74 / Constants.PIXELS_PER_METER, 60 / Constants.PIXELS_PER_METER);
+	public static enum Direction {
+		UP, DOWN, LEFT, RIGHT
+	}
+
+	
+	private final float speed = 0f;
+	protected final Vector2 center = new Vector2(0,0);
+	protected final Vector2 position = new Vector2(0,0);
+	protected final Vector2 size = new Vector2(0,0);
+	protected Vector2 direction = new Vector2(0.0f, 0.0f);
+	protected Vector2 velocity = new Vector2(0,0).limit(getSpeed());
+
+	protected float stateTime = MathUtils.random(10.0f);
+
+	public Mob() {
 	}
 	
 	@Override
 	public void update(float deltaTime, Map<String, Object> context) {
-		float oldX = bounds.x;
-
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			bounds.x -= speed * deltaTime;
-			facingLeft = true;
-		}
-
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			bounds.x += speed * deltaTime;
-			facingLeft = false;
-		}
-
-		CollisionContext collisionContext = (CollisionContext) context.get(CollisionContext.COLLISION);
-
-		Array<CollisionVisitor> objects = collisionContext
-				.getCollisionCandidates();
-
-		boolean collidedX = false;
-		for (CollisionVisitor obj : objects) {
-			if (this.collidesWith(obj)) {
-				collidedX = true;
-				break;
-			}
-		}
-
-		if (collidedX) {
-			bounds.x = oldX;
-		}
-
-		float oldY = bounds.y;
-
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			bounds.y += speed * deltaTime;
-		}
-
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			bounds.y -= speed * deltaTime;
-		}
-
-		boolean collidedY = false;
-		for (CollisionVisitor obj : objects) {
-			if (this.collidesWith(obj)) {
-				collidedY = true;
-				break;
-			}
-		}
-
-		if (collidedY) {
-			bounds.y = oldY;
-		}
-
-	}
-	
-	public boolean isFacingLeft() {
-		return facingLeft;
 	}
 	
 	public void setPosition(float x, float y) {
-		this.bounds.setPosition(x, y);
-	}
-	
-	public Vector2 getPosition() {
-		return bounds.getPosition(position);
-	}
-	
-	public Rectangle getBounds() {
-		return bounds;
+		this.position.set(x, y);
 	}
 	
 	public float getStateTime() {
@@ -114,13 +59,9 @@ public class Mob implements Updateable, CollisionVisitor {
 		this.stateTime += delta;
 	}
 
-	@Override
-	public boolean collidesWith(CollisionVisitor visitor) {
-		return this != visitor && visitor.visit(this.bounds);
+	protected float getSpeed() {
+		return speed;
 	}
 
-	public boolean visit(Rectangle rect) {
-		return Intersector.overlaps(this.bounds, rect);
-	}
 
 }
