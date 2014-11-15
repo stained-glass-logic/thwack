@@ -65,31 +65,7 @@ public class PlayerController implements Updateable, InputProcessor {
 	}
 
 	@Override
-	public boolean keyDown(int keycode) {/*
-		switch (keycode) {
-		case Keys.J:
-			player.setState(Player.State.ATTACKING);
-			break;
-
-		case Keys.W:
-            player.velocity.y += 1;
-            player.setState(Player.State.WALKING);
-            break;
-		case Keys.S:
-            player.velocity.y -= 1;
-            player.setState(Player.State.WALKING);
-            break;
-		case Keys.A:
-			player.velocity.x -= 1;
-			player.setState(Player.State.WALKING);
-			break;
-		case Keys.D:
-			player.velocity.x += 1;
-			player.setState(Player.State.WALKING);
-			break;
-
-		}*/
-		//player.applyImpulse();
+	public boolean keyDown(int keycode) {
 		return false;
 	}
 

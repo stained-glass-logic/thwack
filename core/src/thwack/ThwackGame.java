@@ -5,6 +5,7 @@ import java.util.Map;
 
 import thwack.controller.PlayerController;
 import thwack.model.Mob;
+import thwack.model.Mob.Direction;
 import thwack.model.Player;
 import thwack.model.Rat;
 import thwack.model.Updateable;
@@ -207,7 +208,7 @@ public class ThwackGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(playerController);
 		// System.out.println((Gdx.graphics.getDeltaTime()));
 		player.setPosition(player.playerBody.getPosition().x - .65f, player.playerBody.getPosition().y - .2f);
-
+		rat.setPosition(rat.ratBody.getPosition().x, rat.ratBody.getPosition().y);
 	}
 
 	@Override
@@ -219,9 +220,20 @@ public class ThwackGame extends ApplicationAdapter {
 		camera.position.set(player.playerBody.getPosition().x,
 				player.playerBody.getPosition().y - (11 / 32), 0);
 		player.setPosition(player.playerBody.getPosition().x -.65f, player.playerBody.getPosition().y);
+		if(rat.getDirection() == Direction.UP){
+			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
+		} else if (rat.getDirection() == Direction.DOWN){
+			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
+		} else if (rat.getDirection() == Direction.RIGHT){
+			rat.setPosition(rat.ratBody.getPosition().x -1.35f, rat.ratBody.getPosition().y - .5f);
+		} else if (rat.getDirection() == Direction.LEFT){
+			rat.setPosition(rat.ratBody.getPosition().x -.75f, rat.ratBody.getPosition().y - .5f);
+		}
 		camera.update();
 		tiledMapRenderer.render();
 		playerRenderer.render(player);
+	
+		ratRenderer.render(rat);
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		for (Updateable updateable : updateables) {
@@ -235,15 +247,5 @@ public class ThwackGame extends ApplicationAdapter {
 		debugRenderer.render(world, camera.combined);
 		world.step(1 / 60f, 6, 2);
 	}
-
-
-	// @Override
-	/*
-	 * public void resize(int width, int height) { Vector3 oldpos = new
-	 * Vector3(camera.position); camera.setToOrtho(false,
-	 * width/Constants.PIXELS_PER_METER, height/Constants.PIXELS_PER_METER);
-	 * camera.translate(oldpos.x - camera.position.x, oldpos.y -
-	 * camera.position.y); }
-	 */
 
 }

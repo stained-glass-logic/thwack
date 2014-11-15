@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -26,51 +27,59 @@ public class RatRenderer implements Disposable {
 	
 	private TextureAtlas ratAtlas;
 	
-	private final Map<Direction, Animation> running = new HashMap<Direction, Animation>();
+	private final Map<Direction, Animation> ratAnim = new HashMap<Direction, Animation>();
 
-
+	private Boolean ratBool = false;
 	public RatRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
 		
 		this.ratAtlas = new TextureAtlas(Gdx.files.internal("Rat-packed/Rat.atlas"));
 		
-		float runningSpeed = 0.075f;
-		running.put(Direction.DOWN, new Animation(runningSpeed, ratAtlas.findRegions("Rat/run down"), PlayMode.LOOP));
-		running.put(Direction.LEFT, new Animation(runningSpeed, ratAtlas.findRegions("Rat/run left"), PlayMode.LOOP));
-		running.put(Direction.RIGHT, new Animation(runningSpeed, ratAtlas.findRegions("Rat/run right"), PlayMode.LOOP));
-		running.put(Direction.UP, new Animation(runningSpeed, ratAtlas.findRegions("Rat/running up"), PlayMode.LOOP));
+		float ratAnimSpeed = 0.075f;
+		ratAnim.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("run down/rat run down"), PlayMode.LOOP));
+		ratAnim.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("run left/rat run left"), PlayMode.LOOP));
+		ratAnim.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("run right/rat run right"), PlayMode.LOOP));
+		ratAnim.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("run up/rat run up"), PlayMode.LOOP));
 		
+	}
+	
+	private void ratLogic(Rat rat, float time){
+		if(rat.getStateTime() < time){
+			rat.setState(State.RUNNING);
+			if (ratBool == false){
+			rat.velocity.set(MathUtils.random((int)-1,(int)1), MathUtils.random((int)-1,(int)1));
+			ratBool = true;}
+		}
+		else if (rat.getStateTime() > time){
+			rat.velocity.set(0,0);
+			rat.setState(State.BORED);
+			rat.setStateTime(0);
+			ratBool = false;
+		}
+		rat.move(rat.velocity);
+		rat.applyImpulse();
 	}
 
 	public void render(Rat rat) {
-		
+		ratLogic(rat, 3f);
 		rat.increaseStateTime(Gdx.graphics.getDeltaTime());
-
+		Direction dir = rat.getDirection();
 		AtlasRegion currentRegion = null;
 		Animation animation = null;
 
 		switch (rat.getState()) {
 		
 		case RUNNING:
-			animation = running.get(rat.getDirection());
+			animation = ratAnim.get(rat.getDirection());
 			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
-	    if (rat.getDirection() == Direction.LEFT) {
-	      currentRegion.flip(currentRegion.isFlipX(), false);
-	    } else if (rat.getDirection() == Direction.RIGHT) {
-	      currentRegion.flip(!currentRegion.isFlipX(), false);
-	    }
 			break;
 		case BORED:
-			animation = running.get(rat.getDirection());
-			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
-			break;
-		case STANDING:
-			animation = running.get(rat.getDirection());
+			animation = ratAnim.get(rat.getDirection());
 			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
 			break;
 		default:
-			animation = running.get(rat.getDirection());
+			animation = ratAnim.get(rat.getDirection());
 			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
 			break;
 		}

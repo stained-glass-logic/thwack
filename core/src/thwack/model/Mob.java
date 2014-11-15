@@ -31,7 +31,10 @@ public class Mob implements Updateable{
 	}
 
 	
-	private final float speed = 0f;
+	private float speed = 0f;
+	private Body mobBody;
+	private BodyDef mobBodyDef;
+	private FixtureDef mobBodyFixtureDef;
 	protected final Vector2 center = new Vector2(0,0);
 	protected final Vector2 position = new Vector2(0,0);
 	protected final Vector2 size = new Vector2(0,0);
@@ -62,6 +65,21 @@ public class Mob implements Updateable{
 	protected float getSpeed() {
 		return speed;
 	}
-
+	
+	public void setSpeed(float speedTarget){
+		this.speed = speedTarget;
+	}
+	
+	public void setBody(Body body){
+		this.mobBody = body;
+	}
+	
+	public void setBodyDef(BodyDef bodyDef){
+		this.mobBodyDef = bodyDef;
+	}
+	
+	public void setBodyFixtureDef(FixtureDef bodyFixtureDef){
+		this.mobBodyFixtureDef = bodyFixtureDef;
+	}
 
 }

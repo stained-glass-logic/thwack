@@ -58,7 +58,7 @@ public class Player implements Updateable {
 		playerBodyDef.type = BodyType.DynamicBody;
 		playerBodyDef.position.set(5,20);
 		this.playerBody = world.createBody(playerBodyDef);
-
+		playerBody.setFixedRotation(true);
 		// fixtureDef.restitution=restitution;
 		PolygonShape playerBodyShape = new PolygonShape();
 		playerBodyShape.setAsBox(.5f, .5f);
