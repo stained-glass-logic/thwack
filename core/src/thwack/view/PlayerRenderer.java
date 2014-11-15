@@ -5,8 +5,8 @@ import java.util.Map;
 
 import thwack.Constants;
 import thwack.model.Player;
-import thwack.model.Player.Direction;
-import thwack.model.Player.State;
+import thwack.model.Entity.Direction;
+import thwack.model.Entity.State;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -78,10 +78,12 @@ public class PlayerRenderer implements Disposable {
 			weaponAnimation = attackSword.get(dir);
 			
 			if (animation.isAnimationFinished(player.getStateTime())) {
+				System.out.println("this should be working");
 				player.setState(State.STANDING);
 				animation = walking.get(player.getDirection());
 				currentRegion = (AtlasRegion)animation.getKeyFrames()[0];
 			} else {
+				System.out.println("why isn't this working");
 				currentRegion = (AtlasRegion)animation.getKeyFrame(player.getStateTime(), false);
 				weaponRegion = (AtlasRegion)weaponAnimation.getKeyFrame(player.getStateTime(), false);
 			}
@@ -98,7 +100,13 @@ public class PlayerRenderer implements Disposable {
 	    } else if (player.getDirection() == Direction.RIGHT) {
 	      currentRegion.flip(!currentRegion.isFlipX(), false);
 	    }
+		case BORED:
 			break;
+		case RUNNING:
+			break;
+		default:
+			break;
+
 		}
 		
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;

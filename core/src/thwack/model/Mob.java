@@ -17,28 +17,13 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-public class Mob implements Updateable{
-	
-	//private AI ai;
-	public static enum State {
-		STANDING,
-		BORED,
-		RUNNING
-	}
-	
-	public static enum Direction {
-		UP, DOWN, LEFT, RIGHT
-	}
-
+public class Mob extends Entity implements Updateable{
 	
 	private float speed = 0f;
 	private Body mobBody;
 	private BodyDef mobBodyDef;
 	private FixtureDef mobBodyFixtureDef;
-	protected final Vector2 center = new Vector2(0,0);
-	protected final Vector2 position = new Vector2(0,0);
 	protected final Vector2 size = new Vector2(0,0);
-	protected Vector2 direction = new Vector2(0.0f, 0.0f);
 	protected Vector2 velocity = new Vector2(0,0).limit(getSpeed());
 
 	protected float stateTime = MathUtils.random(10.0f);
@@ -52,14 +37,6 @@ public class Mob implements Updateable{
 	
 	public void setPosition(float x, float y) {
 		this.position.set(x, y);
-	}
-	
-	public float getStateTime() {
-		return stateTime;
-	}
-	
-	public void increaseStateTime(float delta) {
-		this.stateTime += delta;
 	}
 
 	protected float getSpeed() {

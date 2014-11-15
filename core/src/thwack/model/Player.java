@@ -15,30 +15,11 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
-public class Player implements Updateable {
+public class Player extends Entity implements Updateable {
 	
 	public Body playerBody;
 	private BodyDef playerBodyDef = new BodyDef();
 	private FixtureDef playerFixtureDef;
-	
-	public static enum State {
-		STANDING,
-		WALKING,
-		ATTACKING
-	}
-	
-	public static enum Direction {
-		UP, DOWN, LEFT, RIGHT
-	}
-	
-	private Direction direction = Direction.DOWN;
-	private State state = State.STANDING;
-	
-	private final Vector2 center;
-	private final Vector2 position;
-	private final float speed = 7.0f;
-	public Vector2 velocity = new Vector2(0,0).limit(speed);
-	
 	 
     public void applyImpulse() {
 
@@ -50,9 +31,6 @@ public class Player implements Updateable {
             playerBody.setLinearVelocity(impulse);
     }
 
-    
-	private float stateTime = 0.0f;
-	
 	public Player(World world) {
 		this(0.0f, 0.0f);
 		playerBodyDef.type = BodyType.DynamicBody;
@@ -91,14 +69,6 @@ public class Player implements Updateable {
 		return direction;
 	}
 	
-	public float getStateTime() {
-		return stateTime;
-	}
-	
-	public void increaseStateTime(float delta) {
-		this.stateTime += delta;
-	}
-	
 	public void move(Vector2 velocity) {
 		if (this.state == State.ATTACKING) {
 			this.velocity.set(0, 0);
@@ -122,20 +92,6 @@ public class Player implements Updateable {
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void update(float deltaTime, Map<String, Object> context) {
-			Vector2 oldPosition = position.cpy();
-	}
-
-	public void setPosition(float f, float g) {
-	this.position.set(f,g);
-	}
-
-	public Vector2 getPosition() {
-		// TODO Auto-generated method stub
-		return position;
 	}
 	
 }

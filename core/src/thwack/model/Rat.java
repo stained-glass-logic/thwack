@@ -1,8 +1,6 @@
 package thwack.model;
 
 import thwack.Constants;
-import thwack.model.Player.Direction;
-import thwack.model.Player.State;
 
 import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.Vector2;
@@ -18,8 +16,6 @@ public class Rat extends Mob {
 	public Body ratBody;
 	private BodyDef ratBodyDef;
 	private FixtureDef ratFixtureDef;
-	private float stateTime = 10.0f;
-
 	private Direction direction = Direction.UP;
 	private State state = State.BORED;
 
@@ -80,7 +76,7 @@ public class Rat extends Mob {
 	public void setState(State state) {
 		if (this.state != state) {
 			// reset the state time every time state changes
-			stateTime = 2.0f;
+			stateTime = 0.0f;
 		}
 		this.state = state;
 	}
@@ -97,19 +93,7 @@ public class Rat extends Mob {
 		return direction;
 	}
 
-	public float getStateTime() {
-		return stateTime;
-	}
-
-	public void increaseStateTime(float delta) {
-		this.stateTime += delta;
-	}
-
 	public Vector2 getPosition() {
 		return position;
-	}
-
-	public void setStateTime(float f) {
-		this.stateTime = f;
 	}
 }

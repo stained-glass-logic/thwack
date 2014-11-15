@@ -5,7 +5,7 @@ import java.util.Map;
 
 import thwack.controller.PlayerController;
 import thwack.model.Mob;
-import thwack.model.Mob.Direction;
+import thwack.model.Entity.Direction;
 import thwack.model.Player;
 import thwack.model.Rat;
 import thwack.model.Updateable;

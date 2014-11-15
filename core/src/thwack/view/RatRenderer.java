@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import thwack.Constants;
-import thwack.model.Mob.Direction;
-import thwack.model.Mob.State;
+import thwack.model.Entity.Direction;
+import thwack.model.Entity.State;
 import thwack.model.Rat;
 
 import com.badlogic.gdx.Gdx;
