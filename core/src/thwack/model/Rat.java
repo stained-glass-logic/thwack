@@ -1,15 +1,8 @@
 package thwack.model;
 
-import thwack.Constants;
-
-import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class Rat extends Mob {
 
@@ -28,6 +21,7 @@ public class Rat extends Mob {
 		this.ratBodyDef.type = BodyType.DynamicBody;
 		this.ratBodyDef.position.set(pos);
 		ratBody = world.createBody(ratBodyDef);
+		ratBody.setUserData(this);
 		ratBody.setFixedRotation(true);
 
 
@@ -39,6 +33,7 @@ public class Rat extends Mob {
 		ratFixtureDef.shape = ratBodyShape;
 		ratBody.createFixture(ratFixtureDef);
 		ratFixtureDef.shape.dispose();
+
 	}
 
 	public void applyImpulse() {
@@ -47,28 +42,38 @@ public class Rat extends Mob {
 		ratBody.setLinearVelocity(impulse);
 	}
 
+	public boolean isMoving() {
+		// todo: get actual velocity from bx2d
+		return true;
+	}
+
 	public void move(Vector2 velocity) {
 		if (this.state == State.BORED) {
 			this.velocity.set(0, 0);
 		} else {
+			this.velocity.set(velocity.nor());
+			this.state = State.RUNNING;
+
+			float pi = (float)Math.PI;
+			float angle = velocity.getAngleRad();
+			while(angle < 0) {
+				angle += 2*pi;
+			}
+			angle = angle % (2*pi);
+
+			if (angle > pi * 0.25 && angle < pi * 0.75) {
+				this.direction = Direction.UP;
+			} else if (angle > pi * 1.25 && angle < pi * 1.75) {
+				this.direction = Direction.DOWN;
+			} else if (angle > pi * 0.75 && angle < pi * 1.25) {
+				this.direction = Direction.LEFT;
+			} else {
+				this.direction = Direction.RIGHT;
+			}
+
 			if (velocity.isZero(0.01f)) {
 				this.velocity.set(0, 0);
 				this.state = State.STANDING;
-			}
-			{
-				this.velocity.set(velocity.nor());
-				this.state = State.RUNNING;
-
-				float epsilon = 0.5f;
-				if (velocity.isCollinear(Constants.UP, epsilon)) {
-					this.direction = Direction.UP;
-				} else if (velocity.isCollinear(Constants.DOWN, epsilon)) {
-					this.direction = Direction.DOWN;
-				} else if (velocity.isCollinear(Constants.LEFT, epsilon)) {
-					this.direction = Direction.LEFT;
-				} else if (velocity.isCollinear(Constants.RIGHT, epsilon)) {
-					this.direction = Direction.RIGHT;
-				}
 			}
 		}
 	}
