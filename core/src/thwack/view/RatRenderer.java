@@ -1,49 +1,47 @@
 package thwack.view;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Disposable;
 import thwack.Constants;
 import thwack.model.Entity.Direction;
 import thwack.model.Entity.State;
 import thwack.model.Rat;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RatRenderer implements Disposable {
-	
+
 	private SpriteBatch batch;
-	
+
 	private ShapeRenderer shapeRenderer;
-	
+
 	private TextureAtlas ratAtlas;
-	
+
 	private final Map<Direction, Animation> ratAnim = new HashMap<Direction, Animation>();
 
 	private Boolean ratBool = false;
 	public RatRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
-		
-		this.ratAtlas = new TextureAtlas(Gdx.files.internal("Rat-packed/Rat.atlas"));
-		
+
+		this.ratAtlas = new TextureAtlas(Gdx.files.internal("Rat-Packed/Rat.atlas"));
+
 		float ratAnimSpeed = 0.075f;
 		ratAnim.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("run down/rat run down"), PlayMode.LOOP));
 		ratAnim.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("run left/rat run left"), PlayMode.LOOP));
 		ratAnim.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("run right/rat run right"), PlayMode.LOOP));
 		ratAnim.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("run up/rat run up"), PlayMode.LOOP));
-		
+
 	}
-	
+
 	private void ratLogic(Rat rat, float time){
 		if(rat.getStateTime() < time){
 			rat.setState(State.RUNNING);
@@ -69,7 +67,7 @@ public class RatRenderer implements Disposable {
 		Animation animation = null;
 
 		switch (rat.getState()) {
-		
+
 		case RUNNING:
 			animation = ratAnim.get(rat.getDirection());
 			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
@@ -83,7 +81,7 @@ public class RatRenderer implements Disposable {
 			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
 			break;
 		}
-		
+
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
 		float height = currentRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 
@@ -94,6 +92,6 @@ public class RatRenderer implements Disposable {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 	}

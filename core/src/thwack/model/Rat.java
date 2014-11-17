@@ -1,15 +1,9 @@
 package thwack.model;
 
-import thwack.Constants;
-
-import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import thwack.Constants;
 
 public class Rat extends Mob {
 
@@ -28,6 +22,7 @@ public class Rat extends Mob {
 		this.ratBodyDef.type = BodyType.DynamicBody;
 		this.ratBodyDef.position.set(pos);
 		ratBody = world.createBody(ratBodyDef);
+		ratBody.setUserData(this);
 		ratBody.setFixedRotation(true);
 
 
