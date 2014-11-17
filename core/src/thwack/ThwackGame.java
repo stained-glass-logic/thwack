@@ -9,8 +9,6 @@ import thwack.model.Entity.Direction;
 import thwack.model.Player;
 import thwack.model.Rat;
 import thwack.model.Updateable;
-import thwack.view.BlockRenderer;
-import thwack.view.MobRenderer;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
 
@@ -69,12 +67,7 @@ public class ThwackGame extends ApplicationAdapter {
 
 	private PlayerRenderer playerRenderer;
 
-	private MobRenderer mobRenderer;
-
 	private Array<Mob> mobs = new Array<Mob>();
-
-	private BlockRenderer blockRenderer;
-
 
 	// my attempt to add a bodydef
 	private BodyDef bodyWestDef = new BodyDef();
@@ -238,10 +231,6 @@ public class ThwackGame extends ApplicationAdapter {
 
 		for (Updateable updateable : updateables) {
 			updateable.update(deltaTime, context);
-		}
-
-		for (Mob mob : mobs) {
-			mobRenderer.render(mob);
 		}
 
 		debugRenderer.render(world, camera.combined);

@@ -1,7 +1,6 @@
 package thwack.controller;
 
-import com.sun.xml.internal.stream.Entity;
-
+import thwack.model.Entity;
 
 /**
  * @author Daniel Holderbaum
