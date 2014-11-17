@@ -13,7 +13,7 @@ import thwack.model.Wall;
 public class RatVsWallHandler extends ContactHandler<Rat, Wall> {
 
 	@Override
-	public void beginContact(Contact contact, Rat entityA, Fixture fixtureA, Wall entityB, Fixture fixtureB) {
+	public void beginContact(Contact contact, Rat rat, Fixture fixtureA, Wall entityB, Fixture fixtureB) {
 		System.out.println("Rat hit wall");
 	}
 

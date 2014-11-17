@@ -28,6 +28,7 @@ public class RatRenderer implements Disposable {
 	private final Map<Direction, Animation> ratAnim = new HashMap<Direction, Animation>();
 
 	private Boolean ratBool = false;
+
 	public RatRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
@@ -42,15 +43,15 @@ public class RatRenderer implements Disposable {
 
 	}
 
-	private void ratLogic(Rat rat, float time){
-		if(rat.getStateTime() < time){
+	private void ratLogic(Rat rat, float time) {
+		if (rat.getStateTime() < time) {
 			rat.setState(State.RUNNING);
-			if (ratBool == false){
-			rat.velocity.set(MathUtils.random((int)-1,(int)1), MathUtils.random((int)-1,(int)1));
-			ratBool = true;}
-		}
-		else if (rat.getStateTime() > time){
-			rat.velocity.set(0,0);
+			if (ratBool == false) {
+				rat.velocity.set(MathUtils.random((int) -1, (int) 1), MathUtils.random((int) -1, (int) 1));
+				ratBool = true;
+			}
+		} else if (rat.getStateTime() > time) {
+			rat.velocity.set(0, 0);
 			rat.setState(State.BORED);
 			rat.setStateTime(0);
 			ratBool = false;
@@ -66,20 +67,24 @@ public class RatRenderer implements Disposable {
 		AtlasRegion currentRegion = null;
 		Animation animation = null;
 
-		switch (rat.getState()) {
-
-		case RUNNING:
+		if (rat.isMoving()) {
+			switch (rat.getState()) {
+				case RUNNING:
+					animation = ratAnim.get(rat.getDirection());
+					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
+					break;
+				case BORED:
+					animation = ratAnim.get(rat.getDirection());
+					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
+					break;
+				default:
+					animation = ratAnim.get(rat.getDirection());
+					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
+					break;
+			}
+		} else {
 			animation = ratAnim.get(rat.getDirection());
-			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
-			break;
-		case BORED:
-			animation = ratAnim.get(rat.getDirection());
-			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
-			break;
-		default:
-			animation = ratAnim.get(rat.getDirection());
-			currentRegion = (AtlasRegion)animation.getKeyFrame(rat.getStateTime(), true);
-			break;
+			currentRegion = (AtlasRegion) animation.getKeyFrame(0, true);
 		}
 
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
@@ -89,9 +94,10 @@ public class RatRenderer implements Disposable {
 		batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
 		batch.end();
 	}
+
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 
 	}
-	}
+}
