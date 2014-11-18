@@ -9,14 +9,18 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
+
 import thwack.controller.MyContactListener;
 import thwack.controller.PlayerController;
 import thwack.model.Entity.Direction;
@@ -24,6 +28,7 @@ import thwack.model.*;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,8 +81,7 @@ public class ThwackGame extends ApplicationAdapter {
 
 	private Rat rat;
 	private RatRenderer ratRenderer;
-	private Wall wall; // dummy to resolve wall collisions
-
+	
 	@Override
 	public void create() {
 
@@ -110,9 +114,8 @@ public class ThwackGame extends ApplicationAdapter {
 		shapeRenderer = new ShapeRenderer();
 
 		playerRenderer = new PlayerRenderer(batch, shapeRenderer);
-		wall = new Wall();
 
-		//the walls
+		/*//the walls
 		{
 
 			float ww = (width);
@@ -164,7 +167,12 @@ public class ThwackGame extends ApplicationAdapter {
 			bodyNorth.createFixture(fixtureDefNorth);
 			bodyShapeNorth.dispose();
 
-		}
+		}*/
+		
+		
+		
+		
+		
 		player = new Player(world);
 
 		Vector2 ratPos = new Vector2(6f, 20f);
@@ -198,8 +206,151 @@ public class ThwackGame extends ApplicationAdapter {
 		// System.out.println((Gdx.graphics.getDeltaTime()));
 		player.setPosition(player.playerBody.getPosition().x - .65f, player.playerBody.getPosition().y - .2f);
 		rat.setPosition(rat.ratBody.getPosition().x, rat.ratBody.getPosition().y);
+		addBox2D();
 	}
 
+	private void addBox2D () {
+		float tileSize = 0;
+		ArrayList<Box2DCell> cells = new ArrayList<Box2DCell>();
+		MapLayer mapLayer = tiledMap.getLayers().get("walls");
+		TiledMapTileLayer layer = (TiledMapTileLayer)mapLayer;
+		tileSize = layer.getTileWidth();
+		for (int y = 0; y < layer.getHeight(); y++) {
+			for (int x = 0; x < layer.getWidth(); x++) {
+				Cell cell = layer.getCell(x, y);
+				if (cell == null) {
+					continue;
+				}
+				if (cell.getTile() == null) {
+					continue;
+				}
+
+				cells.add(new Box2DCell(cell, x, y));
+			}
+		}
+
+		// X ___
+		// l J
+		// ----
+		int i = cells.size() - 1;
+		ArrayList<Box2DCell> yCells = new ArrayList<Box2DCell>();
+		while (true) {
+			Box2DCell c = cells.get(0);
+			float x = c.x;
+			while (true) {
+				Box2DCell c2 = findCellToRight(cells, c, x);
+				if (c2 != null) {
+					cells.remove(c2);
+					x++;
+					i--;
+				} else {
+					break;
+				}
+			}
+			float x2 = x - c.x + 1;
+			if (x2 - 1 >= 1) {
+				BodyDef bodyDef = new BodyDef();
+				bodyDef.position.x = Pixels.toMeters(c.x * tileSize + x2 * tileSize / 2);
+				bodyDef.position.y = Pixels.toMeters(c.y * tileSize + tileSize / 2);
+				bodyDef.type = BodyType.StaticBody;
+				Body body = world.createBody(bodyDef);
+				body.setUserData(c);
+				PolygonShape shape = new PolygonShape();
+				shape.setAsBox(Pixels.toMeters(x2 * tileSize / 2), Pixels.toMeters(tileSize / 2));
+				FixtureDef fixtureDef = new FixtureDef();
+				fixtureDef.shape = shape;
+				fixtureDef.friction = 0;
+				Fixture f = body.createFixture(fixtureDef);
+				f.setUserData("tile");
+			}
+			if (x2 - 1 == 0) {
+				yCells.add(c);
+			}
+			cells.remove(c);
+			if (cells.size() <= 0) {
+				break;
+			}
+		}
+
+		// Y
+		// _
+		// l l
+		// l l
+		// L _J
+		if (yCells.size() != 0) {
+			while (true) {
+				Box2DCell c = yCells.get(0);
+				float y = c.y;
+				while (true) {
+					Box2DCell c2 = findCellToDown(yCells, c, y);
+					if (c2 != null) {
+						yCells.remove(c2);
+						y++;
+					} else {
+						break;
+					}
+				}
+				float y2 = y - c.y + 1;
+				if (y2 == 0) {
+					y2 = 1;
+				}
+				BodyDef bodyDef = new BodyDef();
+				bodyDef.position.x = Pixels.toMeters(c.x * tileSize + tileSize / 2);
+				bodyDef.position.y = Pixels.toMeters(c.y * tileSize + y2 * tileSize / 2);
+				bodyDef.type = BodyType.StaticBody;
+				Body body = world.createBody(bodyDef);
+				body.setUserData(c);
+				PolygonShape shape = new PolygonShape();
+				shape.setAsBox(Pixels.toMeters(tileSize / 2), Pixels.toMeters(y2 * tileSize / 2));
+				FixtureDef fixtureDef = new FixtureDef();
+				fixtureDef.shape = shape;
+				fixtureDef.friction = 0;
+				Fixture f = body.createFixture(fixtureDef);
+				f.setUserData("tile");
+				yCells.remove(c);
+				if (yCells.size() <= 0) {
+					break;
+				}
+			}
+		}
+	}
+	
+	public static final class Pixels {
+
+		public static final float toMeters (float pixels) {
+			return pixels / 16;
+		}
+
+	}
+
+	
+	private Box2DCell findCellToRight (ArrayList<Box2DCell> cells, Box2DCell c, float x) {
+		for (int i = 0; i < cells.size(); i++) {
+			if (cells.get(i) == c) {
+				continue;
+			}
+			if (cells.get(i).y == c.y && cells.get(i).x == x + 1) {
+				Box2DCell c2 = cells.get(i);
+				cells.remove(i);
+				return c2;
+			}
+		}
+		return null;
+	}
+
+	private Box2DCell findCellToDown (ArrayList<Box2DCell> cells, Box2DCell c, float y) {
+		for (int i = 0; i < cells.size(); i++) {
+			if (cells.get(i) == c) {
+				continue;
+			}
+			if (cells.get(i).y == y + 1 && cells.get(i).x == c.x) {
+				Box2DCell c2 = cells.get(i);
+				cells.remove(i);
+				return c2;
+			}
+		}
+		return null;
+	}
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0.1f, 1);
