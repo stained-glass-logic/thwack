@@ -14,12 +14,12 @@ public class RatVsWallHandler extends ContactHandler<Rat, Wall> {
 
 	@Override
 	public void beginContact(Contact contact, Rat rat, Fixture fixtureA, Wall entityB, Fixture fixtureB) {
-		System.out.println("Rat hit wall");
+
 	}
 
 	@Override
 	public void endContact(Contact contact, Rat entityA, Fixture fixtureA, Wall entityB, Fixture fixtureB) {
-		System.out.println("Rat left wall");
+
 	}
 
 	@Override
