@@ -13,6 +13,7 @@ public class Rat extends Mob {
 	private State state = State.BORED;
 
 	public Vector2 velocity = new Vector2(0, 0).limit(getSpeed());
+    private Vector2 lastPosition = new Vector2(0,0);
 
 	public Rat(World world, Vector2 pos, Vector2 size) {
 		super();
@@ -43,8 +44,9 @@ public class Rat extends Mob {
 	}
 
 	public boolean isMoving() {
-		// todo: get actual velocity from bx2d
-		return true;
+        Vector2 vel = lastPosition.cpy().sub(ratBody.getPosition());
+
+        return vel.len2() > 0.001f;
 	}
 
 	public void move(Vector2 velocity) {
@@ -101,4 +103,8 @@ public class Rat extends Mob {
 	public Vector2 getPosition() {
 		return position;
 	}
+
+    public void archivePosition() {
+        lastPosition = ratBody.getPosition().cpy();
+    }
 }

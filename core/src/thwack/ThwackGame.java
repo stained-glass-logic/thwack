@@ -206,8 +206,19 @@ public class ThwackGame extends ApplicationAdapter {
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		tiledMapRenderer.setView(camera);
-		camera.position.set(player.playerBody.getPosition().x,
-				player.playerBody.getPosition().y - (11 / 32), 0);
+
+		float x = player.playerBody.getPosition().x;
+		float y = player.playerBody.getPosition().y - (11 / 32);
+
+		x = Math.max(x, 10);
+		y = Math.max(y, 9.5f);
+
+		x = Math.min(x, 46);
+		y = Math.min(y, 30.5f);
+
+		camera.position.set(x, y, 0);
+
+
 		player.setPosition(player.playerBody.getPosition().x -.65f, player.playerBody.getPosition().y);
 		if(rat.getDirection() == Direction.UP){
 			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
@@ -230,6 +241,7 @@ public class ThwackGame extends ApplicationAdapter {
 		}
 
 		debugRenderer.render(world, camera.combined);
+
 		world.step(1 / 60f, 6, 2);
 	}
 
