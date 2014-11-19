@@ -1,38 +1,31 @@
 package thwack.model;
 
-import java.util.Map;
-
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import thwack.Constants;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
+import java.util.Map;
 
 public class Player extends Entity implements Updateable {
-	
+
 	public Body playerBody;
 	private BodyDef playerBodyDef = new BodyDef();
 	private FixtureDef playerFixtureDef;
-	 
+	private Weapon weapon;
+
     public void applyImpulse() {
+	   // Vector2 currentVelocity = playerBody.getLinearVelocity();
+		Vector2 targetVelocity = new Vector2(velocity).nor().scl(speed);
 
-           // Vector2 currentVelocity = playerBody.getLinearVelocity();
-            Vector2 targetVelocity = new Vector2(velocity).nor().scl(speed);
+		Vector2 impulse = new Vector2(targetVelocity);
 
-            Vector2 impulse = new Vector2(targetVelocity);
-
-            playerBody.setLinearVelocity(impulse);
+		playerBody.setLinearVelocity(impulse);
     }
 
 	public Player(World world) {
-		this(0.0f, 0.0f);
+		this.position = new Vector2(0, 0);
+		this.center = new Vector2();
 		playerBodyDef.type = BodyType.DynamicBody;
 		playerBodyDef.position.set(5,20);
 		this.playerBody = world.createBody(playerBodyDef);
@@ -46,29 +39,40 @@ public class Player extends Entity implements Updateable {
 
 		this.playerBody.createFixture(playerFixtureDef);
 		playerFixtureDef.shape.dispose();
+
+		weapon = new Sword(world, this);
 	}
-	
-	public Player(float x, float y) {
-		this.position = new Vector2(x, y);
-		this.center = new Vector2();
+
+	@Override
+	public void update(float deltaTime, Map<String, Object> context) {
+		weapon.update(deltaTime, context);
+	}
+
+	@Override
+	public boolean active() {
+		return true;
 	}
 
 	public State getState() {
 		return state;
 	}
-	
+
 	public void setState(State state) {
 		if (this.state != state) {
 			// reset the state time every time state changes
 			stateTime = 0.0f;
+
+			if (state == State.ATTACKING) {
+				weapon.beginAttack();
+			}
 		}
 		this.state = state;
 	}
-	
+
 	public Direction getDirection() {
 		return direction;
 	}
-	
+
 	public void move(Vector2 velocity) {
 		if (this.state == State.ATTACKING) {
 			this.velocity.set(0, 0);
@@ -79,7 +83,7 @@ public class Player extends Entity implements Updateable {
 			} else {
 				this.velocity.set(velocity.nor());
 				this.state = State.WALKING;
-				
+
 				float epsilon = 0.5f;
 				if (velocity.isCollinear(Constants.UP, epsilon)) {
 					this.direction = Direction.UP;
@@ -93,5 +97,9 @@ public class Player extends Entity implements Updateable {
 			}
 		}
 	}
-	
+
+	public void updatePosition() {
+
+	}
+
 }

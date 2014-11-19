@@ -3,10 +3,7 @@ package thwack.controller;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
-import thwack.model.Entity;
-import thwack.model.Player;
-import thwack.model.Rat;
-import thwack.model.Wall;
+import thwack.model.*;
 
 /**
  * This class will determine the correct {@link ContactHandler} for a given
@@ -23,6 +20,7 @@ public class MyContactListener implements ContactListener {
 	public MyContactListener() {
 		handlerInformation.add(new ContactHandlerInformation(Player.class, Pickup.class, new PlayerVsPickupHandler()));
 		handlerInformation.add(new ContactHandlerInformation(Rat.class, Wall.class, new RatVsWallHandler()));
+		handlerInformation.add(new ContactHandlerInformation(Rat.class, Weapon.class, new RatVsWeaponHandler()));
 		// more registered handlers...
 	}
 
@@ -59,6 +57,10 @@ public class MyContactListener implements ContactListener {
 	public void endContact(Contact contact) {
 		Fixture fixtureA = contact.getFixtureA();
 		Fixture fixtureB = contact.getFixtureB();
+
+		if (fixtureA == null || fixtureB == null) {
+			return;
+		}
 
 		Body bodyA = fixtureA.getBody();
 		Body bodyB = contact.getFixtureB().getBody();

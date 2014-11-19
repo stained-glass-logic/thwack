@@ -1,10 +1,16 @@
 package thwack.model;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Disposable;
 
-public class Rat extends Mob {
+import java.util.Map;
+
+public class Rat extends Mob implements Updateable, Disposable {
+
+	private World world;
 
 	public Body ratBody;
 	private BodyDef ratBodyDef;
@@ -15,8 +21,11 @@ public class Rat extends Mob {
 	public Vector2 velocity = new Vector2(0, 0).limit(getSpeed());
     private Vector2 lastPosition = new Vector2(0,0);
 
+	private Boolean stateSwitched = false;
+
 	public Rat(World world, Vector2 pos, Vector2 size) {
 		super();
+		this.world = world;
 		this.setSpeed(10f);
 		this.ratBodyDef = new BodyDef();
 		this.ratBodyDef.type = BodyType.DynamicBody;
@@ -24,7 +33,6 @@ public class Rat extends Mob {
 		ratBody = world.createBody(ratBodyDef);
 		ratBody.setUserData(this);
 		ratBody.setFixedRotation(true);
-
 
 		PolygonShape ratBodyShape = new PolygonShape();
 		ratBodyShape.setAsBox(size.x, size.y);
@@ -34,7 +42,35 @@ public class Rat extends Mob {
 		ratFixtureDef.shape = ratBodyShape;
 		ratBody.createFixture(ratFixtureDef);
 		ratFixtureDef.shape.dispose();
+	}
 
+	@Override
+	public void dispose() {
+		world.destroyBody(ratBody);
+	}
+
+	@Override
+	public void update(float deltaTime, Map<String, Object> context) {
+		ratLogic(3f);
+		increaseStateTime(deltaTime);
+	}
+
+	// why is the rat logic not in the Rat object?
+	private void ratLogic(float time) {
+		if (getStateTime() < time) {
+			setState(State.RUNNING);
+			if (!stateSwitched) {
+				velocity.set(MathUtils.random(-1, 1), MathUtils.random( -1,  1));
+				stateSwitched = true;
+			}
+		} else if (getStateTime() > time) {
+			velocity.set(0, 0);
+			setState(State.BORED);
+			setStateTime(0);
+			stateSwitched = false;
+		}
+		move(velocity);
+		applyImpulse();
 	}
 
 	public void applyImpulse() {
@@ -107,4 +143,8 @@ public class Rat extends Mob {
     public void archivePosition() {
         lastPosition = ratBody.getPosition().cpy();
     }
+
+	public boolean active() {
+		return isAlive();
+	}
 }

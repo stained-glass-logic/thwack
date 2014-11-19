@@ -19,7 +19,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import thwack.controller.MyContactListener;
 import thwack.controller.PlayerController;
-import thwack.model.Entity.Direction;
 import thwack.model.*;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
@@ -48,6 +47,7 @@ public class ThwackGame extends ApplicationAdapter {
 	private ShapeRenderer shapeRenderer;
 
 	private Array<Updateable> updateables = new Array<Updateable>();
+	private Array<Rat> rats = new Array<Rat>();
 
 	private Player player;
 
@@ -74,7 +74,6 @@ public class ThwackGame extends ApplicationAdapter {
 	private FixtureDef fixtureDefWest, fixtureDefEast, fixtureDefNorth, fixtureDefSouth;
 	private FixtureDef playerDef;
 
-	private Rat rat;
 	private RatRenderer ratRenderer;
 	private Wall wall; // dummy to resolve wall collisions
 
@@ -114,7 +113,6 @@ public class ThwackGame extends ApplicationAdapter {
 
 		//the walls
 		{
-
 			float ww = (width);
 			float hh = (height);
 
@@ -163,13 +161,17 @@ public class ThwackGame extends ApplicationAdapter {
 			fixtureDefNorth.shape = bodyShapeNorth;
 			bodyNorth.createFixture(fixtureDefNorth);
 			bodyShapeNorth.dispose();
-
 		}
+
 		player = new Player(world);
 
 		Vector2 ratPos = new Vector2(6f, 20f);
 		Vector2 ratSize = new Vector2(.5f, .5f);
-		rat = new Rat(world, ratPos, ratSize);
+		for (int count = 0; count < 200; count++) {
+			Rat rat = new Rat(world, ratPos, ratSize);
+			rats.add(rat);
+			updateables.add(rat);
+		}
 
 		// and the player object code
 		batch = new SpriteBatch();
@@ -179,9 +181,6 @@ public class ThwackGame extends ApplicationAdapter {
 		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
 				batch);
-
-		font = new BitmapFont();
-		context.put(BITMAP_FONT, font);
 
 		shapeRenderer = new ShapeRenderer();
 		context.put(SHAPE_RENDERER, shapeRenderer);
@@ -196,8 +195,6 @@ public class ThwackGame extends ApplicationAdapter {
 		updateables.add(playerController);
 		Gdx.input.setInputProcessor(playerController);
 		// System.out.println((Gdx.graphics.getDeltaTime()));
-		player.setPosition(player.playerBody.getPosition().x - .65f, player.playerBody.getPosition().y - .2f);
-		rat.setPosition(rat.ratBody.getPosition().x, rat.ratBody.getPosition().y);
 	}
 
 	@Override
@@ -218,31 +215,33 @@ public class ThwackGame extends ApplicationAdapter {
 
 		camera.position.set(x, y, 0);
 
-
-		player.setPosition(player.playerBody.getPosition().x -.65f, player.playerBody.getPosition().y);
-		if(rat.getDirection() == Direction.UP){
-			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.DOWN){
-			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.RIGHT){
-			rat.setPosition(rat.ratBody.getPosition().x -1.35f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.LEFT){
-			rat.setPosition(rat.ratBody.getPosition().x -.75f, rat.ratBody.getPosition().y - .5f);
-		}
 		camera.update();
 		tiledMapRenderer.render();
+
+		batch.begin();
 		playerRenderer.render(player);
 
-		ratRenderer.render(rat);
+		for (int index = 0; index < rats.size; index++) {
+			if (rats.get(index).isAlive()) {
+				ratRenderer.render(rats.get(index));
+			} else {
+				rats.get(index).dispose();
+				rats.removeIndex(index);
+			}
+		}
+		batch.end();
+
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		for (Updateable updateable : updateables) {
-			updateable.update(deltaTime, context);
+			if (updateable.active()) {
+				updateable.update(deltaTime, context);
+			}
 		}
 
 		debugRenderer.render(world, camera.combined);
 
-		world.step(1 / 60f, 6, 2);
+		world.step(deltaTime, 6, 2);
 	}
 
 }
