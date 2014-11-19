@@ -43,6 +43,7 @@ public class RatRenderer implements Disposable {
 
 	}
 
+    // why is the rat logic not in the Rat object?
 	private void ratLogic(Rat rat, float time) {
 		if (rat.getStateTime() < time) {
 			rat.setState(State.RUNNING);
@@ -93,6 +94,8 @@ public class RatRenderer implements Disposable {
 		batch.begin();
 		batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
 		batch.end();
+
+        rat.archivePosition();
 	}
 
 	@Override
