@@ -118,12 +118,10 @@ public class PlayerRenderer implements Disposable {
 			weaponHeight = weaponRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 		}
 
-		batch.begin();
 		batch.draw(currentRegion, player.getPosition().x, player.getPosition().y - .5f, width, height);
 		if (weaponRegion != null) {
 			batch.draw(weaponRegion, weaponX, weaponY, weaponWidth, weaponHeight);
 		}
-		batch.end();
 
 //		shapeRenderer.begin(ShapeType.Line);
 //		shapeRenderer.setColor(Color.WHITE);

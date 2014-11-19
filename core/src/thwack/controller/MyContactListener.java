@@ -58,6 +58,10 @@ public class MyContactListener implements ContactListener {
 		Fixture fixtureA = contact.getFixtureA();
 		Fixture fixtureB = contact.getFixtureB();
 
+		if (fixtureA == null || fixtureB == null) {
+			return;
+		}
+
 		Body bodyA = fixtureA.getBody();
 		Body bodyB = contact.getFixtureB().getBody();
 

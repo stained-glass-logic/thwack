@@ -15,7 +15,7 @@ public class RatVsWeaponHandler extends ContactHandler<Rat, Weapon> {
 	@Override
 	public void beginContact(Contact contact, Rat entityA, Fixture fixtureA, Weapon entityB, Fixture fixtureB) {
 		if (entityB.isAttacking()) {
-			System.out.println("Rat was hit!");
+			entityA.died();
 		}
 	}
 

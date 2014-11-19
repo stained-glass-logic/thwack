@@ -65,6 +65,11 @@ public class PlayerController implements Updateable, InputProcessor {
 	}
 
 	@Override
+	public boolean active() {
+		return true;
+	}
+
+	@Override
 	public boolean keyDown(int keycode) {
 		return false;
 	}

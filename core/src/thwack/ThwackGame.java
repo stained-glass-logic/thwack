@@ -47,6 +47,7 @@ public class ThwackGame extends ApplicationAdapter {
 	private ShapeRenderer shapeRenderer;
 
 	private Array<Updateable> updateables = new Array<Updateable>();
+	private Array<Rat> rats = new Array<Rat>();
 
 	private Player player;
 
@@ -73,7 +74,6 @@ public class ThwackGame extends ApplicationAdapter {
 	private FixtureDef fixtureDefWest, fixtureDefEast, fixtureDefNorth, fixtureDefSouth;
 	private FixtureDef playerDef;
 
-	private Rat rat;
 	private RatRenderer ratRenderer;
 	private Wall wall; // dummy to resolve wall collisions
 
@@ -113,7 +113,6 @@ public class ThwackGame extends ApplicationAdapter {
 
 		//the walls
 		{
-
 			float ww = (width);
 			float hh = (height);
 
@@ -162,13 +161,17 @@ public class ThwackGame extends ApplicationAdapter {
 			fixtureDefNorth.shape = bodyShapeNorth;
 			bodyNorth.createFixture(fixtureDefNorth);
 			bodyShapeNorth.dispose();
-
 		}
+
 		player = new Player(world);
 
 		Vector2 ratPos = new Vector2(6f, 20f);
 		Vector2 ratSize = new Vector2(.5f, .5f);
-		rat = new Rat(world, ratPos, ratSize);
+		for (int count = 0; count < 200; count++) {
+			Rat rat = new Rat(world, ratPos, ratSize);
+			rats.add(rat);
+			updateables.add(rat);
+		}
 
 		// and the player object code
 		batch = new SpriteBatch();
@@ -214,18 +217,31 @@ public class ThwackGame extends ApplicationAdapter {
 
 		camera.update();
 		tiledMapRenderer.render();
+
+		batch.begin();
 		playerRenderer.render(player);
 
-		ratRenderer.render(rat);
+		for (int index = 0; index < rats.size; index++) {
+			if (rats.get(index).isAlive()) {
+				ratRenderer.render(rats.get(index));
+			} else {
+				rats.get(index).dispose();
+				rats.removeIndex(index);
+			}
+		}
+		batch.end();
+
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		for (Updateable updateable : updateables) {
-			updateable.update(deltaTime, context);
+			if (updateable.active()) {
+				updateable.update(deltaTime, context);
+			}
 		}
 
 		debugRenderer.render(world, camera.combined);
 
-		world.step(1 / 60f, 6, 2);
+		world.step(deltaTime, 6, 2);
 	}
 
 }

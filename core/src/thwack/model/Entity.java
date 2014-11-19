@@ -20,7 +20,8 @@ public abstract class Entity {
 		WALKING,
 		ATTACKING,
 		BORED,
-		RUNNING
+		RUNNING,
+		DEAD
 	}
 
 	public static enum Direction {
@@ -53,5 +54,13 @@ public abstract class Entity {
 	}
 
 	public void updatePosition() {}
+
+	public void died() {
+		state = State.DEAD;
+	}
+
+	public boolean isAlive() {
+		return state != State.DEAD;
+	}
 
 }

@@ -48,6 +48,11 @@ public class Player extends Entity implements Updateable {
 		weapon.update(deltaTime, context);
 	}
 
+	@Override
+	public boolean active() {
+		return true;
+	}
+
 	public State getState() {
 		return state;
 	}
