@@ -61,6 +61,7 @@ public class PlayerController implements Updateable, InputProcessor {
 
 		player.move(direction);
 		player.applyImpulse();
+		player.update(deltaTime, context);
 	}
 
 	@Override

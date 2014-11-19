@@ -5,11 +5,14 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import thwack.Constants;
 
+import java.util.Map;
+
 public class Player extends Entity implements Updateable {
 
 	public Body playerBody;
 	private BodyDef playerBodyDef = new BodyDef();
 	private FixtureDef playerFixtureDef;
+	private Weapon weapon;
 
     public void applyImpulse() {
 	   // Vector2 currentVelocity = playerBody.getLinearVelocity();
@@ -36,6 +39,13 @@ public class Player extends Entity implements Updateable {
 
 		this.playerBody.createFixture(playerFixtureDef);
 		playerFixtureDef.shape.dispose();
+
+		weapon = new Sword(world, this);
+	}
+
+	@Override
+	public void update(float deltaTime, Map<String, Object> context) {
+		weapon.update(deltaTime, context);
 	}
 
 	public State getState() {
@@ -46,6 +56,10 @@ public class Player extends Entity implements Updateable {
 		if (this.state != state) {
 			// reset the state time every time state changes
 			stateTime = 0.0f;
+
+			if (state == State.ATTACKING) {
+				weapon.beginAttack();
+			}
 		}
 		this.state = state;
 	}

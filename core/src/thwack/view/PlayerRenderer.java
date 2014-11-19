@@ -66,42 +66,42 @@ public class PlayerRenderer implements Disposable {
 		Animation weaponAnimation = null;
 
 		switch (player.getState()) {
-		case ATTACKING:
-			Direction dir = player.getDirection();
+			case ATTACKING:
+				Direction dir = player.getDirection();
 
-			animation = attack.get(dir);
-			weaponAnimation = attackSword.get(dir);
+				animation = attack.get(dir);
+				weaponAnimation = attackSword.get(dir);
 
-			if (animation.isAnimationFinished(player.getStateTime())) {
-				System.out.println("this should be working");
-				player.setState(State.STANDING);
+				if (animation.isAnimationFinished(player.getStateTime())) {
+					//System.out.println("this should be working");
+					player.setState(State.STANDING);
+					animation = walking.get(player.getDirection());
+					currentRegion = (AtlasRegion)animation.getKeyFrames()[0];
+				} else {
+					//System.out.println("why isn't this working");
+					currentRegion = (AtlasRegion)animation.getKeyFrame(player.getStateTime(), false);
+					weaponRegion = (AtlasRegion)weaponAnimation.getKeyFrame(player.getStateTime(), false);
+				}
+				break;
+			case STANDING:
 				animation = walking.get(player.getDirection());
 				currentRegion = (AtlasRegion)animation.getKeyFrames()[0];
-			} else {
-				System.out.println("why isn't this working");
-				currentRegion = (AtlasRegion)animation.getKeyFrame(player.getStateTime(), false);
-				weaponRegion = (AtlasRegion)weaponAnimation.getKeyFrame(player.getStateTime(), false);
-			}
-			break;
-		case STANDING:
-			animation = walking.get(player.getDirection());
-			currentRegion = (AtlasRegion)animation.getKeyFrames()[0];
-			break;
-		case WALKING:
-			animation = walking.get(player.getDirection());
-			currentRegion = (AtlasRegion)animation.getKeyFrame(player.getStateTime(), true);
-	    if (player.getDirection() == Direction.LEFT) {
-	      currentRegion.flip(currentRegion.isFlipX(), false);
-	    } else if (player.getDirection() == Direction.RIGHT) {
-	      currentRegion.flip(!currentRegion.isFlipX(), false);
-	    }
-		case BORED:
-			break;
-		case RUNNING:
-			break;
-		default:
-			break;
-
+				break;
+			case WALKING:
+				animation = walking.get(player.getDirection());
+				currentRegion = (AtlasRegion)animation.getKeyFrame(player.getStateTime(), true);
+				if (player.getDirection() == Direction.LEFT) {
+				  currentRegion.flip(currentRegion.isFlipX(), false);
+				} else if (player.getDirection() == Direction.RIGHT) {
+				  currentRegion.flip(!currentRegion.isFlipX(), false);
+				}
+				break;
+			case BORED:
+				break;
+			case RUNNING:
+				break;
+			default:
+				break;
 		}
 
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
