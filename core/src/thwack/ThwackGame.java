@@ -19,7 +19,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import thwack.controller.MyContactListener;
 import thwack.controller.PlayerController;
-import thwack.model.Entity.Direction;
 import thwack.model.*;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
@@ -180,9 +179,6 @@ public class ThwackGame extends ApplicationAdapter {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
 				batch);
 
-		font = new BitmapFont();
-		context.put(BITMAP_FONT, font);
-
 		shapeRenderer = new ShapeRenderer();
 		context.put(SHAPE_RENDERER, shapeRenderer);
 
@@ -196,8 +192,6 @@ public class ThwackGame extends ApplicationAdapter {
 		updateables.add(playerController);
 		Gdx.input.setInputProcessor(playerController);
 		// System.out.println((Gdx.graphics.getDeltaTime()));
-		player.setPosition(player.playerBody.getPosition().x - .65f, player.playerBody.getPosition().y - .2f);
-		rat.setPosition(rat.ratBody.getPosition().x, rat.ratBody.getPosition().y);
 	}
 
 	@Override
@@ -218,17 +212,6 @@ public class ThwackGame extends ApplicationAdapter {
 
 		camera.position.set(x, y, 0);
 
-
-		player.setPosition(player.playerBody.getPosition().x -.65f, player.playerBody.getPosition().y);
-		if(rat.getDirection() == Direction.UP){
-			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.DOWN){
-			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.RIGHT){
-			rat.setPosition(rat.ratBody.getPosition().x -1.35f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.LEFT){
-			rat.setPosition(rat.ratBody.getPosition().x -.75f, rat.ratBody.getPosition().y - .5f);
-		}
 		camera.update();
 		tiledMapRenderer.render();
 		playerRenderer.render(player);
