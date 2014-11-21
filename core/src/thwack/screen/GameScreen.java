@@ -153,10 +153,10 @@ public class GameScreen extends ScreenAdapter {
         float y = player.playerBody.getPosition().y - (11 / 32);
 
         x = Math.max(x, 16);
-        y = Math.max(y, 16);
+        y = Math.max(y, 14);
 
         x = Math.min(x, 40);
-        y = Math.min(y, 24);
+        y = Math.min(y, 26);
 
         camera.position.set(x, y, 0);
 
