@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import thwack.Constants;
 import thwack.Global;
 import thwack.controller.MyContactListener;
 import thwack.controller.PlayerController;
@@ -21,6 +22,8 @@ import thwack.model.Player;
 import thwack.model.Rat;
 import thwack.model.Updateable;
 import thwack.model.Wall;
+import thwack.sound.MusicPlayer;
+import thwack.sound.SoundPlayer;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
 
@@ -121,6 +124,11 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        MusicPlayer.GAME_RAGTIME.load();
+        if (Constants.AUDIO_ON) {
+            MusicPlayer.GAME_RAGTIME.play();
+        }
+        SoundPlayer.SLAP.load();
     }
 
     @Override
@@ -130,6 +138,8 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        MusicPlayer.GAME_RAGTIME.dispose();
+        SoundPlayer.SLAP.dispose();
     }
 
     @Override
