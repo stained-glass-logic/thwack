@@ -57,20 +57,66 @@ public class Rat extends Mob implements Updateable, Disposable {
 
 	// why is the rat logic not in the Rat object?
 	private void ratLogic(float time) {
+		
+		//change state randomly every time seconds
 		if (getStateTime() < time) {
-			setState(State.RUNNING);
-			if (!stateSwitched) {
-				velocity.set(MathUtils.random(-1, 1), MathUtils.random( -1,  1));
-				stateSwitched = true;
-			}
-		} else if (getStateTime() > time) {
-			velocity.set(0, 0);
-			setState(State.BORED);
-			setStateTime(0);
-			stateSwitched = false;
+			//if the state doesn't need to change yet, then
+			//just try to move
+			move(velocity);
+			applyImpulse();			
+			
 		}
-		move(velocity);
-		applyImpulse();
+		else
+		{
+			//otherwise, pick a number between 1 to 5 to
+			//determine next state.  Running is particularly likely.
+			int nextState = MathUtils.random(1,5);
+			//pick a random direction too
+			int nextDir = MathUtils.random(1,4);
+			if (nextDir == 1) this.direction = Direction.UP;
+			else if (nextDir == 2) this.direction = Direction.LEFT;
+			else if (nextDir == 3) this.direction = Direction.RIGHT;
+			else if (nextDir == 4) this.direction = Direction.DOWN;
+			
+			switch (nextState)
+			{
+				case 1:
+					//running
+					setState(State.RUNNING);
+					setStateTime(0);
+					velocity.set(MathUtils.random(-1, 1), MathUtils.random( -1,  1));					
+					move(velocity);
+					applyImpulse();			
+					break;
+				case 2:
+					//bored
+					setState(State.BORED);
+					setStateTime(0);
+					velocity.set(0,0);
+					break;
+				case 3:
+					//stand still
+					setState(State.STANDING);
+					setStateTime(0);
+					velocity.set(0,0);
+					break;
+				case 4:
+					//bored2
+					setState(State.BORED2);
+					setStateTime(0);
+					velocity.set(0,0);
+					break;
+				case 5:
+					//running
+					setState(State.RUNNING);
+					setStateTime(0);
+					velocity.set(MathUtils.random(-1, 1), MathUtils.random( -1,  1));					
+					break;
+			}
+		}
+		
+
+		
 	}
 
 	public void applyImpulse() {
@@ -90,7 +136,7 @@ public class Rat extends Mob implements Updateable, Disposable {
 			this.velocity.set(0, 0);
 		} else {
 			this.velocity.set(velocity.nor());
-			this.state = State.RUNNING;
+			//this.state = State.RUNNING;
 
 			float pi = (float)Math.PI;
 			float angle = velocity.getAngleRad();
@@ -109,7 +155,7 @@ public class Rat extends Mob implements Updateable, Disposable {
 				this.direction = Direction.RIGHT;
 			}
 
-			if (velocity.isZero(0.01f)) {
+			if (velocity.isZero(0.01f) && state == State.RUNNING) {
 				this.velocity.set(0, 0);
 				this.state = State.STANDING;
 			}
