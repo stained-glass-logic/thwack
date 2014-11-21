@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
+
 import thwack.Constants;
 import thwack.model.Entity.Direction;
 import thwack.model.Rat;
@@ -23,8 +25,10 @@ public class RatRenderer implements Disposable {
 
 	private TextureAtlas ratAtlas;
 
-	private final Map<Direction, Animation> ratAnim = new HashMap<Direction, Animation>();
-
+	private final Map<Direction, Animation> ratWalkAnim = new HashMap<Direction, Animation>();
+	private final Map<Direction, Animation> ratBoredAnim1 = new HashMap<Direction, Animation>();
+	private final Map<Direction, Animation> ratBoredAnim2 = new HashMap<Direction, Animation>();
+	
 	public RatRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
@@ -32,10 +36,23 @@ public class RatRenderer implements Disposable {
 		this.ratAtlas = new TextureAtlas(Gdx.files.internal("Rat-Packed/Rat.atlas"));
 
 		float ratAnimSpeed = 0.075f;
-		ratAnim.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("run down/rat run down"), PlayMode.LOOP));
-		ratAnim.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("run left/rat run left"), PlayMode.LOOP));
-		ratAnim.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("run right/rat run right"), PlayMode.LOOP));
-		ratAnim.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("run up/rat run up"), PlayMode.LOOP));
+		ratWalkAnim.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("run down/rat run down"), PlayMode.LOOP));
+		ratWalkAnim.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("run left/rat run left"), PlayMode.LOOP));
+		ratWalkAnim.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("run right/rat run right"), PlayMode.LOOP));
+		ratWalkAnim.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("run up/rat run up"), PlayMode.LOOP));
+		ratBoredAnim1.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("bored down/Clean/Rat Clean Down"), PlayMode.LOOP));
+		System.out.println("Adding rat animation: " + ratAtlas.findRegions("bored down/Clean/Rat Clean Down"));
+		ratBoredAnim1.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("bored side/Clean/Rat Clean Side"), PlayMode.LOOP));
+		System.out.println("Adding rat animation: " + ratAtlas.findRegions("bored side/Clean/Rat Clean Side"));
+		ratBoredAnim1.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("bored side/Clean/Rat Clean Side"), PlayMode.LOOP));
+		System.out.println("Adding rat animation: " + ratAtlas.findRegions("bored side/Clean/Rat Clean Side"));
+		ratBoredAnim1.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("bored up/Clean/Rat Clean Up"), PlayMode.LOOP));
+		System.out.println("Adding rat animation: " + ratAtlas.findRegions("bored up/Clean/Rat Clean Up"));
+
+		ratBoredAnim2.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("bored down/Look/Rat Look Down"), PlayMode.LOOP));
+		ratBoredAnim2.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("bored side/Look/Rat Look Side"), PlayMode.LOOP));
+		ratBoredAnim2.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("bored side/Look/Rat Look Side"), PlayMode.LOOP));
+		ratBoredAnim2.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("bored up/Look/Rat Look Up"), PlayMode.LOOP));
 	}
 
 	public void render(Rat rat) {
@@ -53,24 +70,25 @@ public class RatRenderer implements Disposable {
 		AtlasRegion currentRegion;
 		Animation animation;
 
-		if (rat.isMoving()) {
-			switch (rat.getState()) {
+		switch (rat.getState()) {
 				case RUNNING:
-					animation = ratAnim.get(dir);
+					animation = ratWalkAnim.get(dir);
 					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
 					break;
 				case BORED:
-					animation = ratAnim.get(dir);
+					animation = ratBoredAnim1.get(dir);
+					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
+					break;
+				case BORED2:
+					animation = ratBoredAnim2.get(dir);
 					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
 					break;
 				default:
-					animation = ratAnim.get(dir);
-					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
+					animation = ratWalkAnim.get(rat.getDirection());
+					currentRegion = (AtlasRegion) animation.getKeyFrame(0, true);
 					break;
-			}
-		} else {
-			animation = ratAnim.get(rat.getDirection());
-			currentRegion = (AtlasRegion) animation.getKeyFrame(0, true);
+					
+			
 		}
 
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;

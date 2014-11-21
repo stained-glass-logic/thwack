@@ -20,6 +20,7 @@ public abstract class Entity {
 		WALKING,
 		ATTACKING,
 		BORED,
+		BORED2,
 		RUNNING,
 		DEAD
 	}
