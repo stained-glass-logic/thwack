@@ -84,6 +84,8 @@ public class Sword extends Weapon implements Updateable {
                 attacking = false;
             }
         }
+
+        swordBody.setActive(attacking);
     }
 
     public void render(SpriteBatch batch) {

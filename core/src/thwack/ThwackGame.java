@@ -241,7 +241,7 @@ public class ThwackGame extends ApplicationAdapter {
 
 		debugRenderer.render(world, camera.combined);
 
-		world.step(deltaTime, 6, 2);
+		world.step(deltaTime, 8, 4);
 	}
 
 }
