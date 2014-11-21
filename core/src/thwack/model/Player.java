@@ -5,8 +5,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import thwack.Constants;
 
-import java.util.Map;
-
 public class Player extends Entity implements Updateable {
 
 	public Body playerBody;
@@ -44,8 +42,8 @@ public class Player extends Entity implements Updateable {
 	}
 
 	@Override
-	public void update(float deltaTime, Map<String, Object> context) {
-		weapon.update(deltaTime, context);
+	public void update(float deltaTime) {
+		weapon.update(deltaTime);
 	}
 
 	@Override

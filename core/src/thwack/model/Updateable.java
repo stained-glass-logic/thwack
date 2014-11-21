@@ -1,8 +1,6 @@
 package thwack.model;
 
-import java.util.Map;
-
 public interface Updateable {
-	void update(float deltaTime, Map<String, Object> context);
+	void update(float deltaTime);
 	boolean active();
 }

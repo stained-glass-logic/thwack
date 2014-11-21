@@ -7,8 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import thwack.model.Player;
 import thwack.model.Updateable;
 
-import java.util.Map;
-
 public class PlayerController implements Updateable, InputProcessor {
 
 	private Player player;
@@ -23,7 +21,7 @@ public class PlayerController implements Updateable, InputProcessor {
 	}
 
 	@Override
-	public void update(float deltaTime, Map<String, Object> context) {
+	public void update(float deltaTime) {
 
 		direction.set(0, 0);
 
@@ -59,7 +57,7 @@ public class PlayerController implements Updateable, InputProcessor {
 
 		player.move(direction);
 		player.applyImpulse();
-		player.update(deltaTime, context);
+		player.update(deltaTime);
 	}
 
 	@Override

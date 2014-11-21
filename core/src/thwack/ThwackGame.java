@@ -40,17 +40,6 @@ public class ThwackGame extends ApplicationAdapter {
 	private World world = new World(new Vector2(0, 0), false);
 	private OrthographicCamera camera;
 
-	private Map<String, Object> context = new HashMap<String, Object>();
-
-	public static final String SPRITE_BATCH = "SPRITE_BATCH";
-	private SpriteBatch batch;
-
-	public static final String BITMAP_FONT = "BITMAP_FONT";
-	private BitmapFont font;
-
-	public static final String SHAPE_RENDERER = "SHAPE_RENDERER";
-	private ShapeRenderer shapeRenderer;
-
 	private Array<Updateable> updateables = new Array<Updateable>();
 	private Array<Rat> rats = new Array<Rat>();
 
@@ -88,22 +77,19 @@ public class ThwackGame extends ApplicationAdapter {
 		// new code for collision goes here. to be replaced by a handler class
 		// later
 
-		batch = new SpriteBatch();
-		context.put(SPRITE_BATCH, batch);
+		Global.batch = new SpriteBatch();
 
 		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
-				batch);
+				Global.batch);
 
 		int mapWidth = tiledMap.getProperties().get("width", Integer.class);
 		int mapHeight = tiledMap.getProperties().get("height", Integer.class);
 
-		font = new BitmapFont();
-		context.put(BITMAP_FONT, font);
+		Global.font = new BitmapFont();
 
-		shapeRenderer = new ShapeRenderer();
+		Global.shapeRenderer = new ShapeRenderer();
 
-		playerRenderer = new PlayerRenderer(batch, shapeRenderer);
 		wall = new Wall();
 
 		//the walls
@@ -120,11 +106,8 @@ public class ThwackGame extends ApplicationAdapter {
 		}
 
 		// and the player object code
-		shapeRenderer = new ShapeRenderer();
-		context.put(SHAPE_RENDERER, shapeRenderer);
-
-		playerRenderer = new PlayerRenderer(batch, shapeRenderer);
-		ratRenderer = new RatRenderer(batch, shapeRenderer);
+		playerRenderer = new PlayerRenderer(Global.batch, Global.shapeRenderer);
+		ratRenderer = new RatRenderer(Global.batch, Global.shapeRenderer);
 
 		updateables.add(player);
 		playerController = new PlayerController(player);
@@ -187,7 +170,7 @@ public class ThwackGame extends ApplicationAdapter {
 		camera.update();
 		tiledMapRenderer.render();
 
-		batch.begin();
+		Global.batch.begin();
 		playerRenderer.render(player);
 
 		for (int index = 0; index < rats.size; index++) {
@@ -199,13 +182,13 @@ public class ThwackGame extends ApplicationAdapter {
 			}
 		}
 
-		batch.end();
+		Global.batch.end();
 
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		for (Updateable updateable : updateables) {
 			if (updateable.active()) {
-				updateable.update(deltaTime, context);
+				updateable.update(deltaTime);
 			}
 		}
 
