@@ -4,10 +4,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -19,7 +17,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import thwack.controller.MyContactListener;
 import thwack.controller.PlayerController;
-import thwack.model.*;
+import thwack.model.Player;
+import thwack.model.Rat;
+import thwack.model.Updateable;
+import thwack.model.Wall;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
 
@@ -27,9 +28,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ThwackGame extends ApplicationAdapter {
-	Texture img;
-	TiledMap tiledMap;
-	TiledMapRenderer tiledMapRenderer;
+	private static int NORTH 	= 0;
+	private static int EAST 	= 1;
+	private static int SOUTH 	= 2;
+	private static int WEST 	= 3;
+
+	private TiledMap tiledMap;
+	private TiledMapRenderer tiledMapRenderer;
 
 	private Box2DDebugRenderer debugRenderer;
 	private World world = new World(new Vector2(0, 0), false);
@@ -55,31 +60,20 @@ public class ThwackGame extends ApplicationAdapter {
 
 	private PlayerRenderer playerRenderer;
 
-	private Array<Mob> mobs = new Array<Mob>();
-
 	// my attempt to add a bodydef
-	private BodyDef bodyWestDef = new BodyDef();
-	private BodyDef bodyEastDef = new BodyDef();
-	private BodyDef bodyNorthDef = new BodyDef();
-	private BodyDef bodySouthDef = new BodyDef();
-	private BodyDef playerBodyDef = new BodyDef();
-	private Body bodyWest;
-	private Body bodyEast;
-	private Body bodyNorth;
-	private Body bodySouth;
-	private Body playerBody;
+	private BodyDef [] wallsBodyDef = new BodyDef[4];
+	private Body [] wallsBody = new Body[4];
+
 	private int width = 4 / 2;
 	private int height = 29 / 2;
-	private TextureRegion region;
-	private FixtureDef fixtureDefWest, fixtureDefEast, fixtureDefNorth, fixtureDefSouth;
-	private FixtureDef playerDef;
+
+	private FixtureDef [] fixtureDef = new FixtureDef[4];
 
 	private RatRenderer ratRenderer;
 	private Wall wall; // dummy to resolve wall collisions
 
 	@Override
 	public void create() {
-
 		world = new World(new Vector2(0, 0), true);
 		debugRenderer = new Box2DDebugRenderer();
 
@@ -95,6 +89,7 @@ public class ThwackGame extends ApplicationAdapter {
 		// later
 
 		batch = new SpriteBatch();
+		context.put(SPRITE_BATCH, batch);
 
 		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
@@ -112,76 +107,19 @@ public class ThwackGame extends ApplicationAdapter {
 		wall = new Wall();
 
 		//the walls
-		{
-			float ww = (width);
-			float hh = (height);
-
-			bodyWestDef.type = BodyType.StaticBody;
-			bodyWestDef.position.set(2f, 20f);
-			bodyWest = world.createBody(bodyWestDef);
-			bodyWest.setUserData(wall);
-			PolygonShape bodyShapeWest = new PolygonShape();
-			bodyShapeWest.setAsBox(ww, hh);
-			fixtureDefWest = new FixtureDef();
-
-			fixtureDefWest.shape = bodyShapeWest;
-			bodyWest.createFixture(fixtureDefWest);
-			bodyShapeWest.dispose();
-
-
-			bodyEastDef.type = BodyType.StaticBody;
-			bodyEastDef.position.set(54f, 20f);
-			bodyEast = world.createBody(bodyEastDef);
-			bodyEast.setUserData(wall);
-			PolygonShape bodyShapeEast = new PolygonShape();
-			bodyShapeEast.setAsBox(ww, hh);
-			fixtureDefEast = new FixtureDef();
-			fixtureDefEast.shape = bodyShapeEast;
-			bodyEast.createFixture(fixtureDefEast);
-			bodyShapeEast.dispose();
-
-			bodySouthDef.type = BodyType.StaticBody;
-			bodySouthDef.position.set(28f, 4f);
-			bodySouth = world.createBody(bodySouthDef);
-			bodySouth.setUserData(wall);
-			PolygonShape bodyShapeSouth = new PolygonShape();
-			bodyShapeSouth.setAsBox(mapWidth, ww);
-			fixtureDefSouth = new FixtureDef();
-			fixtureDefSouth.shape = bodyShapeSouth;
-			bodySouth.createFixture(fixtureDefSouth);
-			bodyShapeSouth.dispose();
-
-			bodyNorthDef.type = BodyType.StaticBody;
-			bodyNorthDef.position.set(28f, 36f);
-			bodyNorth = world.createBody(bodyNorthDef);
-			bodyNorth.setUserData(wall);
-			PolygonShape bodyShapeNorth = new PolygonShape();
-			bodyShapeNorth.setAsBox(mapWidth, ww);
-			fixtureDefNorth = new FixtureDef();
-			fixtureDefNorth.shape = bodyShapeNorth;
-			bodyNorth.createFixture(fixtureDefNorth);
-			bodyShapeNorth.dispose();
-		}
+    	createWalls(mapWidth, width, height);
 
 		player = new Player(world);
 
 		Vector2 ratPos = new Vector2(6f, 20f);
 		Vector2 ratSize = new Vector2(.5f, .5f);
-		for (int count = 0; count < 200; count++) {
+		for (int count = 0; count < 20; count++) {
 			Rat rat = new Rat(world, ratPos, ratSize);
 			rats.add(rat);
 			updateables.add(rat);
 		}
 
 		// and the player object code
-		batch = new SpriteBatch();
-
-		context.put(SPRITE_BATCH, batch);
-
-		tiledMap = new TmxMapLoader().load("DemoMap.tmx");
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
-				batch);
-
 		shapeRenderer = new ShapeRenderer();
 		context.put(SHAPE_RENDERER, shapeRenderer);
 
@@ -189,12 +127,43 @@ public class ThwackGame extends ApplicationAdapter {
 		ratRenderer = new RatRenderer(batch, shapeRenderer);
 
 		updateables.add(player);
-		playerController = new PlayerController(camera);
-		playerController.setPlayer(player);
+		playerController = new PlayerController(player);
 
 		updateables.add(playerController);
 		Gdx.input.setInputProcessor(playerController);
-		// System.out.println((Gdx.graphics.getDeltaTime()));
+	}
+
+	private void createWalls(int mapWidth, float ww, float hh) {
+		PolygonShape [] bodyShape = new PolygonShape[4];
+
+		for (int index = 0; index < 4 ; index++) {
+			wallsBodyDef[index] = new BodyDef();
+			wallsBodyDef[index].type = BodyType.StaticBody;
+			bodyShape[index] = new PolygonShape();
+
+		}
+
+		wallsBodyDef[WEST].position.set(2f, 20f);
+		bodyShape[WEST].setAsBox(ww, hh);
+
+		wallsBodyDef[EAST].position.set(54f, 20f);
+		bodyShape[EAST].setAsBox(ww, hh);
+
+		wallsBodyDef[SOUTH].position.set(28f, 4f);
+		bodyShape[SOUTH].setAsBox(mapWidth, ww);
+
+		wallsBodyDef[NORTH].position.set(28f, 36f);
+		bodyShape[NORTH].setAsBox(mapWidth, ww);
+
+		for (int index = 0; index < 4 ; index++) {
+			wallsBody[index] = world.createBody(wallsBodyDef[index]);
+			wallsBody[index].setUserData(wall);
+
+			fixtureDef[index] = new FixtureDef();
+			fixtureDef[index].shape = bodyShape[index];
+			wallsBody[index].createFixture(fixtureDef[index]);
+			bodyShape[index].dispose();
+		}
 	}
 
 	@Override
@@ -229,6 +198,7 @@ public class ThwackGame extends ApplicationAdapter {
 				rats.removeIndex(index);
 			}
 		}
+
 		batch.end();
 
 		float deltaTime = Gdx.graphics.getDeltaTime();
