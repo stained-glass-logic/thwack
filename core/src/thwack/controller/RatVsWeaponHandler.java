@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import thwack.model.Rat;
 import thwack.model.Weapon;
+import thwack.sound.SoundPlayer;
 
 /**
  * @author Daniel Holderbaum
@@ -16,6 +17,7 @@ public class RatVsWeaponHandler extends ContactHandler<Rat, Weapon> {
 	public void beginContact(Contact contact, Rat entityA, Fixture fixtureA, Weapon entityB, Fixture fixtureB) {
 		if (entityB.isAttacking()) {
 			entityA.died();
+			SoundPlayer.SLAP.play();
 		}
 	}
 

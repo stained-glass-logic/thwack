@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
-import java.util.Map;
-
 /**
  * User: rnentjes
  * Date: 19-11-14
@@ -74,7 +72,7 @@ public class Sword extends Weapon implements Updateable {
         swordBody.setTransform(offset.cpy().add(player.position), startAngle);
     }
 
-    public void update(float deltaTime, Map<String, Object> context) {
+    public void update(float deltaTime) {
         if (attacking) {
             attackStart += deltaTime;
             currentAngle += deltaTime * HALF_PI * 4f;
@@ -84,6 +82,8 @@ public class Sword extends Weapon implements Updateable {
                 attacking = false;
             }
         }
+
+        swordBody.setActive(attacking);
     }
 
     public void render(SpriteBatch batch) {

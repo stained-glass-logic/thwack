@@ -3,21 +3,17 @@ package thwack.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import thwack.model.Player;
 import thwack.model.Updateable;
 
-import java.util.Map;
-
 public class PlayerController implements Updateable, InputProcessor {
 
-	private final Camera camera;
 	private Player player;
 	private Vector2 direction = new Vector2(0.0f, 0.0f);
 
-	public PlayerController(Camera camera) {
-		this.camera = camera;
+	public PlayerController(Player player) {
+		this.player = player;
 	}
 
 	public void setPlayer(Player player) {
@@ -25,7 +21,7 @@ public class PlayerController implements Updateable, InputProcessor {
 	}
 
 	@Override
-	public void update(float deltaTime, Map<String, Object> context) {
+	public void update(float deltaTime) {
 
 		direction.set(0, 0);
 
@@ -61,7 +57,7 @@ public class PlayerController implements Updateable, InputProcessor {
 
 		player.move(direction);
 		player.applyImpulse();
-		player.update(deltaTime, context);
+		player.update(deltaTime);
 	}
 
 	@Override

@@ -6,8 +6,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
-import java.util.Map;
-
 public abstract class Mob extends Entity implements Updateable{
 
 	private float speed = 0f;
@@ -23,7 +21,7 @@ public abstract class Mob extends Entity implements Updateable{
 	}
 
 	@Override
-	public void update(float deltaTime, Map<String, Object> context) {
+	public void update(float deltaTime) {
 	}
 
 	public void setPosition(float x, float y) {

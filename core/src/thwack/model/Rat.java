@@ -6,8 +6,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Disposable;
 
-import java.util.Map;
-
 public class Rat extends Mob implements Updateable, Disposable {
 
 	private World world;
@@ -50,21 +48,21 @@ public class Rat extends Mob implements Updateable, Disposable {
 	}
 
 	@Override
-	public void update(float deltaTime, Map<String, Object> context) {
+	public void update(float deltaTime) {
 		ratLogic(3f);
 		increaseStateTime(deltaTime);
 	}
 
 	// why is the rat logic not in the Rat object?
 	private void ratLogic(float time) {
-		
+
 		//change state randomly every time seconds
 		if (getStateTime() < time) {
 			//if the state doesn't need to change yet, then
 			//just try to move
 			move(velocity);
-			applyImpulse();			
-			
+			applyImpulse();
+
 		}
 		else
 		{
@@ -77,16 +75,16 @@ public class Rat extends Mob implements Updateable, Disposable {
 			else if (nextDir == 2) this.direction = Direction.LEFT;
 			else if (nextDir == 3) this.direction = Direction.RIGHT;
 			else if (nextDir == 4) this.direction = Direction.DOWN;
-			
+
 			switch (nextState)
 			{
 				case 1:
 					//running
 					setState(State.RUNNING);
 					setStateTime(0);
-					velocity.set(MathUtils.random(-1, 1), MathUtils.random( -1,  1));					
+					velocity.set(MathUtils.random(-1, 1), MathUtils.random( -1,  1));
 					move(velocity);
-					applyImpulse();			
+					applyImpulse();
 					break;
 				case 2:
 					//bored
@@ -110,13 +108,13 @@ public class Rat extends Mob implements Updateable, Disposable {
 					//running
 					setState(State.RUNNING);
 					setStateTime(0);
-					velocity.set(MathUtils.random(-1, 1), MathUtils.random( -1,  1));					
+					velocity.set(MathUtils.random(-1, 1), MathUtils.random( -1,  1));
 					break;
 			}
 		}
-		
 
-		
+
+
 	}
 
 	public void applyImpulse() {

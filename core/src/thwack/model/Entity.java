@@ -2,8 +2,6 @@ package thwack.model;
 
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Map;
-
 public abstract class Entity {
 
 	protected Direction direction = Direction.DOWN;
@@ -41,7 +39,7 @@ public abstract class Entity {
 		this.stateTime += delta;
 	}
 
-	public void update(float deltaTime, Map<String, Object> context) {
+	public void update(float deltaTime) {
 		Vector2 oldPosition = position.cpy();
 	}
 
