@@ -68,7 +68,7 @@ public class GameScreen extends ScreenAdapter {
     private float unitWidth, unitHeight;
 
     public GameScreen(TiledMap map) {
-        world = new World(new Vector2(0, 0), true);
+        world = new World(new Vector2(0, 0), false);
         debugRenderer = new Box2DDebugRenderer();
 
         world.setContactListener(new MyContactListener());
