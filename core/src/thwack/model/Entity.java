@@ -52,8 +52,6 @@ public abstract class Entity {
 		return position;
 	}
 
-	public void updatePosition() {}
-
 	public void died() {
 		state = State.DEAD;
 	}
