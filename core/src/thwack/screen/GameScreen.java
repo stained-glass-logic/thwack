@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.Array;
 import thwack.Constants;
 import thwack.Global;
 import thwack.controller.MyContactListener;
-import thwack.controller.PlayerController;
 import thwack.model.Player;
 import thwack.model.Rat;
 import thwack.model.Updateable;
@@ -115,11 +114,6 @@ public class GameScreen extends ScreenAdapter {
         ratRenderer = new RatRenderer(Global.batch, Global.shapeRenderer);
 
         updateables.add(player);
-        PlayerController playerController = new PlayerController(player);
-        updateables.add(playerController);
-
-        Gdx.input.setInputProcessor(playerController);
-
     }
 
     @Override
