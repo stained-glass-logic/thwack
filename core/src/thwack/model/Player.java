@@ -15,12 +15,11 @@ public class Player extends Entity implements Updateable {
 	private Weapon weapon;
 
     public void applyImpulse() {
-	   // Vector2 currentVelocity = playerBody.getLinearVelocity();
-		Vector2 targetVelocity = new Vector2(velocity).nor().scl(speed);
+		Vector2 targetVelocity = new Vector2(velocity).nor().scl(speed * 15);
 
 		Vector2 impulse = new Vector2(targetVelocity);
 
-		playerBody.setLinearVelocity(impulse);
+		playerBody.applyForceToCenter(impulse, true);
     }
 
 	public Player(World world) {
@@ -30,11 +29,13 @@ public class Player extends Entity implements Updateable {
 		playerBodyDef.position.set(5,20);
 		this.playerBody = world.createBody(playerBodyDef);
 		playerBody.setFixedRotation(true);
-		// fixtureDef.restitution=restitution;
+		playerBody.setLinearDamping(9f);
+
 		PolygonShape playerBodyShape = new PolygonShape();
 		playerBodyShape.setAsBox(.5f, .5f);
+
 		playerFixtureDef = new FixtureDef();
-		playerFixtureDef.density=1.0f;
+		playerFixtureDef.density= 1.0f;
 		playerFixtureDef.shape = playerBodyShape;
 
 		this.playerBody.createFixture(playerFixtureDef);
