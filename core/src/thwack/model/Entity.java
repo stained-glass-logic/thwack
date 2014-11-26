@@ -13,6 +13,8 @@ public abstract class Entity {
 	public Vector2 velocity = new Vector2(0, 0).limit(speed);
 	protected Vector2 directionVector = new Vector2(0.0f, 0.0f);
 
+	int hp; //temporary HP variable for implementing mob color
+	
 	public static enum State {
 		STANDING,
 		WALKING,
@@ -20,6 +22,7 @@ public abstract class Entity {
 		BORED,
 		BORED2,
 		RUNNING,
+		TAKINGDAMAGE,
 		DEAD
 	}
 
@@ -52,6 +55,10 @@ public abstract class Entity {
 		return position;
 	}
 
+	public void tookDamage(Vector2 fromPos) {
+		died();
+	}
+	
 	public void died() {
 		state = State.DEAD;
 	}

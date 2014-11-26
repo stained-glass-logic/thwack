@@ -16,7 +16,7 @@ public class RatVsWeaponHandler extends ContactHandler<Rat, Weapon> {
 	@Override
 	public void beginContact(Contact contact, Rat entityA, Fixture fixtureA, Weapon entityB, Fixture fixtureB) {
 		if (entityB.isAttacking()) {
-			entityA.died();
+			entityA.tookDamage(entityB.getPosition());
 			SoundPlayer.SLAP.play();
 		}
 	}
