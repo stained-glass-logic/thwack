@@ -1,6 +1,7 @@
 package thwack.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 import thwack.Constants;
 import thwack.model.Entity.Direction;
+import thwack.model.Entity.State;
 import thwack.model.Rat;
 
 import java.util.HashMap;
@@ -94,8 +96,13 @@ public class RatRenderer implements Disposable {
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
 		float height = currentRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 
+		if (rat.getState() == State.TAKINGDAMAGE) {
+			batch.setColor(Color.RED);
+		}
+		
 		batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
-
+		batch.setColor(Color.WHITE);
+		
         rat.archivePosition();
 	}
 

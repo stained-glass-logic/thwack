@@ -40,6 +40,8 @@ public class Rat extends Mob implements Updateable, Disposable {
 		ratFixtureDef.shape = ratBodyShape;
 		ratBody.createFixture(ratFixtureDef);
 		ratFixtureDef.shape.dispose();
+		
+		hp = 3;
 	}
 
 	@Override
@@ -53,7 +55,6 @@ public class Rat extends Mob implements Updateable, Disposable {
 		increaseStateTime(deltaTime);
 	}
 
-	// why is the rat logic not in the Rat object?
 	private void ratLogic(float time) {
 
 		//change state randomly every time seconds
@@ -158,6 +159,14 @@ public class Rat extends Mob implements Updateable, Disposable {
 				this.state = State.STANDING;
 			}
 		}
+	}
+	
+	public void tookDamage(Vector2 fromPos) {
+		setState(State.TAKINGDAMAGE);
+		//maybe we should do knockback here? For now, stop the rat.
+		velocity.set(0, 0);
+		hp = hp - 1;
+		if (hp < 1) died();
 	}
 
 	public void setState(State state) {
