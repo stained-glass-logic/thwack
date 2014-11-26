@@ -12,12 +12,14 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Sword extends Weapon implements Updateable {
 
     private static float HALF_PI = (float) Math.PI / 2f;
+    private static float MAX_SIZE = 1f;
 
     private Body swordBody;
     private Player player;
 
     private float startAngle = 0;
     private float currentAngle = 0;
+    private float size = 1;
     private Vector2 offset = new Vector2();
 
     public Sword(World world, Player player) {
@@ -48,37 +50,43 @@ public class Sword extends Weapon implements Updateable {
         attackStart = 0f;
 
         offset.set(0,0);
-        startAngle = - HALF_PI / 2f;
+        startAngle = HALF_PI; //- HALF_PI / 2f;
         switch(player.getDirection()) {
             case UP:
-                offset.set(0.5f, 1.5f);
+                offset.set(0.65f, 1.75f);
                 break;
             case LEFT:
                 startAngle += HALF_PI;
-                offset.set(0f, 0.5f);
+                offset.set(-0.4f, 0f);
                 break;
             case DOWN:
-                startAngle += 2.25f * HALF_PI;
-                offset.set(0.5f, 0f);
+                startAngle += 2 * HALF_PI;
+                offset.set(0.65f, -0.5f);
                 break;
             case RIGHT:
-                startAngle += 3.25f * HALF_PI;
-                offset.set(1f, 0.5f);
+                startAngle += 3 * HALF_PI;
+                offset.set(1.7f, 0f);
                 break;
         }
 
         currentAngle = startAngle;
         // get location from player and slash away
         swordBody.setTransform(offset.cpy().add(player.position), startAngle);
+        size = 0.25f;
     }
 
     public void update(float deltaTime) {
         if (attacking) {
             attackStart += deltaTime;
-            currentAngle += deltaTime * HALF_PI * 4f;
+            //currentAngle += deltaTime * HALF_PI * 4f;
             swordBody.setTransform(offset.cpy().add(player.position), currentAngle);
+            PolygonShape shape = (PolygonShape)swordBody.getFixtureList().get(0).getShape();
+           	//tweaked this to get the speed feeling right --radish
+            size += 5 * deltaTime;
 
-            if (swordBody.getAngle() > startAngle + 2 * HALF_PI) {
+            shape.setAsBox(size, 0.5f);
+
+            if (size > MAX_SIZE) {
                 attacking = false;
             }
         }

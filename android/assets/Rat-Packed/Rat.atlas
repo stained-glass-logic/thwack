@@ -3,346 +3,346 @@ Rat.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 728, 7
+  xy: 722, 7
   size: 14, 19
   orig: 60, 60
   offset: 23, 22
   index: 1
-bored down/Look/Rat Look Down
+Bored Down/Look/Rat Look Down
   rotate: false
-  xy: 728, 7
+  xy: 722, 7
   size: 14, 19
   orig: 60, 60
   offset: 23, 22
   index: 1
-run down/rat run down
+Run Down/Rat Run Down
   rotate: false
-  xy: 728, 7
+  xy: 722, 7
   size: 14, 19
-  orig: 28, 25
-  offset: 7, 5
+  orig: 60, 60
+  offset: 23, 22
   index: 1
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 816, 9
+  xy: 792, 9
   size: 14, 17
   orig: 60, 60
   offset: 23, 22
   index: 2
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 816, 9
+  xy: 792, 9
   size: 14, 17
   orig: 60, 60
   offset: 23, 22
   index: 9
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 832, 9
+  xy: 808, 9
   size: 14, 17
   orig: 60, 60
   offset: 23, 22
   index: 3
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 832, 9
+  xy: 808, 9
   size: 14, 17
   orig: 60, 60
   offset: 23, 22
   index: 5
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 848, 9
+  xy: 824, 9
   size: 14, 17
   orig: 60, 60
   offset: 23, 22
   index: 4
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 848, 9
+  xy: 824, 9
   size: 14, 17
   orig: 60, 60
   offset: 23, 22
   index: 6
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 864, 9
+  xy: 840, 9
   size: 14, 17
   orig: 60, 60
   offset: 23, 22
   index: 7
-bored down/Clean/Rat Clean Down
+Bored Down/Clean/Rat Clean Down
   rotate: false
-  xy: 880, 9
+  xy: 856, 9
   size: 14, 17
   orig: 60, 60
   offset: 23, 22
   index: 8
-bored down/Look/Rat Look Down
+Bored Down/Look/Rat Look Down
   rotate: false
-  xy: 679, 5
+  xy: 671, 5
   size: 15, 21
   orig: 60, 60
   offset: 22, 22
   index: 2
-bored side/Clean/Rat Clean Side
+Bored Side/Clean/Rat Clean Side
   rotate: false
-  xy: 320, 8
+  xy: 238, 8
   size: 33, 18
   orig: 60, 60
   offset: 15, 22
   index: 1
-bored side/Look/Rat Look Side
+Bored Side/Look/Rat Look Side
   rotate: false
-  xy: 320, 8
+  xy: 238, 8
   size: 33, 18
   orig: 60, 60
   offset: 15, 22
   index: 1
-bored side/Clean/Rat Clean Side
+Bored Side/Clean/Rat Clean Side
   rotate: false
-  xy: 386, 11
+  xy: 378, 11
   size: 31, 15
   orig: 60, 60
   offset: 17, 22
   index: 2
-bored side/Clean/Rat Clean Side
+Bored Side/Clean/Rat Clean Side
   rotate: false
-  xy: 419, 11
+  xy: 411, 11
   size: 31, 15
   orig: 60, 60
   offset: 17, 22
   index: 3
-bored side/Clean/Rat Clean Side
+Bored Side/Clean/Rat Clean Side
   rotate: false
-  xy: 419, 11
+  xy: 411, 11
+  size: 31, 15
+  orig: 60, 60
+  offset: 17, 22
+  index: 9
+Bored Side/Clean/Rat Clean Side
+  rotate: false
+  xy: 411, 11
   size: 31, 15
   orig: 60, 60
   offset: 17, 22
   index: 5
-bored side/Clean/Rat Clean Side
+Bored Side/Clean/Rat Clean Side
   rotate: false
-  xy: 419, 11
-  size: 31, 15
-  orig: 60, 60
-  offset: 17, 22
-  index: 9
-bored side/Clean/Rat Clean Side
-  rotate: false
-  xy: 452, 11
+  xy: 444, 11
   size: 31, 15
   orig: 60, 60
   offset: 17, 22
   index: 4
-bored side/Clean/Rat Clean Side
+Bored Side/Clean/Rat Clean Side
   rotate: false
-  xy: 452, 11
+  xy: 444, 11
   size: 31, 15
   orig: 60, 60
   offset: 17, 22
   index: 6
-bored side/Clean/Rat Clean Side
+Bored Side/Clean/Rat Clean Side
   rotate: false
-  xy: 485, 11
+  xy: 477, 11
   size: 30, 15
   orig: 60, 60
   offset: 18, 22
   index: 7
-bored side/Clean/Rat Clean Side
+Bored Side/Clean/Rat Clean Side
   rotate: false
-  xy: 517, 11
+  xy: 509, 11
   size: 30, 15
   orig: 60, 60
   offset: 18, 22
   index: 8
-bored side/Look/Rat Look Side
+Bored Side/Look/Rat Look Side
   rotate: false
-  xy: 355, 7
-  size: 29, 19
+  xy: 273, 7
+  size: 33, 19
   orig: 60, 60
-  offset: 19, 22
+  offset: 15, 22
   index: 2
-bored up/Clean/Rat Clean Up
+Bored Up/Clean/Rat Clean Up
   rotate: false
-  xy: 567, 3
+  xy: 559, 3
   size: 14, 23
   orig: 60, 60
   offset: 23, 18
   index: 1
-bored up/Look/Rat Look Up
+Run Up/Rat Run Up
   rotate: false
-  xy: 567, 3
+  xy: 559, 3
   size: 14, 23
   orig: 60, 60
   offset: 23, 18
   index: 1
-bored up/Clean/Rat Clean Up
+Bored Up/Look/Rat Look Up
   rotate: false
-  xy: 599, 4
+  xy: 559, 3
+  size: 14, 23
+  orig: 60, 60
+  offset: 23, 18
+  index: 1
+Bored Up/Clean/Rat Clean Up
+  rotate: false
+  xy: 591, 4
   size: 14, 22
   orig: 60, 60
   offset: 23, 18
   index: 2
-bored up/Clean/Rat Clean Up
+Bored Up/Clean/Rat Clean Up
   rotate: false
-  xy: 599, 4
+  xy: 591, 4
   size: 14, 22
   orig: 60, 60
   offset: 23, 18
   index: 9
-bored up/Clean/Rat Clean Up
+Bored Up/Clean/Rat Clean Up
   rotate: false
-  xy: 615, 4
+  xy: 607, 4
   size: 14, 22
   orig: 60, 60
   offset: 23, 18
   index: 3
-bored up/Clean/Rat Clean Up
+Bored Up/Clean/Rat Clean Up
   rotate: false
-  xy: 615, 4
+  xy: 607, 4
   size: 14, 22
   orig: 60, 60
   offset: 23, 18
   index: 5
-bored up/Clean/Rat Clean Up
+Bored Up/Clean/Rat Clean Up
   rotate: false
-  xy: 631, 4
+  xy: 623, 4
   size: 14, 22
   orig: 60, 60
   offset: 23, 18
   index: 4
-bored up/Clean/Rat Clean Up
+Bored Up/Clean/Rat Clean Up
   rotate: false
-  xy: 631, 4
+  xy: 623, 4
   size: 14, 22
   orig: 60, 60
   offset: 23, 18
   index: 6
-bored up/Clean/Rat Clean Up
+Bored Up/Clean/Rat Clean Up
   rotate: false
-  xy: 647, 4
+  xy: 639, 4
   size: 14, 22
   orig: 60, 60
   offset: 23, 18
   index: 7
-bored up/Clean/Rat Clean Up
+Bored Up/Clean/Rat Clean Up
   rotate: false
-  xy: 663, 4
+  xy: 655, 4
   size: 14, 22
   orig: 60, 60
   offset: 23, 18
   index: 8
-bored up/Look/Rat Look Up
+Bored Up/Look/Rat Look Up
   rotate: false
-  xy: 549, 2
+  xy: 541, 2
   size: 16, 24
   orig: 60, 60
   offset: 21, 18
   index: 2
-run down/rat run down
+Run Down/Rat Run Down
   rotate: false
-  xy: 696, 6
+  xy: 688, 6
   size: 14, 20
-  orig: 28, 25
-  offset: 7, 4
+  orig: 60, 60
+  offset: 23, 22
   index: 2
-run down/rat run down
+Run Down/Rat Run Down
   rotate: false
-  xy: 744, 10
+  xy: 704, 8
+  size: 16, 18
+  orig: 60, 60
+  offset: 22, 24
+  index: 3
+Run Down/Rat Run Down
+  rotate: false
+  xy: 738, 10
   size: 16, 16
-  orig: 28, 25
-  offset: 6, 6
+  orig: 60, 60
+  offset: 22, 22
   index: 4
-run down/rat run down
+Run Left/Rat Run Side
   rotate: false
-  xy: 780, 11
-  size: 16, 15
-  orig: 28, 25
-  offset: 6, 6
-  index: 3
-run left/rat run left
-  rotate: false
-  xy: 2, 10
-  size: 40, 16
-  orig: 45, 20
-  offset: 2, 3
-  index: 4
-run left/rat run left
-  rotate: false
-  xy: 86, 12
-  size: 40, 14
-  orig: 45, 20
-  offset: 2, 2
-  index: 3
-run left/rat run left
-  rotate: false
-  xy: 170, 8
-  size: 36, 18
-  orig: 45, 20
-  offset: 5, 2
-  index: 1
-run left/rat run left
-  rotate: false
-  xy: 246, 7
-  size: 35, 19
-  orig: 45, 20
-  offset: 5, 1
+  xy: 2, 7
+  size: 34, 19
+  orig: 60, 60
+  offset: 11, 22
   index: 2
-run right/rat run right
+Run Left/Rat Run Side
   rotate: false
-  xy: 44, 10
-  size: 40, 16
-  orig: 45, 20
-  offset: 3, 3
-  index: 4
-run right/rat run right
-  rotate: false
-  xy: 128, 12
-  size: 40, 14
-  orig: 45, 20
-  offset: 3, 2
+  xy: 74, 12
+  size: 39, 14
+  orig: 60, 60
+  offset: 10, 25
   index: 3
-run right/rat run right
+Run Left/Rat Run Side
   rotate: false
-  xy: 208, 8
-  size: 36, 18
-  orig: 45, 20
-  offset: 4, 2
+  xy: 156, 12
+  size: 39, 14
+  orig: 60, 60
+  offset: 11, 22
+  index: 4
+Run Left/Rat Run Side
+  rotate: false
+  xy: 308, 8
+  size: 33, 18
+  orig: 60, 60
+  offset: 15, 22
   index: 1
-run right/rat run right
+Run Right/Rat Run Side
   rotate: false
-  xy: 283, 7
-  size: 35, 19
-  orig: 45, 20
-  offset: 5, 1
+  xy: 38, 7
+  size: 34, 19
+  orig: 60, 60
+  offset: 15, 22
   index: 2
-run up/rat run up
+Run Right/Rat Run Side
   rotate: false
-  xy: 583, 3
+  xy: 115, 12
+  size: 39, 14
+  orig: 60, 60
+  offset: 11, 25
+  index: 3
+Run Right/Rat Run Side
+  rotate: false
+  xy: 197, 12
+  size: 39, 14
+  orig: 60, 60
+  offset: 10, 22
+  index: 4
+Run Right/Rat Run Side
+  rotate: false
+  xy: 343, 8
+  size: 33, 18
+  orig: 60, 60
+  offset: 12, 22
+  index: 1
+Run Up/Rat Run Up
+  rotate: false
+  xy: 575, 3
   size: 14, 23
-  orig: 28, 25
-  offset: 6, 2
+  orig: 60, 60
+  offset: 23, 19
   index: 2
-run up/rat run up
+Run Up/Rat Run Up
   rotate: false
-  xy: 712, 6
-  size: 14, 20
-  orig: 28, 25
-  offset: 6, 4
-  index: 1
-run up/rat run up
-  rotate: false
-  xy: 762, 10
+  xy: 756, 10
   size: 16, 16
-  orig: 28, 25
-  offset: 6, 6
+  orig: 60, 60
+  offset: 22, 24
   index: 3
-run up/rat run up
+Run Up/Rat Run Up
   rotate: false
-  xy: 798, 11
+  xy: 774, 11
   size: 16, 15
-  orig: 28, 25
-  offset: 5, 6
+  orig: 60, 60
+  offset: 22, 22
   index: 4

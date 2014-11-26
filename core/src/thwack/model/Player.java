@@ -1,5 +1,7 @@
 package thwack.model;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -13,12 +15,11 @@ public class Player extends Entity implements Updateable {
 	private Weapon weapon;
 
     public void applyImpulse() {
-	   // Vector2 currentVelocity = playerBody.getLinearVelocity();
-		Vector2 targetVelocity = new Vector2(velocity).nor().scl(speed);
+		Vector2 targetVelocity = new Vector2(velocity).nor().scl(speed * 15);
 
 		Vector2 impulse = new Vector2(targetVelocity);
 
-		playerBody.setLinearVelocity(impulse);
+		playerBody.applyForceToCenter(impulse, true);
     }
 
 	public Player(World world) {
@@ -28,11 +29,13 @@ public class Player extends Entity implements Updateable {
 		playerBodyDef.position.set(5,20);
 		this.playerBody = world.createBody(playerBodyDef);
 		playerBody.setFixedRotation(true);
-		// fixtureDef.restitution=restitution;
+		playerBody.setLinearDamping(9f);
+
 		PolygonShape playerBodyShape = new PolygonShape();
 		playerBodyShape.setAsBox(.5f, .5f);
+
 		playerFixtureDef = new FixtureDef();
-		playerFixtureDef.density=1.0f;
+		playerFixtureDef.density= 1.0f;
 		playerFixtureDef.shape = playerBodyShape;
 
 		this.playerBody.createFixture(playerFixtureDef);
@@ -43,6 +46,42 @@ public class Player extends Entity implements Updateable {
 
 	@Override
 	public void update(float deltaTime) {
+		Vector2 direction = new Vector2(0.0f, 0.0f);
+		direction.set(0, 0);
+
+		if(getState() != Player.State.ATTACKING){
+			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+				direction.add(0, 1);
+				velocity.y += 1;
+				setState(Player.State.WALKING);
+			}
+
+			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+				velocity.y -= 1;
+				setState(Player.State.WALKING);
+				direction.add(0, -1);
+			}
+
+			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+				velocity.x -= 1;
+				setState(Player.State.WALKING);
+				direction.add(-1, 0);
+			}
+
+			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+				velocity.x += 1;
+				setState(Player.State.WALKING);
+				direction.add(1, 0);
+			}
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.J) && getState() != Player.State.ATTACKING){
+			direction.set(0,0);
+			setState(Player.State.ATTACKING);
+		}
+
+		move(direction);
+		applyImpulse();
+
 		weapon.update(deltaTime);
 	}
 
@@ -94,10 +133,6 @@ public class Player extends Entity implements Updateable {
 				}
 			}
 		}
-	}
-
-	public void updatePosition() {
-
 	}
 
 }
