@@ -114,8 +114,11 @@ public class RatRenderer implements Disposable {
 		batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
 		batch.setColor(Color.WHITE);
 		
+<<<<<<< HEAD
 		batch.setColor(Color.WHITE);
 		
+=======
+>>>>>>> origin/master
         rat.archivePosition();
 	}
 

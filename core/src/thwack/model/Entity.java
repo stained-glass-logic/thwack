@@ -15,7 +15,10 @@ public abstract class Entity {
 	protected Vector2 directionVector = new Vector2(0.0f, 0.0f);
 
 	int hp; //temporary HP variable for implementing mob color
+<<<<<<< HEAD
 	protected float damageStateTime;
+=======
+>>>>>>> origin/master
 	
 	public static enum State {
 		STANDING,
@@ -24,6 +27,7 @@ public abstract class Entity {
 		BORED,
 		BORED2,
 		RUNNING,
+		TAKINGDAMAGE,
 		DEAD
 	}
 	

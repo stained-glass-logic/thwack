@@ -164,14 +164,20 @@ public class Rat extends Mob implements Updateable, Disposable {
 	}
 	
 	public void tookDamage(Vector2 fromPos) {
+<<<<<<< HEAD
 		setDamageState(DamageState.PHYSICAL);
 		setDamageStateTime(0);
 		//maybe we should do knockback here? For now, stop the rat.
 		//sorry to override - didn't want the rat to stop moving. makes them too easy to kill --radish
+=======
+		setState(State.TAKINGDAMAGE);
+		//maybe we should do knockback here? For now, stop the rat.
+>>>>>>> origin/master
 		velocity.set(0, 0);
 		hp = hp - 1;
 		if (hp < 1) died();
 	}
+<<<<<<< HEAD
 
 	public void setDamageState(DamageState state) {
 		if (this.damageState != state){
@@ -179,6 +185,8 @@ public class Rat extends Mob implements Updateable, Disposable {
 		}
 		this.damageState = state;
 	}
+=======
+>>>>>>> origin/master
 
 	public void setState(State state) {
 		if (this.state != state) {
