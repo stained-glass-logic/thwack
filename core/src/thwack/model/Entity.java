@@ -13,9 +13,12 @@ public abstract class Entity {
 	protected final float speed = 7.0f;
 	public Vector2 velocity = new Vector2(0, 0).limit(speed);
 	protected Vector2 directionVector = new Vector2(0.0f, 0.0f);
-	protected float damageStateTime;
 
 	int hp; //temporary HP variable for implementing mob color
+<<<<<<< HEAD
+	protected float damageStateTime;
+=======
+>>>>>>> origin/master
 	
 	public static enum State {
 		STANDING,

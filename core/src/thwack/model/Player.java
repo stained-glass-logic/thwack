@@ -74,8 +74,11 @@ public class Player extends Entity implements Updateable {
 				direction.add(1, 0);
 			}
 		}
-		
+<<<<<<< HEAD
 		if (Gdx.input.isKeyPressed(Input.Keys.J) && getState() != Player.State.ATTACKING){
+=======
+		if (Gdx.input.isKeyPressed(Input.Keys.J)){
+>>>>>>> origin/master
 			direction.set(0,0);
 			setState(Player.State.ATTACKING);
 		}
