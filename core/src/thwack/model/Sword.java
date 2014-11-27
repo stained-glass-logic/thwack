@@ -81,14 +81,10 @@ public class Sword extends Weapon implements Updateable {
             //currentAngle += deltaTime * HALF_PI * 4f;
             swordBody.setTransform(offset.cpy().add(player.position), currentAngle);
             PolygonShape shape = (PolygonShape)swordBody.getFixtureList().get(0).getShape();
-<<<<<<< HEAD
+
            	//tweaked this to get the speed feeling right --radish
             size += 5 * deltaTime;
 
-=======
-
-            size += 2 * deltaTime;
->>>>>>> origin/master
             shape.setAsBox(size, 0.5f);
 
             if (size > MAX_SIZE) {
