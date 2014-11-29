@@ -113,14 +113,14 @@ public class PlayerRenderer implements Disposable {
 		float weaponY = 0.0f;
 		if (weaponRegion != null) {
 			weaponX = player.getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX) / Constants.PIXELS_PER_METER * 2;
-			weaponY = player.getPosition().y - (currentRegion.offsetY - weaponRegion.offsetY) / Constants.PIXELS_PER_METER * 2;
+			weaponY = player.getPosition().y - ((currentRegion.offsetY - weaponRegion.offsetY) / Constants.PIXELS_PER_METER * 2);
 			weaponWidth = weaponRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
 			weaponHeight = weaponRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 		}
 
 		batch.draw(currentRegion, player.getPosition().x, player.getPosition().y - .5f, width, height);
 		if (weaponRegion != null) {
-			batch.draw(weaponRegion, weaponX, weaponY, weaponWidth, weaponHeight);
+			batch.draw(weaponRegion, weaponX, weaponY - .5f, weaponWidth, weaponHeight);
 		}
 
 //		shapeRenderer.begin(ShapeType.Line);

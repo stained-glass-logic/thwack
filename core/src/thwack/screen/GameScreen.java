@@ -144,15 +144,17 @@ public class GameScreen extends ScreenAdapter {
         tiledMapRenderer.setView(camera);
 
         float x = player.playerBody.getPosition().x;
+
         float y = player.playerBody.getPosition().y - (11 / 32);
 
-        x = Math.max(x, 16);
-        y = Math.max(y, 14);
+       x = Math.max(x, 10);
+     y = (float) Math.max(y, 9.8);
 
-        x = Math.min(x, 40);
-        y = Math.min(y, 26);
+       x = Math.min(x, 46);
+       y = (float) Math.min(y, 30.41);
 
         camera.position.set(x, y, 0);
+        System.out.println(camera.position.toString());
 
         camera.update();
         tiledMapRenderer.render();
@@ -184,14 +186,6 @@ public class GameScreen extends ScreenAdapter {
         world.step(deltaTime, 8, 4);
     }
 
-    @Override
-    public void resize(int width, int height) {
-        this.unitWidth = 1024f / 32f;
-        //this.unitWidth = 900f / 32f;
-        this.unitHeight = unitWidth / (float)width * (float)height;
-
-        camera.setToOrtho(false, unitWidth, unitHeight);
-    }
 
     private void createWalls(int mapWidth, float ww, float hh) {
         PolygonShape [] bodyShape = new PolygonShape[4];

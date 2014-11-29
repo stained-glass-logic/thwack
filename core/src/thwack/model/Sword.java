@@ -53,19 +53,19 @@ public class Sword extends Weapon implements Updateable {
         startAngle = HALF_PI; //- HALF_PI / 2f;
         switch(player.getDirection()) {
             case UP:
-                offset.set(0.65f, 1.75f);
+                offset.set(0.65f, 0.75f);
                 break;
             case LEFT:
                 startAngle += HALF_PI;
-                offset.set(-0.4f, 0f);
+                offset.set(-0.2f, 0f);
                 break;
             case DOWN:
                 startAngle += 2 * HALF_PI;
-                offset.set(0.65f, -0.5f);
+                offset.set(0.65f, -0.75f);
                 break;
             case RIGHT:
                 startAngle += 3 * HALF_PI;
-                offset.set(1.7f, 0f);
+                offset.set(1.5f, 0f);
                 break;
         }
 
