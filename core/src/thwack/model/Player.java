@@ -46,8 +46,8 @@ public class Player extends Entity implements Updateable {
 
 	@Override
 	public void update(float deltaTime) {
-		Vector2 direction = new Vector2(0.0f, 0.0f);
-		direction.set(0, 0);
+		Vector2 direction = new Vector2(0.0f, 0.0f);  //and if you move or delete this line it doesn't compile! spooky
+	//	direction.set(0, 0);  <-- this appears to do nothing.
 
 		if(getState() != Player.State.ATTACKING){
 			if (Gdx.input.isKeyPressed(Input.Keys.W)) {

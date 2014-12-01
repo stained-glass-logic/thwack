@@ -13,8 +13,9 @@ public abstract class Mob extends Entity implements Updateable{
 	private BodyDef mobBodyDef;
 	private FixtureDef mobBodyFixtureDef;
 	protected final Vector2 size = new Vector2(0,0);
-	protected Vector2 velocity = new Vector2(0,0).limit(getSpeed());
-
+	private Vector2 velocity = new Vector2(0,0).limit(getSpeed());
+	protected static float lastContactx;
+	protected static float lastContacty;
 	protected float stateTime = MathUtils.random(10.0f);
 
 	public Mob() {
@@ -26,6 +27,14 @@ public abstract class Mob extends Entity implements Updateable{
 
 	public void setPosition(float x, float y) {
 		this.position.set(x, y);
+	}
+
+	public Vector2 getVelocity() {
+		return velocity;
+	}
+
+	public void setVelocity(Vector2 velocity) {
+		this.velocity = velocity;
 	}
 
 	protected float getSpeed() {
@@ -48,4 +57,24 @@ public abstract class Mob extends Entity implements Updateable{
 		this.mobBodyFixtureDef = bodyFixtureDef;
 	}
 
+	public void mobMoveLogic(float f) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void setLastContactx(float f) {
+		lastContactx = f;
+	}
+
+	public static void setLastContacty(float f) {
+		lastContacty = f;
+	}
+
+	public static float getLastContactx(){
+		return lastContactx;
+	}
+	
+	public static float getLastContacty(){
+		return lastContacty;
+	}
 }

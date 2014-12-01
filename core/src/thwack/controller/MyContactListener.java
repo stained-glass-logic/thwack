@@ -19,8 +19,8 @@ public class MyContactListener implements ContactListener {
 
 	public MyContactListener() {
 		handlerInformation.add(new ContactHandlerInformation(Player.class, Pickup.class, new PlayerVsPickupHandler()));
-		handlerInformation.add(new ContactHandlerInformation(Rat.class, Wall.class, new RatVsWallHandler()));
-		handlerInformation.add(new ContactHandlerInformation(Rat.class, Weapon.class, new RatVsWeaponHandler()));
+		handlerInformation.add(new ContactHandlerInformation(Mob.class, Wall.class, new MobVsWallHandler()));
+		handlerInformation.add(new ContactHandlerInformation(Mob.class, Weapon.class, new MobVsWeaponHandler()));
 		// more registered handlers...
 	}
 

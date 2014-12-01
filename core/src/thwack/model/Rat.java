@@ -53,11 +53,11 @@ public class Rat extends Mob implements Updateable, Disposable {
 
 	@Override
 	public void update(float deltaTime) {
-		ratLogic(3f);
+		mobMoveLogic(3f);
 		increaseStateTime(deltaTime);
 	}
 
-	private void ratLogic(float time) {
+	public void mobMoveLogic(float time) {
 
 		//change state randomly every time seconds
 		if (getStateTime() < time) {
@@ -156,8 +156,9 @@ public class Rat extends Mob implements Updateable, Disposable {
 				this.direction = Direction.RIGHT;
 			}
 
-			if (velocity.isZero(0.01f) && state == State.RUNNING) {
+			if (velocity.isZero() && state == State.RUNNING) {
 				this.velocity.set(0, 0);
+				applyImpulse();
 				this.state = State.STANDING;
 			}
 		}

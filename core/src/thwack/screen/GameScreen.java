@@ -148,13 +148,13 @@ public class GameScreen extends ScreenAdapter {
         float y = player.playerBody.getPosition().y - (11 / 32);
 
        x = Math.max(x, 10);
-     y = (float) Math.max(y, 9.8);
+       y = (float) Math.max(y, 9.8);
 
        x = Math.min(x, 46);
        y = (float) Math.min(y, 30.41);
 
         camera.position.set(x, y, 0);
-        System.out.println(camera.position.toString());
+       // System.out.println(camera.position.toString());
 
         camera.update();
         tiledMapRenderer.render();

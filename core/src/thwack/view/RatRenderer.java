@@ -2,14 +2,18 @@ package thwack.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Scaling;
 
 import thwack.Constants;
 import thwack.model.Entity.DamageState;
@@ -72,7 +76,10 @@ public class RatRenderer implements Disposable {
 		Direction dir = rat.getDirection();
 		AtlasRegion currentRegion;
 		Animation animation;
-
+		TextureRegion image2 = new TextureRegion(new Texture(Gdx.files.internal("Hit_1.png")));
+		Image image = new Image(image2);
+		image.setScaling(Scaling.fill);
+		
 		switch (rat.getState()) {
 				case RUNNING:
 					animation = ratWalkAnim.get(dir);
@@ -87,27 +94,38 @@ public class RatRenderer implements Disposable {
 					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
 					break;
 				default:
-					animation = ratWalkAnim.get(rat.getDirection());
-					currentRegion = (AtlasRegion) animation.getKeyFrame(0, true);
+					animation = ratBoredAnim1.get(dir);
+					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
 					break;
 					
 			
 		}
-
-		if (rat.getDamageState() == DamageState.PHYSICAL) {
-			if(rat.getDamageStateTime() < .1f){
-			batch.setColor(Color.RED);}
-			else if(rat.getDamageStateTime() <= .1f){
-			batch.setColor(Color.WHITE);
-			rat.setDamageState(DamageState.OK);
-			rat.setDamageStateTime(0);}
-		}
-		
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
 		float height = currentRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 
 		batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
+		
+		if (rat.getDamageState() == DamageState.PHYSICAL) {
+			if(rat.getDamageStateTime() < .1f){
+			
+			image.setPosition(rat.getLastContactx() - .5f, rat.getLastContacty() - .5f);
+			image.setSize(image2.getTexture().getWidth() / 32, image2.getTexture().getHeight() / 32);
+
+			image.draw(batch, 1f);
+			batch.setColor(Color.RED);
+			batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
+			image.draw(batch, 1f);}
+			else if(rat.getDamageStateTime() <= .1f){
+			
+			image2.getTexture().dispose();
+			batch.setColor(Color.WHITE);
+			rat.setDamageState(DamageState.OK);
+			rat.setDamageStateTime(0);}
+
+		}
+		
 		batch.setColor(Color.WHITE);
+
         rat.archivePosition();
 	}
 
