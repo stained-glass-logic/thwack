@@ -10,6 +10,6 @@ public class Packer {
 		settings.stripWhitespaceX = true;
 		settings.stripWhitespaceY = true;
 		settings.combineSubdirectories = true;
-		TexturePacker.process(settings, "C:/Users/super radish/git/thwack/android/assets/Rat", "C:/Users/super radish/git/thwack/android/assets/Rat-Packed", "Rat");
+		TexturePacker.process(settings, "C:/Users/super radish/git/thwack/desktop/assets/Saw Rat", "C:/Users/super radish/git/thwack/desktop/assets/Saw Rat-Packed", "Saw Rat");
 	}
 }

@@ -1,14 +1,18 @@
 package thwack.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+
 import thwack.Constants;
 import thwack.model.Entity.Direction;
 import thwack.model.Entity.State;
@@ -118,6 +122,12 @@ public class PlayerRenderer implements Disposable {
 			weaponHeight = weaponRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 		}
 
+		TextureRegion region = (currentRegion);
+		//next 2 lines draw the shadow
+		batch.setColor((int) 0, (int) 0, (int) 0, (float) 0.6);
+		batch.draw(region, player.getPosition().x, player.getPosition().y - .5f, (float) (width * 1.5) , height / 4);
+		
+		batch.setColor(Color.WHITE);
 		batch.draw(currentRegion, player.getPosition().x, player.getPosition().y - .5f, width, height);
 		if (weaponRegion != null) {
 			batch.draw(weaponRegion, weaponX, weaponY - .5f, weaponWidth, weaponHeight);

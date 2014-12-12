@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Scaling;
 import thwack.Constants;
 import thwack.model.Entity.DamageState;
 import thwack.model.Entity.Direction;
+import thwack.model.Entity.State;
 import thwack.model.Rat;
 
 import java.util.HashMap;
@@ -63,16 +64,28 @@ public class RatRenderer implements Disposable {
 }
 
 	public void render(Rat rat) {
-		if(rat.getDirection() == Direction.UP){
-			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.DOWN){
-			rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.RIGHT){
-			rat.setPosition(rat.ratBody.getPosition().x -1.35f, rat.ratBody.getPosition().y - .5f);
-		} else if (rat.getDirection() == Direction.LEFT){
-			rat.setPosition(rat.ratBody.getPosition().x -.75f, rat.ratBody.getPosition().y - .5f);
-		}
-
+		if(rat.getState() == State.RUNNING){
+			if(rat.getDirection() == Direction.UP){
+				rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
+			} else if (rat.getDirection() == Direction.DOWN){
+				rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
+			} else if (rat.getDirection() == Direction.RIGHT){
+				rat.setPosition(rat.ratBody.getPosition().x -1.35f, rat.ratBody.getPosition().y - .5f);
+			} else if (rat.getDirection() == Direction.LEFT){
+				rat.setPosition(rat.ratBody.getPosition().x -.75f, rat.ratBody.getPosition().y - .5f);
+			}
+			}
+		if(rat.getState() == State.BORED || rat.getState() == State.BORED2){
+			if(rat.getDirection() == Direction.UP){
+				rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
+			} else if (rat.getDirection() == Direction.DOWN){
+				rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
+			} else if (rat.getDirection() == Direction.RIGHT){
+				rat.setPosition(rat.ratBody.getPosition().x -1.35f, rat.ratBody.getPosition().y - .5f);
+			} else if (rat.getDirection() == Direction.LEFT){
+				rat.setPosition(rat.ratBody.getPosition().x -.5f, rat.ratBody.getPosition().y - .5f);
+			}
+			}
 		Direction dir = rat.getDirection();
 		AtlasRegion currentRegion;
 		Animation animation;
@@ -102,7 +115,14 @@ public class RatRenderer implements Disposable {
 		}
 		float width = currentRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
 		float height = currentRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
-
+		
+		TextureRegion region = (currentRegion);
+		//next 2 lines draw the shadow
+		batch.setColor((int) 0, (int) 0, (int) 0, (float) 0.6);
+		batch.draw(region, rat.getPosition().x, rat.getPosition().y , (float) (width * 1.5) , height / 4);
+		
+		batch.setColor(Color.WHITE);
+		
 		batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
 		
 		if (rat.getDamageState() == DamageState.PHYSICAL) {
