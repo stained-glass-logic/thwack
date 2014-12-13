@@ -140,7 +140,7 @@ public class Rat extends Mob implements Updateable, Disposable {
 			//this.state = State.RUNNING;
 
 			float pi = (float)Math.PI;
-			float angle = velocity.getAngleRad();
+			float angle = velocity.angleRad();
 			while(angle < 0) {
 				angle += 2*pi;
 			}

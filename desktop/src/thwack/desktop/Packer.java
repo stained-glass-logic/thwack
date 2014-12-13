@@ -1,4 +1,4 @@
-package thwack;
+package thwack.desktop;
 
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
