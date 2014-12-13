@@ -118,12 +118,13 @@ public class RatRenderer implements Disposable {
 		
 		TextureRegion region = (currentRegion);
 		//next 2 lines draw the shadow
-		batch.setColor((int) 0, (int) 0, (int) 0, (float) 0.6);
-		batch.draw(region, rat.getPosition().x, rat.getPosition().y , (float) (width * 1.5) , height / 4);
+		batch.setColor( 0, 0, 0,  0.6f);
+		
+		batch.draw(region,  rat.ratBody.getPosition().x - width/2, rat.ratBody.getPosition().y - height/2 , (float) (width * 1.5) , height / 4);
 		
 		batch.setColor(Color.WHITE);
 		
-		batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
+		batch.draw(currentRegion, rat.ratBody.getPosition().x - width/2, rat.ratBody.getPosition().y - height/2, width, height);
 		
 		if (rat.getDamageState() == DamageState.PHYSICAL) {
 			if(rat.getDamageStateTime() < .1f){
@@ -133,7 +134,7 @@ public class RatRenderer implements Disposable {
 
 			image.draw(batch, 1f);
 			batch.setColor(Color.RED);
-			batch.draw(currentRegion, rat.getPosition().x, rat.getPosition().y, width, height);
+			batch.draw(currentRegion, rat.ratBody.getPosition().x - width/2, rat.ratBody.getPosition().y - height/2, width, height);
 			image.draw(batch, 1f);}
 			else if(rat.getDamageStateTime() <= .1f){
 			
