@@ -1,7 +1,7 @@
 package thwack.controller;
 
-import thwack.model.Entity;
-import thwack.model.Player;
+import thwack.model.entities.player.Player;
+import thwack.model.entity.Entity;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
