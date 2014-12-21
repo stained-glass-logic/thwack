@@ -1,5 +1,14 @@
 package thwack.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import thwack.Constants;
+import thwack.model.entities.mobs.Mob.State;
+import thwack.model.entities.mobs.Rat;
+import thwack.model.entity.Damageable.DamageState;
+import thwack.model.entity.Movable.Direction;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,25 +19,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 
-import thwack.Constants;
-import thwack.model.Entity.DamageState;
-import thwack.model.Entity.Direction;
-import thwack.model.Entity.State;
-import thwack.model.Rat;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class RatRenderer implements Disposable {
 
 	private SpriteBatch batch;
-
-	private ShapeRenderer shapeRenderer;
 
 	private TextureAtlas ratAtlas;
 
@@ -38,7 +36,7 @@ public class RatRenderer implements Disposable {
 	
 	public RatRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 		this.batch = batch;
-		this.shapeRenderer = shapeRenderer;
+		//this.shapeRenderer = shapeRenderer;
 
 		this.ratAtlas = new TextureAtlas(Gdx.files.internal("Rat-Packed/Rat.atlas"));
 
@@ -64,36 +62,38 @@ public class RatRenderer implements Disposable {
 }
 
 	public void render(Rat rat) {
-		if(rat.getState() == State.RUNNING){
-			if(rat.getDirection() == Direction.UP){
-				rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-			} else if (rat.getDirection() == Direction.DOWN){
-				rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-			} else if (rat.getDirection() == Direction.RIGHT){
-				rat.setPosition(rat.ratBody.getPosition().x -1.35f, rat.ratBody.getPosition().y - .5f);
-			} else if (rat.getDirection() == Direction.LEFT){
-				rat.setPosition(rat.ratBody.getPosition().x -.75f, rat.ratBody.getPosition().y - .5f);
+		Vector2 position = new Vector2();
+		
+		if(rat.state == State.RUNNING){
+			if(rat.direction == Direction.UP){
+				position.set(rat.getBody().getPosition().x - .5f, rat.getBody().getPosition().y - .5f);
+			} else if (rat.direction == Direction.DOWN){
+				position.set(rat.getBody().getPosition().x - .5f, rat.getBody().getPosition().y - .5f);
+			} else if (rat.direction == Direction.RIGHT){
+				position.set(rat.getBody().getPosition().x -1.35f, rat.getBody().getPosition().y - .5f);
+			} else if (rat.direction == Direction.LEFT){
+				position.set(rat.getBody().getPosition().x -.75f, rat.getBody().getPosition().y - .5f);
 			}
 			}
-		if(rat.getState() == State.BORED || rat.getState() == State.BORED2){
-			if(rat.getDirection() == Direction.UP){
-				rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-			} else if (rat.getDirection() == Direction.DOWN){
-				rat.setPosition(rat.ratBody.getPosition().x - .5f, rat.ratBody.getPosition().y - .5f);
-			} else if (rat.getDirection() == Direction.RIGHT){
-				rat.setPosition(rat.ratBody.getPosition().x -1.35f, rat.ratBody.getPosition().y - .5f);
-			} else if (rat.getDirection() == Direction.LEFT){
-				rat.setPosition(rat.ratBody.getPosition().x -.5f, rat.ratBody.getPosition().y - .5f);
+		if(rat.state == State.BORED || rat.state == State.BORED2){
+			if(rat.direction == Direction.UP){
+				position.set(rat.getBody().getPosition().x - .5f, rat.getBody().getPosition().y - .5f);
+			} else if (rat.direction == Direction.DOWN){
+				position.set(rat.getBody().getPosition().x - .5f, rat.getBody().getPosition().y - .5f);
+			} else if (rat.direction == Direction.RIGHT){
+				position.set(rat.getBody().getPosition().x -1.35f, rat.getBody().getPosition().y - .5f);
+			} else if (rat.direction == Direction.LEFT){
+				position.set(rat.getBody().getPosition().x -.5f, rat.getBody().getPosition().y - .5f);
 			}
 			}
-		Direction dir = rat.getDirection();
+		Direction dir = rat.direction;
 		AtlasRegion currentRegion;
 		Animation animation;
 		TextureRegion image2 = new TextureRegion(new Texture(Gdx.files.internal("Hit_1.png")));
 		Image image = new Image(image2);
 		image.setScaling(Scaling.fill);
 		
-		switch (rat.getState()) {
+		switch (rat.state) {
 				case RUNNING:
 					animation = ratWalkAnim.get(dir);
 					currentRegion = (AtlasRegion) animation.getKeyFrame(rat.getStateTime(), true);
@@ -120,34 +120,35 @@ public class RatRenderer implements Disposable {
 		//next 2 lines draw the shadow
 		batch.setColor( 0, 0, 0,  0.6f);
 		
-		batch.draw(region,  rat.ratBody.getPosition().x - width/2, rat.ratBody.getPosition().y - height/2 , (float) (width * 1.5) , height / 4);
+		batch.draw(region,  rat.getBody().getPosition().x - width/2, rat.getBody().getPosition().y - height/2 , (float) (width * 1.5) , height / 4);
 		
 		batch.setColor(Color.WHITE);
 		
-		batch.draw(currentRegion, rat.ratBody.getPosition().x - width/2, rat.ratBody.getPosition().y - height/2, width, height);
+		batch.draw(currentRegion, rat.getBody().getPosition().x - width/2, rat.getBody().getPosition().y - height/2, width, height);
 		
-		if (rat.getDamageState() == DamageState.PHYSICAL) {
+		if (rat.damageState == DamageState.PHYSICAL) {
 			if(rat.getDamageStateTime() < .1f){
 			
-			image.setPosition(rat.getLastContactx() - .5f, rat.getLastContacty() - .5f);
+			image.setPosition(rat.getLastContactX() - .5f, rat.getLastContactY() - .5f);
 			image.setSize(image2.getTexture().getWidth() / 32, image2.getTexture().getHeight() / 32);
 
 			image.draw(batch, 1f);
 			batch.setColor(Color.RED);
-			batch.draw(currentRegion, rat.ratBody.getPosition().x - width/2, rat.ratBody.getPosition().y - height/2, width, height);
+			batch.draw(currentRegion, rat.getBody().getPosition().x - width/2, rat.getBody().getPosition().y - height/2, width, height);
 			image.draw(batch, 1f);}
 			else if(rat.getDamageStateTime() <= .1f){
 			
 			image2.getTexture().dispose();
 			batch.setColor(Color.WHITE);
-			rat.setDamageState(DamageState.OK);
-			rat.setDamageStateTime(0);}
+			rat.damageState = DamageState.OK;
+			rat.setDamageStateTime(0);
+			}
 
 		}
 		
 		batch.setColor(Color.WHITE);
 
-        rat.archivePosition();
+        //rat.archivePosition();
 	}
 
 	@Override

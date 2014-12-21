@@ -1,9 +1,20 @@
 package thwack.controller;
 
-import com.badlogic.gdx.physics.box2d.*;
+import thwack.model.entities.mobs.Mob;
+import thwack.model.entities.player.Player;
+import thwack.model.entities.projectiles.Projectile;
+import thwack.model.entities.weapons.Weapon;
+import thwack.model.entities.worldobjects.Wall;
+import thwack.model.entity.Entity;
+
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
-import thwack.model.*;
 
 /**
  * This class will determine the correct {@link ContactHandler} for a given
@@ -21,9 +32,11 @@ public class MyContactListener implements ContactListener {
 		handlerInformation.add(new ContactHandlerInformation(Player.class, Pickup.class, new PlayerVsPickupHandler()));
 		handlerInformation.add(new ContactHandlerInformation(Mob.class, Wall.class, new MobVsWallHandler()));
 		handlerInformation.add(new ContactHandlerInformation(Mob.class, Weapon.class, new MobVsWeaponHandler()));
+		handlerInformation.add(new ContactHandlerInformation(Projectile.class, Player.class, new ProjectileVsPlayer()));
 		// more registered handlers...
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void beginContact(Contact contact) {
 		Fixture fixtureA = contact.getFixtureA();
@@ -53,6 +66,7 @@ public class MyContactListener implements ContactListener {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void endContact(Contact contact) {
 		Fixture fixtureA = contact.getFixtureA();
@@ -87,6 +101,7 @@ public class MyContactListener implements ContactListener {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
 		Fixture fixtureA = contact.getFixtureA();
@@ -116,6 +131,7 @@ public class MyContactListener implements ContactListener {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 		Fixture fixtureA = contact.getFixtureA();
@@ -143,6 +159,8 @@ public class MyContactListener implements ContactListener {
 				handlerInformation.contactHandler.postSolve(contact, impulse, entityB, fixtureB, entityA, fixtureA);
 			}
 		}
+		
+		
 	}
 
 	private ResolvedHandlerInformation resolveContactHandlerInformation(Class<? extends Entity> classA, Class<? extends Entity> classB) {

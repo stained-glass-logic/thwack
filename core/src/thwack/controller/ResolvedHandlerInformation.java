@@ -4,6 +4,7 @@ package thwack.controller;
  */
 public class ResolvedHandlerInformation {
  
+	@SuppressWarnings("rawtypes")
 	public ContactHandler contactHandler;
  
 	public boolean reverse;

@@ -1,6 +1,6 @@
 package thwack.controller;
 
-import thwack.model.Entity;
+import thwack.model.entity.Entity;
 
 import com.badlogic.gdx.physics.box2d.Body;
 
@@ -11,5 +11,11 @@ public class Pickup extends Entity {
 	  public void Player() {
 	    body.setUserData(this);
 	  }
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
 	 
 	}

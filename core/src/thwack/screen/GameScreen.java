@@ -1,5 +1,23 @@
 package thwack.screen;
 
+import thwack.Constants;
+import thwack.Global;
+import thwack.controller.MyContactListener;
+import thwack.model.entities.mobs.Aimer;
+import thwack.model.entities.mobs.Rat;
+import thwack.model.entities.player.Player;
+import thwack.model.entities.projectiles.Projectile;
+import thwack.model.entities.worldobjects.Wall;
+import thwack.model.entity.Entity;
+import thwack.model.entity.Stateable;
+import thwack.model.entity.Stateable.EntityState;
+import thwack.model.entity.Updateable;
+import thwack.sound.MusicPlayer;
+import thwack.sound.SoundPlayer;
+import thwack.view.AimerRenderer;
+import thwack.view.PlayerRenderer;
+import thwack.view.RatRenderer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,19 +30,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import thwack.Constants;
-import thwack.Global;
-import thwack.controller.MyContactListener;
-import thwack.model.Player;
-import thwack.model.Rat;
-import thwack.model.Updateable;
-import thwack.model.Wall;
-import thwack.sound.MusicPlayer;
-import thwack.sound.SoundPlayer;
-import thwack.view.PlayerRenderer;
-import thwack.view.RatRenderer;
 
 /**
  * User: rnentjes
@@ -47,7 +59,9 @@ public class GameScreen extends ScreenAdapter {
 
     private Array<Updateable> updateables = new Array<Updateable>();
     private Array<Rat> rats = new Array<Rat>();
-
+    private Array<Aimer> aimers = new Array<Aimer>();
+    public static Array<Projectile> projectiles = new Array<Projectile>();
+    
     private Player player;
 
     private PlayerRenderer playerRenderer;
@@ -62,9 +76,10 @@ public class GameScreen extends ScreenAdapter {
     private FixtureDef[] fixtureDef = new FixtureDef[4];
 
     private RatRenderer ratRenderer;
+    private AimerRenderer aimerRenderer;
     private Wall wall; // dummy to resolve wall collisions
 
-    private float unitWidth, unitHeight;
+    //private float unitWidth, unitHeight;
 
     public GameScreen(TiledMap map) {
         world = new World(new Vector2(0, 0), false);
@@ -88,7 +103,7 @@ public class GameScreen extends ScreenAdapter {
                 Global.batch);
 
         int mapWidth = tiledMap.getProperties().get("width", Integer.class);
-        int mapHeight = tiledMap.getProperties().get("height", Integer.class);
+        //int mapHeight = tiledMap.getProperties().get("height", Integer.class);
 
         Global.font = new BitmapFont();
 
@@ -101,18 +116,25 @@ public class GameScreen extends ScreenAdapter {
 
         player = new Player(world);
 
-        Vector2 ratPos = new Vector2(6f, 20f);
+        Vector2 ratPos = new Vector2(6f, 25f);
         Vector2 ratSize = new Vector2(.5f, .5f);
-        for (int count = 0; count < 20; count++) {
+        for (int count = 0; count < 0; count++) {
             Rat rat = new Rat(world, ratPos, ratSize);
             rats.add(rat);
             updateables.add(rat);
+        }
+        
+        for (int count = 0; count <4; count++) {
+            Aimer aimer = new Aimer(world, ratPos, ratSize);
+            aimers.add(aimer);
+            updateables.add(aimer);
         }
 
         // and the player object code
         playerRenderer = new PlayerRenderer(Global.batch, Global.shapeRenderer);
         ratRenderer = new RatRenderer(Global.batch, Global.shapeRenderer);
-
+        aimerRenderer = new AimerRenderer(Global.batch, Global.shapeRenderer);
+        
         updateables.add(player);
     }
 
@@ -143,9 +165,9 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.setView(camera);
 
-        float x = player.playerBody.getPosition().x;
+        float x = player.getBody().getPosition().x;
 
-        float y = player.playerBody.getPosition().y - (11 / 32);
+        float y = player.getBody().getPosition().y - (11 / 32);
 
        x = Math.max(x, 10);
        y = (float) Math.max(y, 9.8);
@@ -154,7 +176,6 @@ public class GameScreen extends ScreenAdapter {
        y = (float) Math.min(y, 30.41);
 
         camera.position.set(x, y, 0);
-       // System.out.println(camera.position.toString());
 
         camera.update();
         tiledMapRenderer.render();
@@ -165,25 +186,73 @@ public class GameScreen extends ScreenAdapter {
         for (int index = 0; index < rats.size; index++) {
             if (rats.get(index).isAlive()) {
                 ratRenderer.render(rats.get(index));
-            } else {
-                rats.get(index).dispose();
-                rats.removeIndex(index);
             }
+        }
+        
+        for (int index = 0; index < aimers.size; index++)
+        {
+        	if (aimers.get(index).isAlive())
+        	{
+        		aimerRenderer.render(aimers.get(index));
+        	}
         }
 
         Global.batch.end();
 
         float deltaTime = Gdx.graphics.getDeltaTime();
-
-        for (Updateable updateable : updateables) {
-            if (updateable.active()) {
-                updateable.update(deltaTime);
-            }
-        }
-
+        
         debugRenderer.render(world, camera.combined);
 
+        Array<Body> bodies2 = new Array<Body>();
+		world.getBodies(bodies2);
+		
+		
+		for(Body body : bodies2)
+		{
+			if(body.getUserData() instanceof Updateable)
+			{
+				Updateable u = (Updateable) body.getUserData();
+				if(u.active())
+					u.update(deltaTime);
+			}
+		}
+        
+        
         world.step(deltaTime, 8, 4);
+        
+       
+        
+        //Only destroy stuff after world.step();
+        if(!world.isLocked())
+		{
+        	Array<Body> bodies = new Array<Body>();
+    		world.getBodies(bodies);
+    		
+    		
+			for(Body body : bodies)
+			{
+//				if(body.getUserData() instanceof Updateable)
+//				{
+//					Updateable u = (Updateable) body.getUserData();
+//					if(u.active())
+//						u.update(deltaTime);
+//				}
+				
+				if(body.getUserData() instanceof Stateable)
+				{
+					Stateable e = (Stateable) body.getUserData();
+					if(e.getPublicState() == EntityState.DESTROY)
+					{
+						if(body.getUserData() instanceof Entity)
+						{
+							Entity e2 = (Entity) body.getUserData();
+							e2.dispose();
+						}	
+					}
+				}
+			}
+		}
+       
     }
 
 
@@ -219,5 +288,4 @@ public class GameScreen extends ScreenAdapter {
             bodyShape[index].dispose();
         }
     }
-
 }

@@ -1,13 +1,13 @@
 package thwack.controller;
 
+import thwack.model.entities.mobs.Mob;
+import thwack.model.entities.worldobjects.Wall;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-
-import thwack.model.Mob;
-import thwack.model.Wall;
 
 /**
  * @author Daniel Holderbaum
@@ -19,7 +19,7 @@ public class MobVsWallHandler extends ContactHandler<Mob, Wall> {
 
 			mob.setVelocity(velocity);
 			mob.setStateTime(0f);
-			mob.mobMoveLogic(0f);
+			mob.moveLogic(0f);
 	}
 
 	@Override

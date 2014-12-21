@@ -1,8 +1,15 @@
 package thwack.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import thwack.Constants;
+import thwack.model.entities.player.Player;
+import thwack.model.entities.player.Player.State;
+import thwack.model.entity.Movable.Direction;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,19 +20,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
-import thwack.Constants;
-import thwack.model.Entity.Direction;
-import thwack.model.Entity.State;
-import thwack.model.Player;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class PlayerRenderer implements Disposable {
 
 	private SpriteBatch batch;
-
-	private ShapeRenderer shapeRenderer;
 
 	private TextureAtlas heroAtlas;
 
@@ -35,7 +32,7 @@ public class PlayerRenderer implements Disposable {
 
 	public PlayerRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer) {
 		this.batch = batch;
-		this.shapeRenderer = shapeRenderer;
+		//this.shapeRenderer = shapeRenderer;
 
 		this.heroAtlas = new TextureAtlas(Gdx.files.internal("Hero-packed/Hero.atlas"));
 
@@ -60,7 +57,7 @@ public class PlayerRenderer implements Disposable {
 	}
 
 	public void render(Player player) {
-		player.setPosition(player.playerBody.getPosition().x -.65f, player.playerBody.getPosition().y);
+		//player.setPosition(player.getBody().getPosition().x -.65f, player.getBody().getPosition().y);
 
 		player.increaseStateTime(Gdx.graphics.getDeltaTime());
 
@@ -69,9 +66,9 @@ public class PlayerRenderer implements Disposable {
 		Animation animation = null;
 		Animation weaponAnimation = null;
 
-		switch (player.getState()) {
+		switch (player.state) {
 			case ATTACKING:
-				Direction dir = player.getDirection();
+				Direction dir = player.direction;
 
 				animation = attack.get(dir);
 				weaponAnimation = attackSword.get(dir);
@@ -79,7 +76,7 @@ public class PlayerRenderer implements Disposable {
 				if (animation.isAnimationFinished(player.getStateTime())) {
 					//System.out.println("this should be working");
 					player.setState(State.STANDING);
-					animation = walking.get(player.getDirection());
+					animation = walking.get(player.direction);
 					currentRegion = (AtlasRegion)animation.getKeyFrames()[0];
 				} else {
 					//System.out.println("why isn't this working");
@@ -88,15 +85,15 @@ public class PlayerRenderer implements Disposable {
 				}
 				break;
 			case STANDING:
-				animation = walking.get(player.getDirection());
+				animation = walking.get(player.direction);
 				currentRegion = (AtlasRegion)animation.getKeyFrames()[0];
 				break;
 			case WALKING:
-				animation = walking.get(player.getDirection());
+				animation = walking.get(player.direction);
 				currentRegion = (AtlasRegion)animation.getKeyFrame(player.getStateTime(), true);
-				if (player.getDirection() == Direction.LEFT) {
+				if (player.direction == Direction.LEFT) {
 				  currentRegion.flip(currentRegion.isFlipX(), false);
-				} else if (player.getDirection() == Direction.RIGHT) {
+				} else if (player.direction == Direction.RIGHT) {
 				  currentRegion.flip(!currentRegion.isFlipX(), false);
 				}
 				break;
@@ -116,8 +113,8 @@ public class PlayerRenderer implements Disposable {
 		float weaponX = 0.0f;
 		float weaponY = 0.0f;
 		if (weaponRegion != null) {
-			weaponX = player.getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX) / Constants.PIXELS_PER_METER * 2;
-			weaponY = player.getPosition().y - ((currentRegion.offsetY - weaponRegion.offsetY) / Constants.PIXELS_PER_METER * 2);
+			weaponX = player.getBody().getPosition().x - (currentRegion.offsetX - weaponRegion.offsetX) / Constants.PIXELS_PER_METER * 2;
+			weaponY = player.getBody().getPosition().y - ((currentRegion.offsetY - weaponRegion.offsetY) / Constants.PIXELS_PER_METER * 2);
 			weaponWidth = weaponRegion.getRegionWidth() / Constants.PIXELS_PER_METER * 2;
 			weaponHeight = weaponRegion.getRegionHeight() / Constants.PIXELS_PER_METER * 2;
 		}
@@ -125,18 +122,13 @@ public class PlayerRenderer implements Disposable {
 		TextureRegion region = (currentRegion);
 		//next 2 lines draw the shadow
 		batch.setColor((int) 0, (int) 0, (int) 0, (float) 0.6);
-		batch.draw(region, player.getPosition().x, player.getPosition().y - .5f, (float) (width * 1.5) , height / 4);
+		batch.draw(region, player.getBody().getPosition().x - width/2, player.getBody().getPosition().y - height/4, (float) (width * 1.5) , height / 4); 
 		
 		batch.setColor(Color.WHITE);
-		batch.draw(currentRegion, player.getPosition().x, player.getPosition().y - .5f, width, height);
+		batch.draw(currentRegion, player.getBody().getPosition().x - width/2, player.getBody().getPosition().y - height/4, width, height);
 		if (weaponRegion != null) {
 			batch.draw(weaponRegion, weaponX, weaponY - .5f, weaponWidth, weaponHeight);
 		}
-
-//		shapeRenderer.begin(ShapeType.Line);
-//		shapeRenderer.setColor(Color.WHITE);
-//		shapeRenderer.rect(player.getPosition().x, player.getPosition().y, width, height);
-//		shapeRenderer.end();
 
 	}
 
