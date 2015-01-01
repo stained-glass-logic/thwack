@@ -15,6 +15,7 @@ import thwack.model.entity.Updateable;
 import thwack.sound.MusicPlayer;
 import thwack.sound.SoundPlayer;
 import thwack.view.AimerRenderer;
+import thwack.view.MinimapRenderer;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
 
@@ -80,6 +81,11 @@ public class GameScreen extends ScreenAdapter {
     private Wall wall; // dummy to resolve wall collisions
 
     //private float unitWidth, unitHeight;
+    
+    private MinimapRenderer minimapRenderer;
+    SpriteBatch guiBatch;
+    OrthographicCamera cameraMinimap;
+
 
     public GameScreen(TiledMap map) {
         world = new World(new Vector2(0, 0), false);
@@ -97,6 +103,9 @@ public class GameScreen extends ScreenAdapter {
         // later
 
         Global.batch = new SpriteBatch();
+        guiBatch = new SpriteBatch();
+        cameraMinimap = new OrthographicCamera(w,h);
+        cameraMinimap.zoom = 16.0f;       
 
         tiledMap = new TmxMapLoader().load("DemoMap.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / 16f,
@@ -136,6 +145,10 @@ public class GameScreen extends ScreenAdapter {
         aimerRenderer = new AimerRenderer(Global.batch, Global.shapeRenderer);
         
         updateables.add(player);
+        
+        //and the minimap
+        minimapRenderer = new MinimapRenderer(guiBatch, Global.shapeRenderer, aimers, player, tiledMap);
+       
     }
 
     @Override
@@ -198,6 +211,13 @@ public class GameScreen extends ScreenAdapter {
         }
 
         Global.batch.end();
+        
+        //minimap
+        cameraMinimap.update();
+        guiBatch.setProjectionMatrix(cameraMinimap.combined);
+        guiBatch.begin();
+        minimapRenderer.render();
+        guiBatch.end();
 
         float deltaTime = Gdx.graphics.getDeltaTime();
         
