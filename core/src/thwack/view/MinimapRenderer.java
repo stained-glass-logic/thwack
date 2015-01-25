@@ -2,7 +2,9 @@ package thwack.view;
 
 
 
+import thwack.Dungeon;
 import thwack.model.entities.mobs.Aimer;
+import thwack.model.entities.mobs.MobGroup;
 import thwack.model.entities.player.Player;
 
 import com.badlogic.gdx.graphics.Color;
@@ -21,7 +23,7 @@ public class MinimapRenderer implements Disposable {
 
 	SpriteBatch batch;
 	ShapeRenderer shapeRenderer;
-	Array<Aimer> mobs;
+	//MobGroup mobs;
 	Player player;
 	
 	float minimapAlpha = 0.5f;
@@ -35,18 +37,19 @@ public class MinimapRenderer implements Disposable {
 	
 
 	public MinimapRenderer(SpriteBatch batch, ShapeRenderer shapeRenderer,
-			Array<Aimer> mobs, thwack.model.entities.player.Player player,
+			MobGroup mobs, thwack.model.entities.player.Player player,
 			TiledMap tiledMap) {
 		this.batch = batch;
 		this.shapeRenderer = shapeRenderer;
-		this.mobs = mobs;
+		//this.mobs = mobs;
 		this.player = player;
 		updateMapTerrain(tiledMap);
 		
 	}
 
-	public void render() {
+	public void render(Dungeon thisDungeon) {
 	
+		MobGroup mobs = thisDungeon.getCurrentStage().getMobs();
 		//batch.draw(mapTerrainImage,-20f,20f);
 		batch.draw(mapTerrainImage,-20f,70f);
 		Texture radarImage = new Texture(getUpdatedRadar(mobs), Format.RGBA8888, false);
@@ -116,21 +119,31 @@ public class MinimapRenderer implements Disposable {
 		mapTerrainImage = new Texture(terrainPixels,Format.RGBA8888,false);
 	}
 	
-	public Pixmap getUpdatedRadar(Array<Aimer> mobs) {
+	public Pixmap getUpdatedRadar(MobGroup mobs) {
 		
 		//there is no particular reason why we offset x and y here.  It just worked.  Otherwise the pixels don't line up.
 		//it's possible that I made a rounding error somewhere when converting floats to ints
 		
 		
 		//draw rats on radar
+		//System.out.println("On minimap, ,drawing " + mobs.getRatCount() + " rats and " + mobs.getAimerCount() + "aimers.");
 		Pixmap retPixmap = new Pixmap(MINIMAP_WIDTH_PIXELS,MINIMAP_HEIGHT_PIXELS,Format.RGBA8888);
-		for (int count = 0; count < mobs.size; count++) {
-			if (mobs.get(count).active() == true)
+		for (int count = 0; count < mobs.getRatCount(); count++) {
+			if (mobs.getRatByIndex(count) != null && mobs.getRatByIndex(count).active() == true)
 			{
 				retPixmap.setColor(Color.GREEN);
-				retPixmap.drawPixel( (int)(mobs.get(count).getBody().getPosition().x)+XOFFSET, MINIMAP_HEIGHT_PIXELS - (int)(mobs.get(count).getBody().getPosition().y)+YOFFSET);
+				retPixmap.drawPixel( (int)(mobs.getRatByIndex(count).getBody().getPosition().x)+XOFFSET, MINIMAP_HEIGHT_PIXELS - (int)(mobs.getRatByIndex(count).getBody().getPosition().y)+YOFFSET);
 			}
 		}
+		//draw aimers on radar
+		for (int count = 0; count < mobs.getAimerCount(); count++) {
+			if (mobs.getAimerByIndex(count) != null && mobs.getAimerByIndex(count).active() == true)
+			{
+				retPixmap.setColor(Color.OLIVE);
+				retPixmap.drawPixel( (int)(mobs.getAimerByIndex(count).getBody().getPosition().x)+XOFFSET, MINIMAP_HEIGHT_PIXELS - (int)(mobs.getAimerByIndex(count).getBody().getPosition().y)+YOFFSET);
+			}
+		}
+		
 		
 		//draw player on radar
 		retPixmap.setColor(Color.WHITE);

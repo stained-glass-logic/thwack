@@ -1,5 +1,7 @@
 package thwack.model.entities.mobs;
 
+import thwack.model.entity.Stateable.EntityState;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -29,6 +31,8 @@ public class Rat extends Mob {
 		ratFixtureDef.shape = ratBodyShape;
 		entityBody.createFixture(ratFixtureDef);
 		ratFixtureDef.shape.dispose();
+		
+		setHealth(2);
 	}
 	
 	@Override
@@ -110,6 +114,8 @@ public class Rat extends Mob {
 	@Override
 	public void applyHit(int damage) {
 		health -= damage;
+		if(health < 1)
+			setPublicState(EntityState.DESTROY);
 	}
 
 	@Override

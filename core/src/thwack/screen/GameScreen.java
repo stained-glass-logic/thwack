@@ -1,9 +1,12 @@
 package thwack.screen;
 
 import thwack.Constants;
+import thwack.DungeonStage;
+import thwack.Dungeon;
 import thwack.Global;
 import thwack.controller.MyContactListener;
 import thwack.model.entities.mobs.Aimer;
+import thwack.model.entities.mobs.MobGroup;
 import thwack.model.entities.mobs.Rat;
 import thwack.model.entities.player.Player;
 import thwack.model.entities.projectiles.Projectile;
@@ -59,8 +62,8 @@ public class GameScreen extends ScreenAdapter {
     private OrthographicCamera camera;
 
     private Array<Updateable> updateables = new Array<Updateable>();
-    private Array<Rat> rats = new Array<Rat>();
-    private Array<Aimer> aimers = new Array<Aimer>();
+    private Dungeon testDungeon;
+    //private MobGroup mobs = new MobGroup();
     public static Array<Projectile> projectiles = new Array<Projectile>();
     
     private Player player;
@@ -125,19 +128,24 @@ public class GameScreen extends ScreenAdapter {
 
         player = new Player(world);
 
+        
+        /*
         Vector2 ratPos = new Vector2(6f, 25f);
         Vector2 ratSize = new Vector2(.5f, .5f);
-        for (int count = 0; count < 0; count++) {
+        for (int count = 0; count < 2; count++) {
             Rat rat = new Rat(world, ratPos, ratSize);
-            rats.add(rat);
+            mobs.addRat(rat);
             updateables.add(rat);
         }
         
         for (int count = 0; count <4; count++) {
             Aimer aimer = new Aimer(world, ratPos, ratSize);
-            aimers.add(aimer);
+            mobs.addAimer(aimer);
             updateables.add(aimer);
-        }
+        }*/
+        
+        testDungeon = new Dungeon(world, updateables);
+        
 
         // and the player object code
         playerRenderer = new PlayerRenderer(Global.batch, Global.shapeRenderer);
@@ -147,7 +155,7 @@ public class GameScreen extends ScreenAdapter {
         updateables.add(player);
         
         //and the minimap
-        minimapRenderer = new MinimapRenderer(guiBatch, Global.shapeRenderer, aimers, player, tiledMap);
+        minimapRenderer = new MinimapRenderer(guiBatch, Global.shapeRenderer, testDungeon.getCurrentStage().getMobs(), player, tiledMap);
        
     }
 
@@ -196,19 +204,10 @@ public class GameScreen extends ScreenAdapter {
         Global.batch.begin();
         playerRenderer.render(player);
 
-        for (int index = 0; index < rats.size; index++) {
-            if (rats.get(index).isAlive()) {
-                ratRenderer.render(rats.get(index));
-            }
-        }
+
         
-        for (int index = 0; index < aimers.size; index++)
-        {
-        	if (aimers.get(index).isAlive())
-        	{
-        		aimerRenderer.render(aimers.get(index));
-        	}
-        }
+        testDungeon.drawMobs(ratRenderer, aimerRenderer);
+        testDungeon.update(world, updateables);
 
         Global.batch.end();
         
@@ -216,7 +215,8 @@ public class GameScreen extends ScreenAdapter {
         cameraMinimap.update();
         guiBatch.setProjectionMatrix(cameraMinimap.combined);
         guiBatch.begin();
-        minimapRenderer.render();
+        minimapRenderer.render(testDungeon);
+        testDungeon.drawGUI(guiBatch);
         guiBatch.end();
 
         float deltaTime = Gdx.graphics.getDeltaTime();
