@@ -1,6 +1,7 @@
 package thwack.model.entities.mobs;
 
 import thwack.model.entity.Damageable;
+import thwack.model.entity.EntityStats;
 import thwack.model.entity.Movable;
 
 import com.badlogic.gdx.math.Vector2;
@@ -35,6 +36,7 @@ public abstract class Mob extends Movable implements Damageable{
 		this.world = world;
 		//this.position.set(pos);
 		//this.size.set(size);
+		this.stats = new EntityStats();
 	}
 	
 	/**

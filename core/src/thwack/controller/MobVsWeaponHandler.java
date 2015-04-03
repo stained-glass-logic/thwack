@@ -17,7 +17,7 @@ public class MobVsWeaponHandler extends ContactHandler<Mob, Weapon> {
 	@Override
 	public void beginContact(Contact contact, Mob entityA, Fixture fixtureA, Weapon entityB, Fixture fixtureB) {
 		if (entityB.isAttacking()) {
-			entityA.applyHit(entityB.damage);
+			entityA.applyHit(entityB.damage, entityB.getWielder());
 			if(contact.isTouching()){
 				entityA.setLastContactX((contact.getFixtureA().getBody().getPosition().x + contact.getFixtureB().getBody().getPosition().x) / 2);
 				entityA.setLastContactY((contact.getFixtureA().getBody().getPosition().y + contact.getFixtureB().getBody().getPosition().y) / 2);

@@ -4,6 +4,8 @@ import thwack.Constants;
 import thwack.model.entities.weapons.Sword;
 import thwack.model.entities.weapons.Weapon;
 import thwack.model.entity.Damageable;
+import thwack.model.entity.Entity;
+import thwack.model.entity.EntityStats;
 import thwack.model.entity.Movable;
 
 import com.badlogic.gdx.Gdx;
@@ -38,6 +40,7 @@ public class Player extends Movable implements Damageable {
 	public Player(World world)
 	{
 		this.world = world;
+		this.stats = new EntityStats();
 		
 		BodyDef playerBodyDef = new BodyDef();
 		playerBodyDef.type = BodyType.DynamicBody;
@@ -135,8 +138,9 @@ public class Player extends Movable implements Damageable {
 	}
 
 	@Override
-	public void applyHit(int damage) {
+	public void applyHit(int damage, Entity weapon) {
 		this.health -= damage;
+		
 	}
 
 	@Override

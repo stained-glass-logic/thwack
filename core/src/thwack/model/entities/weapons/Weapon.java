@@ -31,4 +31,8 @@ public abstract class Weapon extends Entity implements Updateable {
 	public void setStateTime(float stateTime) {
 		this.stateTime = stateTime;
 	}
+	
+	public Entity getWielder() { 
+		return this.weilder;
+	}
 }

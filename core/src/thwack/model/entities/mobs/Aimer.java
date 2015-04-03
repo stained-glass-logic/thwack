@@ -4,6 +4,8 @@ package thwack.model.entities.mobs;
 import thwack.model.entities.player.Player;
 import thwack.model.entities.projectiles.FireBall;
 import thwack.model.entities.projectiles.FireOrbital;
+import thwack.model.entity.Entity;
+import thwack.model.entity.Stateable.EntityState;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -159,10 +161,13 @@ public class Aimer extends Mob {
 	}
 
 	@Override
-	public void applyHit(int damage) {
+	public void applyHit(int damage, Entity attacker) {
 		health -= damage;
-		if(health < 1)
+		if(health < 1) {
 			setPublicState(EntityState.DESTROY);
+			attacker.stats.killCount++;
+			System.out.println(attacker + " kills: " + attacker.stats.killCount);
+		}
 	}
 
 	@Override

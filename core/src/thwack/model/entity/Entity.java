@@ -26,6 +26,11 @@ public abstract class Entity extends Stateable implements Disposable{
 	 * The position of the entity.
 	 */
 	//public final Vector2 position = new Vector2(0f, 0f);
+	
+	/**
+	 * Statistics about the entity for tracking purposes (kills, hits, etc)
+	 */
+	public EntityStats stats;
 
 	/**
 	 * @return the world

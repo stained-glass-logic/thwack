@@ -13,7 +13,7 @@ public interface Damageable {
 	}
 	
 	public void setHealth(int health);
-	public void applyHit(int damage);
+	public void applyHit(int damage, Entity attacker);
 	public boolean isAlive();
 	public int getHealth();
 	public void increaseDamageStateTime(float deltaTime);
