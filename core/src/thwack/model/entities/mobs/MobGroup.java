@@ -3,6 +3,7 @@ package thwack.model.entities.mobs;
 import java.util.ArrayList;
 
 import thwack.view.AimerRenderer;
+import thwack.view.LifebarRenderer;
 import thwack.view.RatRenderer;
 
 public class MobGroup {
@@ -17,16 +18,26 @@ public class MobGroup {
 	
 	
 	
-	public void renderMobs(RatRenderer ratRenderer, AimerRenderer aimerRenderer) {
+	public void renderMobs(RatRenderer ratRenderer, AimerRenderer aimerRenderer, LifebarRenderer lifebarRenderer) {
 		for (int i=0;i<rats.size();i++) {
 			if (rats.get(i).isAlive()) {
 				ratRenderer.render(rats.get(i));
+				if (rats.get(i).isAlive() && rats.get(i).lifebar != null) {
+					lifebarRenderer.render(rats.get(i).getBody().getPosition().x,
+											rats.get(i).getBody().getPosition().y,
+											rats.get(i).lifebar);
+				}
 			}
 		}
 		
 		for (int i=0;i<aimers.size();i++) {
 			if (aimers.get(i).isAlive()) {
 				aimerRenderer.render(aimers.get(i));
+				if (aimers.get(i).isAlive() && aimers.get(i).lifebar != null) {
+					lifebarRenderer.render(aimers.get(i).getBody().getPosition().x,
+											aimers.get(i).getBody().getPosition().y,
+											aimers.get(i).lifebar);
+				}
 			}
 		}
 	}

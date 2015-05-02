@@ -2,6 +2,7 @@ package thwack.model.entities.mobs;
 
 import thwack.model.entity.Damageable;
 import thwack.model.entity.EntityStats;
+import thwack.model.entity.Lifebar;
 import thwack.model.entity.Movable;
 
 import com.badlogic.gdx.math.Vector2;
@@ -10,8 +11,11 @@ import com.badlogic.gdx.physics.box2d.World;
 public abstract class Mob extends Movable implements Damageable{
 
 	public Vector2 lastContact = new Vector2(0f, 0f);
-	public int health = 0;
+	public int maxHealth = 0;
+	public int currentHealth = 0;
 	public boolean isActive = true;
+	
+	public Lifebar lifebar;
 	
 	//States
 	public State state = State.STANDING;

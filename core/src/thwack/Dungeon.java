@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import thwack.model.entity.Updateable;
 import thwack.view.AimerRenderer;
+import thwack.view.LifebarRenderer;
 import thwack.view.RatRenderer;
 
 import com.badlogic.gdx.graphics.Color;
@@ -143,14 +144,14 @@ public class Dungeon {
 		}
 	}
 	
-	public void drawMobs(RatRenderer ratRenderer, AimerRenderer aimerRenderer) {
+	public void drawMobs(RatRenderer ratRenderer, AimerRenderer aimerRenderer, LifebarRenderer lifebarRenderer) {
 		if (thisDungeonType == DungeonType.clearStages) {
-			this.getCurrentStage().getMobs().renderMobs(ratRenderer,aimerRenderer);
+			this.getCurrentStage().getMobs().renderMobs(ratRenderer,aimerRenderer, lifebarRenderer);
 		}
 		else if (thisDungeonType == DungeonType.timedStages) {
 			for (int i=0;i<stages.size();i++) {
 				if (i <= currentStage && i < stages.size()) {
-					stages.get(i).getMobs().renderMobs(ratRenderer, aimerRenderer);
+					stages.get(i).getMobs().renderMobs(ratRenderer, aimerRenderer, lifebarRenderer);
 				}
 			}
 		}

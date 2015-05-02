@@ -1,6 +1,7 @@
 package thwack.model.entities.mobs;
 
 import thwack.model.entity.Entity;
+import thwack.model.entity.Lifebar;
 import thwack.model.entity.Stateable.EntityState;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class Rat extends Mob {
+	
 	
 	public Rat(World world, Vector2 pos, Vector2 size)
 	{
@@ -33,6 +35,9 @@ public class Rat extends Mob {
 		entityBody.createFixture(ratFixtureDef);
 		ratFixtureDef.shape.dispose();
 		
+		
+
+		lifebar = new Lifebar();
 		setHealth(2);
 	}
 	
@@ -109,13 +114,16 @@ public class Rat extends Mob {
 
 	@Override
 	public void setHealth(int health) {
-		this.health = health;
+		this.maxHealth = health;
+		this.currentHealth = health;
+		lifebar.update(currentHealth, maxHealth);
 	}
 
 	@Override
 	public void applyHit(int damage, Entity attacker) {
-		health -= damage;
-		if(health < 1) {
+		currentHealth -= damage;
+		lifebar.update(currentHealth, maxHealth);
+		if(currentHealth < 1) {
 			setPublicState(EntityState.DESTROY);
 			attacker.stats.killCount++;
 			System.out.println(attacker + " kills: " + attacker.stats.killCount);
@@ -124,12 +132,12 @@ public class Rat extends Mob {
 
 	@Override
 	public boolean isAlive() {
-		return (health > 0);
+		return (currentHealth > 0);
 	}
 
 	@Override
 	public int getHealth() {
-		return health;
+		return currentHealth;
 	}
 
 	

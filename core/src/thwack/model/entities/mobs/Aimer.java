@@ -1,5 +1,7 @@
 package thwack.model.entities.mobs;
 
+import thwack.model.entity.Lifebar;
+
 
 import thwack.model.entities.player.Player;
 import thwack.model.entities.projectiles.FireBall;
@@ -42,7 +44,8 @@ public class Aimer extends Mob {
 		ratFixtureDef.shape = ratBodyShape;
 		entityBody.createFixture(ratFixtureDef);
 		ratFixtureDef.shape.dispose();
-		
+
+		lifebar = new Lifebar();
 		setHealth(3);
 	}
 	
@@ -157,13 +160,16 @@ public class Aimer extends Mob {
 
 	@Override
 	public void setHealth(int health) {
-		this.health = health;
+		this.currentHealth = health;
+		this.maxHealth = health;
+		lifebar.update(currentHealth, maxHealth);
 	}
 
 	@Override
 	public void applyHit(int damage, Entity attacker) {
-		health -= damage;
-		if(health < 1) {
+		currentHealth -= damage;
+		lifebar.update(currentHealth, maxHealth);
+		if(currentHealth < 1) {
 			setPublicState(EntityState.DESTROY);
 			attacker.stats.killCount++;
 			System.out.println(attacker + " kills: " + attacker.stats.killCount);
@@ -172,12 +178,12 @@ public class Aimer extends Mob {
 
 	@Override
 	public boolean isAlive() {
-		return (health > 0);
+		return (currentHealth > 0);
 	}
 
 	@Override
 	public int getHealth() {
-		return health;
+		return currentHealth;
 	}
 
 	

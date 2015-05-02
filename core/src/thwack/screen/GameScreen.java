@@ -18,6 +18,7 @@ import thwack.model.entity.Updateable;
 import thwack.sound.MusicPlayer;
 import thwack.sound.SoundPlayer;
 import thwack.view.AimerRenderer;
+import thwack.view.LifebarRenderer;
 import thwack.view.MinimapRenderer;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
@@ -82,6 +83,7 @@ public class GameScreen extends ScreenAdapter {
     private RatRenderer ratRenderer;
     private AimerRenderer aimerRenderer;
     private Wall wall; // dummy to resolve wall collisions
+    private LifebarRenderer lifebarRenderer;
 
     //private float unitWidth, unitHeight;
     
@@ -151,6 +153,7 @@ public class GameScreen extends ScreenAdapter {
         playerRenderer = new PlayerRenderer(Global.batch, Global.shapeRenderer);
         ratRenderer = new RatRenderer(Global.batch, Global.shapeRenderer);
         aimerRenderer = new AimerRenderer(Global.batch, Global.shapeRenderer);
+        lifebarRenderer = new LifebarRenderer(Global.batch, Global.shapeRenderer);
         
         updateables.add(player);
         
@@ -206,7 +209,7 @@ public class GameScreen extends ScreenAdapter {
 
 
         
-        testDungeon.drawMobs(ratRenderer, aimerRenderer);
+        testDungeon.drawMobs(ratRenderer, aimerRenderer, lifebarRenderer);
         testDungeon.update(world, updateables);
 
         Global.batch.end();
