@@ -10,6 +10,7 @@ import thwack.Dungeon.DungeonType;
 import thwack.model.entities.mobs.Aimer;
 import thwack.model.entities.mobs.MobGroup;
 import thwack.model.entities.mobs.Rat;
+import thwack.model.entities.mobs.SawRat;
 import thwack.model.entity.Updateable;
 
 
@@ -73,6 +74,13 @@ public class DungeonStage {
 		            mobs.addAimer(aimer);
 		            updateables.add(aimer);
 		  		}
+				else if (thisMobType[MOBTYPE].equals("sawrat")) {
+					Vector2 sawratPos = new Vector2(6f, 25f);
+					Vector2 sawratSize = new Vector2(.5f,.5f);
+					SawRat sawrat = new SawRat(world, sawratPos, sawratSize);
+					mobs.addSawRat(sawrat);
+					updateables.add(sawrat);
+				}
 				else {
 					System.out.println(".Couldn't add " + thisMobType[MOBTYPE]);
 				}

@@ -6,6 +6,7 @@ import thwack.model.entity.Updateable;
 import thwack.view.AimerRenderer;
 import thwack.view.LifebarRenderer;
 import thwack.view.RatRenderer;
+import thwack.view.SawRatRenderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -50,9 +51,11 @@ public class Dungeon {
 		stages.add(new DungeonStage("Stage 3: The Rat Pack", thisDungeonType));
 		stageTemplates.add("rat=1 aimer=1");
 		stages.add(new DungeonStage("Stage 4: This one shoots", thisDungeonType));
-		stageTemplates.add("rat=2 aimer=4");
-		stages.add(new DungeonStage("Stage 5: Rat clan", thisDungeonType));
-		stageTemplates.add("rat=50 aimer=50");
+		stageTemplates.add("rat=2 sawrat=1");
+		stages.add(new DungeonStage("Stage 5: This one has a CHAINSAW!!!", thisDungeonType));
+		stageTemplates.add("rat=2 aimer=4 sawrat=2");
+		stages.add(new DungeonStage("Stage 6: Rat clan", thisDungeonType));
+		stageTemplates.add("rat=50 aimer=50 sawrat=50");
 		stages.add(new DungeonStage("BONUS STAGE! YAY!", thisDungeonType));
 		
 		
@@ -144,14 +147,14 @@ public class Dungeon {
 		}
 	}
 	
-	public void drawMobs(RatRenderer ratRenderer, AimerRenderer aimerRenderer, LifebarRenderer lifebarRenderer) {
+	public void drawMobs(RatRenderer ratRenderer, AimerRenderer aimerRenderer, SawRatRenderer sawratRenderer, LifebarRenderer lifebarRenderer) {
 		if (thisDungeonType == DungeonType.clearStages) {
-			this.getCurrentStage().getMobs().renderMobs(ratRenderer,aimerRenderer, lifebarRenderer);
+			this.getCurrentStage().getMobs().renderMobs(ratRenderer,aimerRenderer, sawratRenderer, lifebarRenderer);
 		}
 		else if (thisDungeonType == DungeonType.timedStages) {
 			for (int i=0;i<stages.size();i++) {
 				if (i <= currentStage && i < stages.size()) {
-					stages.get(i).getMobs().renderMobs(ratRenderer, aimerRenderer, lifebarRenderer);
+					stages.get(i).getMobs().renderMobs(ratRenderer, aimerRenderer, sawratRenderer, lifebarRenderer);
 				}
 			}
 		}

@@ -22,6 +22,7 @@ import thwack.view.LifebarRenderer;
 import thwack.view.MinimapRenderer;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
+import thwack.view.SawRatRenderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -82,6 +83,7 @@ public class GameScreen extends ScreenAdapter {
 
     private RatRenderer ratRenderer;
     private AimerRenderer aimerRenderer;
+    private SawRatRenderer sawratRenderer;
     private Wall wall; // dummy to resolve wall collisions
     private LifebarRenderer lifebarRenderer;
 
@@ -153,6 +155,7 @@ public class GameScreen extends ScreenAdapter {
         playerRenderer = new PlayerRenderer(Global.batch, Global.shapeRenderer);
         ratRenderer = new RatRenderer(Global.batch, Global.shapeRenderer);
         aimerRenderer = new AimerRenderer(Global.batch, Global.shapeRenderer);
+        sawratRenderer = new SawRatRenderer(Global.batch, Global.shapeRenderer);
         lifebarRenderer = new LifebarRenderer(Global.batch, Global.shapeRenderer);
         
         updateables.add(player);
@@ -209,7 +212,7 @@ public class GameScreen extends ScreenAdapter {
 
 
         
-        testDungeon.drawMobs(ratRenderer, aimerRenderer, lifebarRenderer);
+        testDungeon.drawMobs(ratRenderer, aimerRenderer, sawratRenderer, lifebarRenderer);
         testDungeon.update(world, updateables);
 
         Global.batch.end();

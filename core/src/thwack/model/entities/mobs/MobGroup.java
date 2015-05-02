@@ -5,20 +5,23 @@ import java.util.ArrayList;
 import thwack.view.AimerRenderer;
 import thwack.view.LifebarRenderer;
 import thwack.view.RatRenderer;
+import thwack.view.SawRatRenderer;
 
 public class MobGroup {
 
 	ArrayList<Rat> rats;
 	ArrayList<Aimer> aimers;
+	ArrayList<SawRat> sawrats;
 	
 	public MobGroup() {
 		rats = new ArrayList<Rat>();
 		aimers = new ArrayList<Aimer>();
+		sawrats = new ArrayList<SawRat>();
 	}
 	
 	
 	
-	public void renderMobs(RatRenderer ratRenderer, AimerRenderer aimerRenderer, LifebarRenderer lifebarRenderer) {
+	public void renderMobs(RatRenderer ratRenderer, AimerRenderer aimerRenderer, SawRatRenderer sawratRenderer, LifebarRenderer lifebarRenderer) {
 		for (int i=0;i<rats.size();i++) {
 			if (rats.get(i).isAlive()) {
 				ratRenderer.render(rats.get(i));
@@ -40,6 +43,18 @@ public class MobGroup {
 				}
 			}
 		}
+		
+		for (int i=0;i<sawrats.size();i++) {
+			if (sawrats.get(i).isAlive()) {
+				sawratRenderer.render(sawrats.get(i));
+				if (sawrats.get(i).isAlive() && sawrats.get(i).lifebar != null) {
+					lifebarRenderer.render(sawrats.get(i).getBody().getPosition().x,
+											sawrats.get(i).getBody().getPosition().y,
+											sawrats.get(i).lifebar);
+				}
+			}
+		}
+		
 	}
 	
 	public void addRat(Rat newRat)  { 
@@ -53,10 +68,16 @@ public class MobGroup {
 			aimers.add(newAimer);
 		}
 	}
+	
+	public void addSawRat(SawRat newSawRat) {
+		if (newSawRat != null) {
+			sawrats.add(newSawRat);
+		}
+	}
 		
 		
 	public int getMobCount()  { 
-		return rats.size() + aimers.size(); 
+		return rats.size() + aimers.size() + sawrats.size(); 
 	}
 	
 	public void addMobGroup(MobGroup moreMobs)
@@ -66,6 +87,9 @@ public class MobGroup {
 		}
 		for (int i=0;i<moreMobs.getAimerCount();i++) {
 			aimers.add(moreMobs.getAimerByIndex(i));
+		}
+		for (int i=0;i<moreMobs.getSawRatCount();i++) {
+			sawrats.add(moreMobs.getSawRatByIndex(i));
 		}
 	}
 	
@@ -82,11 +106,15 @@ public class MobGroup {
 		for (int i=0;i<aimers.size();i++) {
 			if (aimers.get(i).isAlive()) mobCount++;
 		}
+		for (int i=0;i<sawrats.size();i++) {
+			if (sawrats.get(i).isAlive()) mobCount++;
+		}
 		return mobCount;
 	}
 	
 	public int getRatCount() { return rats.size(); }
 	public int getAimerCount() { return aimers.size(); }
+	public int getSawRatCount() { return sawrats.size(); }
 	
 	public Rat getRatByIndex(int i) {
 		if (i >= 0 && i < rats.size()) {
@@ -97,6 +125,12 @@ public class MobGroup {
 	public Aimer getAimerByIndex(int i) {
 		if (i >= 0 && i < aimers.size()) {
 			return aimers.get(i);
+		}
+		else return null;
+	}
+	public SawRat getSawRatByIndex(int i) {
+		if (i >= 0 && i < sawrats.size()) {
+			return sawrats.get(i);
 		}
 		else return null;
 	}
