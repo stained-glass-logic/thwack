@@ -75,7 +75,9 @@ public class Lifebar {
 					lifebarPixels.drawPixel(x,y);
 				}
 			}
+			if (lifebarImage != null) lifebarImage.dispose();
 			lifebarImage = new Texture(lifebarPixels,Format.RGBA8888,false);
+			lifebarPixels.dispose();
 			lifebarSprite = new Sprite(lifebarImage);
 			lifebarSprite.setAlpha(0.1f);
 			

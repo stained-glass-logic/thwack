@@ -26,6 +26,9 @@ public class MinimapRenderer implements Disposable {
 	
 	float minimapAlpha = 0.5f;
 	Texture mapTerrainImage;
+	Pixmap terrainPixels;
+	Pixmap updatedRadar;
+	Texture radarImage;
 	
 	int MINIMAP_WIDTH_PIXELS = 64;
 	int MINIMAP_HEIGHT_PIXELS = 64;
@@ -49,14 +52,18 @@ public class MinimapRenderer implements Disposable {
 	
 		MobGroup mobs = thisDungeon.getCurrentStage().getMobs();
 		batch.draw(mapTerrainImage,-20f,70f);
-		Texture radarImage = new Texture(getUpdatedRadar(mobs), Format.RGBA8888, false);
+		if (updatedRadar != null) updatedRadar.dispose();
+		updatedRadar = getUpdatedRadar(mobs);
+		if (radarImage != null) radarImage.dispose();
+		radarImage = new Texture(updatedRadar, Format.RGBA8888, false);
 		batch.draw(radarImage,-20f,70f);
 		
 	}
 	
 	public void updateMapTerrain(TiledMap tiledMap) {
 		
-		Pixmap terrainPixels = new Pixmap(MINIMAP_WIDTH_PIXELS,MINIMAP_HEIGHT_PIXELS,Format.RGBA8888);
+		if (terrainPixels != null) terrainPixels.dispose();
+		terrainPixels = new Pixmap(MINIMAP_WIDTH_PIXELS,MINIMAP_HEIGHT_PIXELS,Format.RGBA8888);
 		
 		//Dark grey for floor, light grey for walls
 		Color floorColor = new Color(0.1f,0.1f,0.1f,minimapAlpha);
@@ -109,7 +116,9 @@ public class MinimapRenderer implements Disposable {
 			}
 		}
 		
+		if (mapTerrainImage != null) mapTerrainImage.dispose();
 		mapTerrainImage = new Texture(terrainPixels,Format.RGBA8888,false);
+		
 	}
 	
 	public Pixmap getUpdatedRadar(MobGroup mobs) {
@@ -121,6 +130,8 @@ public class MinimapRenderer implements Disposable {
 		//draw rats on radar
 		//Global.DebugOutLine("On minimap, ,drawing " + mobs.getRatCount() + " rats and " + mobs.getAimerCount() + "aimers.");
 		Pixmap retPixmap = new Pixmap(MINIMAP_WIDTH_PIXELS,MINIMAP_HEIGHT_PIXELS,Format.RGBA8888);
+		
+		
 		for (int count = 0; count < mobs.getRatCount(); count++) {
 			if (mobs.getRatByIndex(count) != null && mobs.getRatByIndex(count).active() == true)
 			{
