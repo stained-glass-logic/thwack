@@ -1,9 +1,12 @@
 package thwack.model.entity;
 
+import thwack.Global;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Lifebar {
 
@@ -14,6 +17,13 @@ public class Lifebar {
 													//is hard coded at 2.
 
 	Texture lifebarImage;
+	Sprite lifebarSprite;
+	
+	public float scaleFactor=16;
+	public float xOffset;							//offset based on mob's size
+	public float yOffset =-3;
+	public float lifebarAlpha = 0f;
+	public float lifebarFadeTimer = 0.0f;
 
 	
 	public Lifebar() {
@@ -22,21 +32,40 @@ public class Lifebar {
 	}
 	
 	public Texture getImage() { return lifebarImage; }
+	public Sprite getSprite() { return lifebarSprite; }
 	public float getWidth() { return lifebarWidth; }
 	public float getHeight() { return lifebarHeight; }
 	
-	public void update(int curHP, int maxHP) {
+	public void updateTime(float deltaTime)
+	{
+		//Global.DebugOutLine("" + deltaTime);
+		if (lifebarFadeTimer < 0)
+		{
+			lifebarAlpha -= deltaTime;
+			if (lifebarAlpha < 0) lifebarAlpha = 0;
+		}
+		else lifebarFadeTimer -= deltaTime;
+	}
+
+	public void makeVisible()
+	{
+		lifebarAlpha = 1.0f;
+		lifebarFadeTimer = 2.0f;
+	}
+	
+	public void updateImage(int curHP, int maxHP) {
 		if (maxHP > 32) {
-			System.out.println("TODO: Handle maxhp > 32 for lifebarS");
+			Global.DebugOutLine("TODO: Handle maxhp > 32 for lifebarS");
 		}
 		else {
 			lifebarWidth = maxHP;
+			xOffset =  - ( (lifebarWidth) / scaleFactor);
 			Pixmap lifebarPixels = new Pixmap(32,32,Format.RGBA8888);
 			
-			int starty = lifebarPixels.getHeight() - (int)lifebarHeight -15;
-			int endy = starty + (int)lifebarHeight;
-			int startx = lifebarPixels.getWidth()/2 - (int)lifebarWidth;
-			int endx = startx + (int)lifebarWidth;
+			int starty = 0;
+			int startx = 0;
+			int endy = (int)lifebarHeight;
+			int endx = (int)lifebarWidth;
 			
 			for (int y = starty; y< endy; y++) {
 				for (int x =startx;x<endx;x++) {
@@ -47,6 +76,8 @@ public class Lifebar {
 				}
 			}
 			lifebarImage = new Texture(lifebarPixels,Format.RGBA8888,false);
+			lifebarSprite = new Sprite(lifebarImage);
+			lifebarSprite.setAlpha(0.1f);
 			
 		}
 	}

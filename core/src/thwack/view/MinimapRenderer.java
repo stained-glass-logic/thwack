@@ -3,7 +3,6 @@ package thwack.view;
 
 
 import thwack.Dungeon;
-import thwack.model.entities.mobs.Aimer;
 import thwack.model.entities.mobs.MobGroup;
 import thwack.model.entities.player.Player;
 
@@ -16,7 +15,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 public class MinimapRenderer implements Disposable {
@@ -29,10 +27,10 @@ public class MinimapRenderer implements Disposable {
 	float minimapAlpha = 0.5f;
 	Texture mapTerrainImage;
 	
-	int MINIMAP_WIDTH_PIXELS = 56;
-	int MINIMAP_HEIGHT_PIXELS = 36;
+	int MINIMAP_WIDTH_PIXELS = 64;
+	int MINIMAP_HEIGHT_PIXELS = 64;
 	//these offsets are for walls or something
-	int XOFFSET = 1;
+	int XOFFSET = 0;
 	int YOFFSET = 1;
 	
 
@@ -50,10 +48,8 @@ public class MinimapRenderer implements Disposable {
 	public void render(Dungeon thisDungeon) {
 	
 		MobGroup mobs = thisDungeon.getCurrentStage().getMobs();
-		//batch.draw(mapTerrainImage,-20f,20f);
 		batch.draw(mapTerrainImage,-20f,70f);
 		Texture radarImage = new Texture(getUpdatedRadar(mobs), Format.RGBA8888, false);
-		//batch.draw(radarImage,-20f,20f);
 		batch.draw(radarImage,-20f,70f);
 		
 	}
@@ -113,9 +109,6 @@ public class MinimapRenderer implements Disposable {
 			}
 		}
 		
-		//terrainPixels.drawPixel(0,0);
-		//terrainPixels.drawPixel(MINIMAP_WIDTH_PIXELS-1,MINIMAP_HEIGHT_PIXELS-1);
-		
 		mapTerrainImage = new Texture(terrainPixels,Format.RGBA8888,false);
 	}
 	
@@ -126,7 +119,7 @@ public class MinimapRenderer implements Disposable {
 		
 		
 		//draw rats on radar
-		//System.out.println("On minimap, ,drawing " + mobs.getRatCount() + " rats and " + mobs.getAimerCount() + "aimers.");
+		//Global.DebugOutLine("On minimap, ,drawing " + mobs.getRatCount() + " rats and " + mobs.getAimerCount() + "aimers.");
 		Pixmap retPixmap = new Pixmap(MINIMAP_WIDTH_PIXELS,MINIMAP_HEIGHT_PIXELS,Format.RGBA8888);
 		for (int count = 0; count < mobs.getRatCount(); count++) {
 			if (mobs.getRatByIndex(count) != null && mobs.getRatByIndex(count).active() == true)
@@ -141,6 +134,14 @@ public class MinimapRenderer implements Disposable {
 			{
 				retPixmap.setColor(Color.OLIVE);
 				retPixmap.drawPixel( (int)(mobs.getAimerByIndex(count).getBody().getPosition().x)+XOFFSET, MINIMAP_HEIGHT_PIXELS - (int)(mobs.getAimerByIndex(count).getBody().getPosition().y)+YOFFSET);
+			}
+		}
+		//draw sawrats on radar
+		for (int count = 0; count < mobs.getSawRatCount(); count++) {
+			if (mobs.getSawRatByIndex(count) != null && mobs.getSawRatByIndex(count).active() == true)
+			{
+				retPixmap.setColor(Color.BLUE);
+				retPixmap.drawPixel( (int)(mobs.getSawRatByIndex(count).getBody().getPosition().x)+XOFFSET, MINIMAP_HEIGHT_PIXELS - (int)(mobs.getSawRatByIndex(count).getBody().getPosition().y) + YOFFSET);
 			}
 		}
 		

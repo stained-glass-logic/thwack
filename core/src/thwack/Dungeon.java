@@ -87,7 +87,7 @@ public class Dungeon {
 	}
 	
 	public void advanceToNextStage(World world, Array<Updateable> updateables) {
-		System.out.println("Advancing to next stage");
+		Global.DebugOutLine("Advancing to next stage");
 		if (currentStage+1 < stages.size()) {
 			currentStage++;
 			if (thisDungeonType == DungeonType.timedStages) {
@@ -100,7 +100,7 @@ public class Dungeon {
 			stages.get(currentStage).beginStage(stageTemplates.get(currentStage), world, updateables);
 		}
 		else {
-			System.out.println("No more stages...");
+			Global.DebugOutLine("No more stages...");
 		}
 	}
 	

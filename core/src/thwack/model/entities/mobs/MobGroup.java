@@ -13,10 +13,14 @@ public class MobGroup {
 	ArrayList<Aimer> aimers;
 	ArrayList<SawRat> sawrats;
 	
+	ArrayList<Mob> mobs;
+	
 	public MobGroup() {
 		rats = new ArrayList<Rat>();
 		aimers = new ArrayList<Aimer>();
 		sawrats = new ArrayList<SawRat>();
+		
+		mobs = new ArrayList<Mob>();
 	}
 	
 	
