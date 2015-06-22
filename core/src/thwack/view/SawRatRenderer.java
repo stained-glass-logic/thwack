@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import thwack.Constants;
-import thwack.model.entities.mobs.Rat;
 import thwack.model.entities.mobs.Mob.State;
 import thwack.model.entities.mobs.SawRat;
 import thwack.model.entity.Damageable.DamageState;
@@ -44,21 +43,13 @@ public class SawRatRenderer implements Disposable {
 		
 		float ratAnimSpeed = 0.075f;
 		ratWalkAnim.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("Run/Down/Saw Rat Down Run"), PlayMode.LOOP));
-		System.out.println("Adding sawrat animation: " + ratAtlas.findRegions("Run/Down/Saw Rat Down Run"));
 		ratWalkAnim.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("Run/Side/Saw Rat Side Run"), PlayMode.LOOP));
-		System.out.println("Adding sawrat animation: " + ratAtlas.findRegions("Run/Side/Saw Rat Side Run"));
 		ratWalkAnim.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("Run/Side/Saw Rat Side Run"), PlayMode.LOOP));
-		System.out.println("Adding sawrat animation: " + ratAtlas.findRegions("Run/Side/Saw Rat Side Run"));
 		ratWalkAnim.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("Run/Up/Saw Rat Up Run"), PlayMode.LOOP));
-		System.out.println("Adding sawrat animation: " + ratAtlas.findRegions("Run/Up/Saw Rat Up Run"));
 		ratBoredAnim1.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("Idle/Down/Saw Rat Down Idle"), PlayMode.LOOP));
-		System.out.println("Adding sawrat animation: " + ratAtlas.findRegions("Idle/Down/Saw Rat Down Idle"));
 		ratBoredAnim1.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("Idle/Side/Saw Rat Side Idle"), PlayMode.LOOP));
-		System.out.println("Adding sawrat animation: " + ratAtlas.findRegions("Idle/Side/Saw Rat Side Idle"));
 		ratBoredAnim1.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("Idle/Side/Saw Rat Side Idle"), PlayMode.LOOP));
-		System.out.println("Adding sawrat animation: " + ratAtlas.findRegions("Idle/Side/Saw Rat Side Idle"));
 		ratBoredAnim1.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("Idle/Up/Saw Rat Up Idle"), PlayMode.LOOP));
-		System.out.println("Adding sawrat animation: " + ratAtlas.findRegions("Idle/Up/Saw Rat Up Idle"));
 
 		//i tweaked these to get the look times feeling right --radish
 		ratBoredAnim2.put(Direction.DOWN, new Animation(.75f, ratAtlas.findRegions("Idle/Down/Saw Rat Down Idle"), PlayMode.LOOP));

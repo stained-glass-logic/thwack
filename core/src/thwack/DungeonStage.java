@@ -50,15 +50,15 @@ public class DungeonStage {
 	}
 	
 	public void buildFromString(String mobString, World world, Array<Updateable> updateables) {
-		System.out.print("Building stage from string");
+		Global.DebugOut("Building stage from string");
 		String[] mobTypes = mobString.split(" ");
-		System.out.print("...got " + mobTypes.length + " types of mobs");
+		Global.DebugOut("...got " + mobTypes.length + " types of mobs");
 		for (int i=0;i<mobTypes.length;i++) {
 			int MOBTYPE =0;
 			int MOBCOUNT = 1;
 			String[] thisMobType = mobTypes[i].split("=");
 			int mobCount = Integer.parseInt(thisMobType[MOBCOUNT]);
-			System.out.print("...Creating " + mobCount + " of " + thisMobType[MOBTYPE]);
+			Global.DebugOut("...Creating " + mobCount + " of " + thisMobType[MOBTYPE]);
 			for (int n=0;n<mobCount;n++) {
 				if (thisMobType[MOBTYPE].equals("rat")) {
 			        Vector2 ratPos = new Vector2(6f, 25f);
@@ -86,7 +86,7 @@ public class DungeonStage {
 				}
 			}
 		}
-		System.out.println("");
+		Global.DebugOutLine("");
 	}
 	
 	public void beginStage(String stageTemplate, World world, Array<Updateable> updateables) {
@@ -98,7 +98,6 @@ public class DungeonStage {
 		long thisNanoTick = System.nanoTime();
 		elapsedNanoSeconds += thisNanoTick - lastNanoTick;
 		elapsedSeconds = TimeUnit.SECONDS.convert(elapsedNanoSeconds,TimeUnit.NANOSECONDS);
-		//System.out.println("" + elapsedSeconds);
 		lastNanoTick = System.nanoTime();
 		if (dungeonType == DungeonType.clearStages) {
 			//check to see if any living mobs are left

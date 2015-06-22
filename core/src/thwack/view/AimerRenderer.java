@@ -46,13 +46,9 @@ public class AimerRenderer implements Disposable {
 		ratWalkAnim.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("Run Right/Rat Run Side"), PlayMode.LOOP));
 		ratWalkAnim.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("Run Up/Rat Run Up"), PlayMode.LOOP));
 		ratBoredAnim1.put(Direction.DOWN, new Animation(ratAnimSpeed, ratAtlas.findRegions("Bored Down/Clean/Rat Clean Down"), PlayMode.LOOP));
-		System.out.println("Adding rat animation: " + ratAtlas.findRegions("Bored Down/Clean/Rat Clean Down"));
 		ratBoredAnim1.put(Direction.LEFT, new Animation(ratAnimSpeed, ratAtlas.findRegions("Bored Side/Clean/Rat Clean Side"), PlayMode.LOOP));
-		System.out.println("Adding rat animation: " + ratAtlas.findRegions("Bored Side/Clean/Rat Clean Side"));
 		ratBoredAnim1.put(Direction.RIGHT, new Animation(ratAnimSpeed, ratAtlas.findRegions("Bored Side/Clean/Rat Clean Side"), PlayMode.LOOP));
-		System.out.println("Adding rat animation: " + ratAtlas.findRegions("Bored Side/Clean/Rat Clean Side"));
 		ratBoredAnim1.put(Direction.UP, new Animation(ratAnimSpeed, ratAtlas.findRegions("Bored Up/Clean/Rat Clean Up"), PlayMode.LOOP));
-		System.out.println("Adding rat animation: " + ratAtlas.findRegions("Bored Up/Clean/Rat Clean Up"));
 
 		//i tweaked these to get the look times feeling right --radish
 		ratBoredAnim2.put(Direction.DOWN, new Animation(.75f, ratAtlas.findRegions("Bored Down/Look/Rat Look Down"), PlayMode.LOOP));

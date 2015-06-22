@@ -1,13 +1,9 @@
 package thwack.screen;
 
 import thwack.Constants;
-import thwack.DungeonStage;
 import thwack.Dungeon;
 import thwack.Global;
 import thwack.controller.MyContactListener;
-import thwack.model.entities.mobs.Aimer;
-import thwack.model.entities.mobs.MobGroup;
-import thwack.model.entities.mobs.Rat;
 import thwack.model.entities.player.Player;
 import thwack.model.entities.projectiles.Projectile;
 import thwack.model.entities.worldobjects.Wall;

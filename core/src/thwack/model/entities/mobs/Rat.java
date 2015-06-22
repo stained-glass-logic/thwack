@@ -1,5 +1,6 @@
 package thwack.model.entities.mobs;
 
+import thwack.Global;
 import thwack.model.entity.Entity;
 import thwack.model.entity.Lifebar;
 import thwack.model.entity.Stateable.EntityState;
@@ -46,6 +47,7 @@ public class Rat extends Mob {
 		this.increaseDamageStateTime(deltaTime);
 		this.increaseStateTime(deltaTime);
 		moveLogic(3f);
+		lifebar.updateTime(deltaTime);
 	}
 	
 	@Override
@@ -116,17 +118,18 @@ public class Rat extends Mob {
 	public void setHealth(int health) {
 		this.maxHealth = health;
 		this.currentHealth = health;
-		lifebar.update(currentHealth, maxHealth);
+		lifebar.updateImage(currentHealth, maxHealth);
 	}
 
 	@Override
 	public void applyHit(int damage, Entity attacker) {
 		currentHealth -= damage;
-		lifebar.update(currentHealth, maxHealth);
+		lifebar.updateImage(currentHealth, maxHealth);
+		lifebar.makeVisible();
 		if(currentHealth < 1) {
 			setPublicState(EntityState.DESTROY);
 			attacker.stats.killCount++;
-			System.out.println(attacker + " kills: " + attacker.stats.killCount);
+			Global.DebugOutLine(attacker + " kills: " + attacker.stats.killCount);
 		}
 	}
 
