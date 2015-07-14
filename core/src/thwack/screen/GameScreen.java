@@ -19,6 +19,7 @@ import thwack.view.MinimapRenderer;
 import thwack.view.PlayerRenderer;
 import thwack.view.RatRenderer;
 import thwack.view.SawRatRenderer;
+import thwack.view.UiRenderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -86,6 +87,7 @@ public class GameScreen extends ScreenAdapter {
     //private float unitWidth, unitHeight;
     
     private MinimapRenderer minimapRenderer;
+    private UiRenderer uiRenderer;
     SpriteBatch guiBatch;
     OrthographicCamera cameraMinimap;
 
@@ -159,6 +161,8 @@ public class GameScreen extends ScreenAdapter {
         //and the minimap
         minimapRenderer = new MinimapRenderer(guiBatch, Global.shapeRenderer, testDungeon.getCurrentStage().getMobs(), player, tiledMap);
        
+        //ui
+        uiRenderer = new UiRenderer();
     }
 
     @Override
@@ -213,13 +217,15 @@ public class GameScreen extends ScreenAdapter {
 
         Global.batch.end();
         
-        //minimap
+        //minimap and ui
         cameraMinimap.update();
         guiBatch.setProjectionMatrix(cameraMinimap.combined);
         guiBatch.begin();
         minimapRenderer.render(testDungeon);
+        uiRenderer.render(guiBatch);
         testDungeon.drawGUI(guiBatch);
         guiBatch.end();
+        
 
         float deltaTime = Gdx.graphics.getDeltaTime();
         
