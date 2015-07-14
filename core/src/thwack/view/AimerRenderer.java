@@ -146,6 +146,10 @@ public class AimerRenderer implements Disposable {
 		batch.setColor(Color.WHITE);
 
         //rat.archivePosition();
+		
+		//trying to fix memory leak
+		image2.getTexture().dispose();
+
 	}
 
 	@Override
