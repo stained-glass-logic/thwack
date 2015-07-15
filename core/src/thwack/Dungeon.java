@@ -8,9 +8,12 @@ import thwack.view.LifebarRenderer;
 import thwack.view.RatRenderer;
 import thwack.view.SawRatRenderer;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -37,8 +40,8 @@ public class Dungeon {
 	public Dungeon(World world, Array<Updateable> updateables) {
 		stages = new ArrayList<DungeonStage>();
 
-		thisDungeonType = DungeonType.clearStages;
-		//thisDungeonType = DungeonType.timedStages;
+		//thisDungeonType = DungeonType.clearStages;
+		thisDungeonType = DungeonType.timedStages;
 
 		
 		stageTemplates = new ArrayList<String>();
@@ -65,7 +68,13 @@ public class Dungeon {
 			this.getCurrentStage().beginStage(stageTemplates.get(0),world,updateables);
 		}
 		
-		dungeonFont = new BitmapFont();
+		//dungeonFont = new BitmapFont();
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ScalaSans_Black.ttf"));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 16;
+		dungeonFont = generator.generateFont(parameter); // font size 12 pixels
+		generator.dispose(); // don't forget to dispose to avoid memory leaks!
+
 	}
 	
 	public void update(World world, Array<Updateable> updateables) {
